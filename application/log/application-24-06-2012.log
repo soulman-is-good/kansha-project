@@ -1,0 +1,11 @@
+[24.06.2012 23:10:09] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:10:09] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:10:09] No such function in bubbling stack
+[24.06.2012 23:10:14] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:10:14] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:10:14] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:10:14] No such function in bubbling stack
+[24.06.2012 23:35:05] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:35:05] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:35:05] Applying SQL 'ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   ' for X3_MySQL_Model
+[24.06.2012 23:35:06] No such function in bubbling stack

@@ -1,0 +1,40 @@
+/**
+ * Основа
+ */
+.ui-slider-horizontal { border-left: 1px solid #898989;border-right: 1px solid #898989; background: #e4e4e4; color: #333333; }
+.ui-slider { height: 6px; position: relative; text-align: left;margin-bottom:23px;}
+
+/**
+ * Заполнитель
+ */
+.ui-widget-header { border: 1px solid #e78f08; 
+background: #4e9919;
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzRlOTkxOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyNzRkMGQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #4e9919 0%, #274d0d 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4e9919), color-stop(100%,#274d0d));
+background: -webkit-linear-gradient(top,  #4e9919 0%,#274d0d 100%);
+background: -o-linear-gradient(top,  #4e9919 0%,#274d0d 100%);
+background: -ms-linear-gradient(top,  #4e9919 0%,#274d0d 100%);
+background: linear-gradient(top,  #4e9919 0%,#274d0d 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4e9919', endColorstr='#274d0d',GradientType=0 ); 
+color: #ffffff; font-weight: bold; }
+.ui-slider-horizontal .ui-slider-range { top: 0; height: 100%; position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; background-position: 0 0;}
+.isOpera .ui-widget-header {
+background: url(/images/green_gradient.png) repeat-x !important;
+}
+/**
+ * Ручки
+ */
+.ui-slider-horizontal .ui-slider-handle {background:url(../images/slider_handle.png) no-repeat left bottom; font-weight: bold; color: #c77405;}
+.ui-slider-horizontal .ui-slider-handle.right {background-position: -7px bottom;margin-left:0px;}
+.ui-slider-horizontal .ui-slider-handle { top: 7px; margin-left: -7px; position: absolute; z-index: 2; width: 7px; height: 7px; cursor: default;}
+
+/**
+ * Misc
+ */
+.product_inside_upper .range .numbers{height:14px;font:10px Tahoma,sans-serif;}
+.product_inside_upper .range .numbers .lnum{float:left;text-align:left;}
+.product_inside_upper .range .numbers .rnum{float:right;text-align:right;}
+.product_inside_upper .range .numbers .cnum{text-align:center;width:100px;margin:0 auto;}
+.product_inside_upper .range .lines {height:3px;font-size:0px;border-left:1px solid #989693;border-right:1px solid #989693;}
+.product_inside_upper .range .lines div {height:3px;width:1px;font-size:0px;background:#989693;margin:0 auto;}

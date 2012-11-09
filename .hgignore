@@ -1,0 +1,16 @@
+# use glob syntax.
+syntax: glob
+
+*.elc
+*.pyc
+*~
+
+# switch to regexp syntax.
+syntax: regexp
+^\nbproject.*
+^\application.*
+\.orig\..*$
+\.orig$
+\.chg\..*$
+\.rej$
+\.conflict\~$
