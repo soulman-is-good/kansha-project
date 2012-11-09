@@ -52,6 +52,7 @@ class Address extends X3_Module_Table {
     }
     
     public function _setWorktime($value) {
+        if(!is_array($value['days'])) $value['days'] = array();
         $diff = array_diff_key($value['days'], array('Monday'=>'0',"Tuesday"=>"0","Wednesday"=>"0","Thursday"=>"0","Friday"=>"0","Saturday"=>"1","Sunday"=>"2"));
         if(!is_array($value) || !isset($value['days']) || !isset($value['times']) || !empty($diff))
                 $value = array('days'=>array('Monday'=>'0',"Tuesday"=>"0","Wednesday"=>"0","Thursday"=>"0","Friday"=>"0","Saturday"=>"1","Sunday"=>"2")
