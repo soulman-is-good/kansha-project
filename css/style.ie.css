@@ -1,0 +1,108 @@
+/*IE*/
+.ie7 div.overlook {margin-top:15px;}
+.ie7 div.mn_news_pic {margin-bottom:0px;}
+.ie7 div.project {margin-top:20px;}
+/*.ie7 div.project div.mailer {}*/
+.ie7 div.mailer button {margin-top:-31px;padding:4px 11px;}
+.ie7 div.mailer_inside {padding-top:8px;}
+.ie7 div.project div.mailer span {padding-top:15px;}
+.ie7 div.main_product_info a.product_info_price {display:block;}
+.ie7 div.m_product {width:118px;}
+.ie7 div.main_menu div.m_product.without {width:153px;}
+.ie7 div.services_inside_right {margin-top:20px;}
+.ie7 div.main_popular_left h2 {margin-top:15px;}
+.ie div.main_popular_right a.m_green.active {}
+.ie7 div.m_gray_stripe {margin-top:26px;padding-top:1px;}
+.ie7 div.market_box p.market_text {padding-bottom:11px;}
+.ie7 div.find_it a.main_red_link {position:relative;top:-2px;}
+.ie7 div.find_it p {margin-bottom:10px;}
+.ie7 div.find_it_inside button {padding:6px 12px;}
+.ie7 div.find_it_inside input {margin-right:5px;}
+.ie7 div.main_menu div.m_product.market {width:127px;}
+.ie .mailer button, .ie .find_it_inside button {filter:none}
+.ie7 div.sub_menu div.m_product a {filter:none;position:relative;top:-15px;display:block}
+.ie8 .mailer{z-index:-1}
+
+
+.ie7 div.sale_box_text div.green_white  {z-index:2;}
+.ie7 div.sale_box_text div.green_white span.white_text {filter:none;position:relative;top:-8px;padding-bottom:6px;}
+.ie7 div.m_market_stripe {margin-top:14px;height:6px;}
+.ie7 div.sale_left div.navi a.active  {position:relative;top:4px;}
+
+.ie9 div.sale_box_text div.old_price span.red_price i {top:-9px;}
+.ie7 div.service_lower div.navi a.active {position:relative;top:4px;}
+.ie8 .m_gray_stripe, .ie9 .m_gray_stripe {position:relative;top:1px;z-index:-1}
+.ie7 .m_gray_stripe {position:relative;z-index:-1}
+.ie div.upper_ssilki span.list_shops sup {font-size:14px;}
+
+.ie8 div.project div.mailer span {padding-top:14px;}
+.ie9 div.project div.mailer span {padding-top:14px;}
+.ie div.main_popular table tr td div.selector_shops span {top:12px;}
+.ie7 div.main_content_left div.navi a.active {position:relative;top:4px;}
+.ie8 div.sale_box_text div.old_price span.red_price i  {top:-9px;}
+
+.ie div.product_expand table.production div.black_stripe {filter:none;}
+.ie7 .find_table td.right {padding-top:10px}
+.ie7 .main_menu {margin-top:31px;}
+
+.ie7 .find_it_inside input {/*width:expression((document.body.clientWidth - 854) + "px");*/}
+.ie7 div.find_it_inside button {padding-left:6px;padding-right:6px;}
+.ie9 div.main_popular_right table.product_new td.first{width:212px;}
+.ie div.m_product_stripe {filter:none}
+.ie8 div.m_product css3-container {z-index:0 !important;}
+.ie8 div.sub_menu div.m_product css3-container {z-index:-1 !important;}
+
+.ie7 div.main_popular table.big_table td{border-bottom:1px solid #e6e6e6;}
+.ie9 div.tender table.tender_stripe h2 {color:#386d12;font-size:16px;font-family:Verdana,sans-serif;width:193px;margin-right:0px;}
+.ie7 div.tender table.tender_stripe h2 {margin-top:12px;}
+.ie9 div.top_markets h2 {color:#2e6b99;font-size:16px;font-weight:bold;font-family:Verdana,serif;float:left;margin-bottom:6px;margin-top:0px;width:140px;}
+.ie9 div.top_markets div.blue_stripe {margin-left:2px;width:94px;}
+.ie9 div.tender_long_stripe {margin-left:-2px;}
+
+.ie7 #long_gray_stripe  {filter:none;}
+.ie8 #long_gray_stripe  {filter:none;}
+.ie9 #long_gray_stripe  {filter:none;}
+
+.ie9 div.main_services table.company_service tr td h2 {width:170px;}
+.ie9 div.branch_long_stripe div.dark_right {right:-2px;}
+.ie7 div.main_services table.company_service tr td div.orange_company {position:relative;top:10px;}
+.ie7 div.main_services a.add {top:4px;}
+.ie7 div.main_services a.add:hover {text-decoration:none;}
+.ie7 div.branch table.branch_stripe div.branch_long_stripe {position:relative;top:11px;}
+
+.ie9 div.service_s table.service_header h2 {width:170px;}
+.ie8 div.pustoi_alone {height:30px;}
+.ie9 div.pustoi_alone {height:30px;}
+.ie7 div.expand_box_text a.product_info_price  {filter:none;}
+.ie7 div.product_inside_upper a.one {filter:none;background:none;}
+.ie #bg_upper {filter:none;}
+
+.ie8 div.main_services a.city {top:13px;left:10px;}
+.ie7 div.main_services a.city {top:1px;left:8px;}
+.ie8 div.main_services table.company_service tr td div.orange_company {margin-left:10px;}
+.ie7 div.main_services table.company_service tr td div.orange_company {margin-left:6px;}
+
+.ie8 div.enter button {filter:none;}
+.ie9 div.enter button {filter:none;}
+.ie7 div.enter button {filter:none;top:4px;left:-2px;}
+.ie7 div.enter input.try {position:relative;top:-8px;}
+.ie7 div.enter form span.try_remember {top:3px;}
+.ie7 div.main_services_left.indent {border:none;}
+.ie7 div.main_services_left.indent div.pustoi {border-bottom:1px solid #ebdfd8;}
+.ie7 div.main_services a.city {left:17px;}
+.ie8 div.main_services a.city {left:17px;}
+.ie9 div.main_services a.city {left:15px;}
+.ie7 div.main_services table.company_service tr td div.orange_company {left:8px;}
+.ie8 div.main_services table.company_service tr td div.orange_company {left:4px;}
+.ie9 div.main_services table.company_service tr td div.orange_company {left:4px;}
+/*.ie7 div.bg_upper_header a.link_one {margin-left:106px;}*/
+.ie7 div.main_popular table.big_table tr.shops_table_header td {padding-bottom:5px;}
+
+
+
+
+
+
+
+
+

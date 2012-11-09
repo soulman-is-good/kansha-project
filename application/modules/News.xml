@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="News" title="Новости" tableName="data_news" encoding="UTF-8">
+    <fields>
+        <field>
+            <name>id</name>
+            <type>integer[11]</type>
+            <unsigned />
+            <primary />
+            <extra>auto_increment</extra>
+        </field>
+        <field>
+            <name>title</name>
+            <type>string[255]</type>
+            <language />
+        </field>
+        <field>
+            <name>content</name>
+            <type>content</type>
+            <language />
+        </field>
+        <field>
+            <name>text</name>
+            <type>text</type>
+            <language />
+        </field>
+        <field>
+            <name>status</name>
+            <type>boolean</type>
+            <default>1</default>
+        </field>
+        <field>
+            <name>created_at</name>
+            <type>datetime</type>
+            <default>0</default>
+        </field>
+    </fields>
+    <cache>
+        <actions>
+            index,show
+        </actions>
+        <role>*</role>
+        <expire>+2 days</expire>
+    </cache>
+    <nocache>
+        <actions>*</actions>
+        <role>admin</role>
+    </nocache>
+    <function:onDelete arguments="$tables,$condition">
+        <[CDATA[
+        
+        ]]>
+    </function:onDelete>
+</module>
