@@ -67,6 +67,18 @@ class SysSettings extends X3_Module_Table {
         self::$_settings[$name] = $s->value;
         return $self->value;
     }
+    
+    public function actionSeoupdate() {
+        if(isset($_POST['SysSettings']))
+        foreach($_POST['SysSettings'] as $ss){
+            $sys = SysSettings::get(array('name'=>$ss['name']),1);
+            $sys->value = $ss['value'];
+            $sys->save();
+        }
+        if(!IS_AJAX)
+            $this->redirect('/admin');
+        exit;
+    }
 
     public function actionAdmin(){
         if(X3::app()->user->isGuest())  throw new X3_404();

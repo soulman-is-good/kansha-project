@@ -1,11 +1,12 @@
 <?php
-if($modules->getTable()->getIsNewRecord()){
+if(!$modules->getTable()->getIsNewRecord()){
 $grps = X3::db()->query("SELECT DISTINCT sg.* FROM shop_group sg INNER JOIN shop_item si ON si.group_id=sg.id WHERE sg.status AND si.manufacturer_id='$modules->id' ORDER BY sg.title, sg.weight");
 $i = 0;
 $groups = array();
 $text = array();
 while($g=mysql_fetch_array($grps)){
     $pps = X3::db()->query("SELECT id, group_id, title, value, property_id FROM shop_proplist WHERE group_id={$g['id']} AND property_id IN (SELECT id FROM shop_properties WHERE isgroup AND group_id={$g['id']}) ORDER BY weight, title");
+//    var_dump("SELECT id, group_id, title, value, property_id FROM shop_proplist WHERE group_id={$g['id']} AND property_id IN (SELECT id FROM shop_properties WHERE isgroup AND group_id={$g['id']}) ORDER BY weight, title");
     if(is_resource($pps) && mysql_num_rows($pps)>0){
         while ($ps = mysql_fetch_assoc($pps)){
             $groups[]=array(
@@ -43,6 +44,16 @@ while($g=mysql_fetch_array($grps)){
         width:400px;
         height:300px;
     }
+
+    table td.fieldname{
+        width:200px
+    }
+    table td{
+        text-align: left;
+    }
+    table td input, table td select, table td textarea{
+        width:100%;
+    }    
 </style>
 <?/*STANDART TEMPLATE*/
 if($modules instanceOf X3_Module_Table):
@@ -59,7 +70,7 @@ if($_GET['add']!='' && isset($modules->table['parent_id'])){
 <div id="mtabs">
     <ul>
         <li><a href="#common">Основные</a></li>
-        <?if($modules->getTable()->getIsNewRecord()):?>
+        <?if(!$modules->getTable()->getIsNewRecord() && !empty($groups)):?>
         <li><a href="#text">Текстовка</a></li>
         <?endif;?>
     </ul>
@@ -76,16 +87,16 @@ if(!empty($errs)):?>
             <!--li><?=X3::db()->getErrors()?></li-->
         </ul>
     </div>
-<?endif;?>    
+<?endif;?>
 <?=$form->start(array('action'=>"/admin/$action/save"));?>
 <?=$form->render();?>
 <?=$form->end();?>
     </div>
-<?if($modules->getTable()->getIsNewRecord()):?>
+<?if(!$modules->getTable()->getIsNewRecord() && !empty($groups)):?>
     <div id="text">
         <form action="/manufacturer_Group/update" method="post" enctype="multipart/form-data">
         <ul>
-            <? foreach ($groups as $g): $key = $modules->id . '|' . $g['gid'] . '|' . $g['pid']?>
+            <? if(!empty($groups)) foreach ($groups as $g): $key = $modules->id . '|' . $g['gid'] . '|' . $g['pid']?>
             <li>
                 <div style="background: #dadada;padding:5px;font-size:14px;font-weight:bold;cursor:pointer;" onclick="$(this).siblings('.slide').slideToggle();"><?=$g['title']?></div>
                 <div class="slide" style="display:none">

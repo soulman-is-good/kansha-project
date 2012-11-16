@@ -201,6 +201,12 @@ $form = new Form($modules);
         <div id="seo">
 <table class="formtable">            
     <tr><td colspan="4" bgcolor="#cacaca">Общая метаинформация</td></tr>
+    <tr id="<?=$class?>-allheader">
+        <td class="fieldname"><?=$modules->fieldName('allheader')?></td>
+        <td class="field"><?=$form->input('allheader',array('style'=>'width:90%','placeholder'=>'По умолчанию'))?><input type="button" for="#Shop_Group_allheader" value="..." class="suffixF" /></td>
+        <td class="required">*</td>
+        <td class="error">&nbsp;</td>
+    </tr>
     <tr id="<?=$class?>-alltitle">
         <td class="fieldname"><?=$modules->fieldName('alltitle')?></td>
         <td class="field"><?=$form->input('alltitle',array('style'=>'width:90%'))?><input type="button" for="#Shop_Group_alltitle" value="..." class="suffixF" /></td>
@@ -220,6 +226,12 @@ $form = new Form($modules);
         <td class="error">&nbsp;</td>
     </tr>
     <tr><td colspan="4" bgcolor="#cacaca">Метаинформация для характеристик товара</td></tr>
+    <tr id="<?=$class?>-metaheader">
+        <td class="fieldname"><?=$modules->fieldName('metaheader')?></td>
+        <td class="field"><?=$form->input('metaheader',array('style'=>'width:90%','placeholder'=>'По умолчанию'))?><input type="button" for="#Shop_Group_metaheader" value="..." class="suffixF" /></td>
+        <td class="required">*</td>
+        <td class="error">&nbsp;</td>
+    </tr>
     <tr id="<?=$class?>-metatitle">
         <td class="fieldname"><?=$modules->fieldName('metatitle')?></td>
         <td class="field"><?=$form->input('metatitle',array('style'=>'width:90%'))?><input type="button" for="#Shop_Group_metatitle" value="..." class="suffixF" /></td>
@@ -239,6 +251,12 @@ $form = new Form($modules);
         <td class="error">&nbsp;</td>
     </tr>
     <tr><td colspan="4" bgcolor="#cacaca">Метаинформация для цен товара</td></tr>
+    <tr id="<?=$class?>-priceheader">
+        <td class="fieldname"><?=$modules->fieldName('priceheader')?></td>
+        <td class="field"><?=$form->input('priceheader',array('style'=>'width:90%','placeholder'=>'По умолчанию'))?><input type="button" for="#Shop_Group_priceheader" value="..." class="suffixF" /></td>
+        <td class="required">*</td>
+        <td class="error">&nbsp;</td>
+    </tr>
     <tr id="<?=$class?>-pricetitle">
         <td class="fieldname"><?=$modules->fieldName('pricetitle')?></td>
         <td class="field"><?=$form->input('pricetitle',array('style'=>'width:90%'))?><input type="button" for="#Shop_Group_pricetitle" value="..." class="suffixF" /></td>
@@ -258,6 +276,12 @@ $form = new Form($modules);
         <td class="error">&nbsp;</td>
     </tr>
     <tr><td colspan="4" bgcolor="#cacaca">Метаинформация для отзывов товара</td></tr>
+    <tr id="<?=$class?>-feedheader">
+        <td class="fieldname"><?=$modules->fieldName('feedheader')?></td>
+        <td class="field"><?=$form->input('feedheader',array('style'=>'width:90%','placeholder'=>'По умолчанию'))?><input type="button" for="#Shop_Group_feedheader" value="..." class="suffixF" /></td>
+        <td class="required">*</td>
+        <td class="error">&nbsp;</td>
+    </tr>
     <tr id="<?=$class?>-feedtitle">
         <td class="fieldname"><?=$modules->fieldName('feedtitle')?></td>
         <td class="field"><?=$form->input('feedtitle',array('style'=>'width:90%'))?><input type="button" for="#Shop_Group_feedtitle" value="..." class="suffixF" /></td>
@@ -277,6 +301,12 @@ $form = new Form($modules);
         <td class="error">&nbsp;</td>
     </tr>
     <tr><td colspan="4" bgcolor="#cacaca">Метаинформация для услуг товара</td></tr>
+    <tr id="<?=$class?>-servheader">
+        <td class="fieldname"><?=$modules->fieldName('servheader')?></td>
+        <td class="field"><?=$form->input('servheader',array('style'=>'width:90%','placeholder'=>'По умолчанию'))?><input type="button" for="#Shop_Group_servheader" value="..." class="suffixF" /></td>
+        <td class="required">*</td>
+        <td class="error">&nbsp;</td>
+    </tr>
     <tr id="<?=$class?>-servtitle">
         <td class="fieldname"><?=$modules->fieldName('servtitle')?></td>
         <td class="field"><?=$form->input('servtitle',array('style'=>'width:90%'))?><input type="button" for="#Shop_Group_servtitle" value="..." class="suffixF" /></td>

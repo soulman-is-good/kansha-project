@@ -21,7 +21,9 @@
         <meta property="og:image" content="<?=X3::app()->image?>" />
         <?endif;?>
         <meta property="og:site_name" content="<?=X3::app()->name?>" />
-        <meta property="fb:app_id" content="" />        
+        <meta property="fb:app_id" content="" />
+        <meta name="google-site-verification" content="p0YgTR35WVWJQLtUHwQ28crm6B0oZHMu5fNhDj6OlQE" />
+        <meta name="google-site-verification" content="PxeOSvNkk1faqb_vNt7U-yVgeqk6qdx3eRC92OfbSFA" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
         <link rel="stylesheet" type="text/css" href="/js/tipTip.css" />
         <script type="text/javascript" src="/js/jquery.js"></script>
@@ -137,8 +139,10 @@
                                                 </div>
                                                 <div class="clear-both">&nbsp;</div>
                                                 <div class="main_menu">
+                                                    <nav>
                                                     <?= $this->renderPartial('@layouts:menu.php'); ?>
                                                     <?= $this->renderPartial('@layouts:bread.php', array('bread' => isset($bread) ? $bread : false)); ?>
+                                                    </nav>
                                                 </div>
 
 
@@ -179,7 +183,7 @@
                                                                         <? endif; ?>
                                                                         </div><!--main_content-->
                                                                         <div class="clear-both">&nbsp;</div>
-<?=  X3_Widget::run('@layouts:footer.php',array(),array('cache'=>true))?>
+<?=  X3_Widget::run('@layouts:footer.php',array(),array('cache'=>false))?>
 
                                                                         <div id="bg_lower">
                                                                             <div class="bg_lower_content">

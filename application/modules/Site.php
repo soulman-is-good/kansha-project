@@ -59,6 +59,7 @@ class Site extends X3_Module {
     }
     public function actionIndex() {
         //$this->template->layout='index';
+        SeoHelper::setMeta();
         $this->template->render('index');
     }
 
@@ -135,6 +136,23 @@ class Site extends X3_Module {
             $i=0;
             $file = 0;
             $files = array();
+            //GENERAL
+            $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/vse-razdely.html");
+            $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/manufacturers.html");
+            $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/news.html");
+            $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/articles.html");
+            //MANUFACTURERS
+            $models = X3::db()->query("SELECT name,title FROM manufacturer WHERE status");
+            while($m = mysql_fetch_assoc($models)){
+                $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".$m['name'].".html");
+                $i++;
+                if($i%50000==0){
+                    file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
+                    $links = array();
+                    $files[] = $fname;
+                    $file++;
+                }
+            }
             //CATEGORIES
             $models = X3::db()->query("SELECT id,title FROM shop_category WHERE status");
             while($m = mysql_fetch_assoc($models)){
@@ -155,8 +173,46 @@ class Site extends X3_Module {
                     foreach($prs as $pr){
                         if($pr['type'] == 'string' || $pr['type']=='content'){
                             $pls = X3::db()->fetchAll("SELECT * FROM shop_proplist sl WHERE group_id={$m['id']} AND property_id={$pr['id']}");
+                            $mans = X3::db()->query("SELECT DISTINCT m.name FROM manufacturer m 
+                                INNER JOIN shop_item si ON si.manufacturer_id=m.id 
+                                INNER JOIN shop_properties sp ON sp.group_id=si.group_id 
+                                WHERE m.status AND si.group_id={$m['id']} AND sp.id={$pr['id']}");
                             foreach($pls as $pl){
-                                $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($pl['value'])->translit())."-group".$m['id']."-p{$pl['id']}.html");
+                                $link = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($pl['value'])->translit())."-group".$m['id']."-p{$pl['id']}");
+                                $links[] = $link . ".html";
+                                $i++;
+                                if($i%50000==0){
+                                    $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
+                                    $links = array();
+                                    $files[] = $fname;
+                                    $file++;
+                                }
+                                while($man = mysql_fetch_assoc($mans)){
+                                    $links[] = $link . "/" . str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),$man['name']) . ".html";
+                                    $i++;
+                                    if($i%50000==0){
+                                        $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
+                                        $links = array();
+                                        $files[] = $fname;
+                                        $file++;
+                                    }
+                                }
+                            }
+                        }else{
+                            $mans = X3::db()->query("SELECT DISTINCT m.name FROM manufacturer m 
+                                INNER JOIN shop_item si ON si.manufacturer_id=m.id 
+                                INNER JOIN shop_properties sp ON sp.group_id=si.group_id 
+                                WHERE m.status AND si.group_id={$m['id']} AND sp.id={$pr['id']}");                            
+                            $link = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($pr['label'])->translit())."-group".$m['id']."-pr{$pr['id']}");
+                            $links[] = $link . ".html";
+                            $i++;
+                            if($i%50000==0){
+                                $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
+                                $links = array();
+                                $file++;
+                            }
+                            while($man = mysql_fetch_assoc($mans)){
+                                $links[] = $link . "/" . str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),$man['name']) . ".html";
                                 $i++;
                                 if($i%50000==0){
                                     $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
@@ -165,24 +221,30 @@ class Site extends X3_Module {
                                     $file++;
                                 }
                             }
-                        }else{
-                            $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($pr['label'])->translit())."-group".$m['id']."-pr{$pr['id']}.html");
-                            $i++;
-                            if($i%50000==0){
-                                $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
-                                $links = array();
-                                $file++;
-                            }
                         }
                     }
                 }else{
-                    $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($m['title'])->translit())."-group".$m['id'].".html");
+                    $mans = X3::db()->query("SELECT DISTINCT m.name FROM manufacturer m 
+                        INNER JOIN shop_item si ON si.manufacturer_id=m.id 
+                        WHERE m.status AND si.group_id={$m['id']}");                            
+                    $link = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($m['title'])->translit())."-group".$m['id']);
+                    $links[] = $link . ".html";
                     $i++;
                     if($i%50000==0){
                         $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
                         $links = array();
                         $files[] = $fname;
                         $file++;
+                    }
+                    while($man = mysql_fetch_assoc($mans)){
+                        $links[] = $link . "/" . str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),$man['name']) . ".html";
+                        $i++;
+                        if($i%50000==0){
+                            $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
+                            $links = array();
+                            $files[] = $fname;
+                            $file++;
+                        }
                     }
                 }
             }

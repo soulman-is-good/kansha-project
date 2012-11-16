@@ -15,6 +15,7 @@ class Shop_Group extends X3_Module_Table {
     public $tableName = 'shop_group';
     public $prop = null;
     public $manuf = null;
+    public $header = false;
     
     public $_fields = array(
         'id'=>array('integer[10]','unsigned','primary','auto_increment'),
@@ -31,18 +32,23 @@ class Shop_Group extends X3_Module_Table {
         'status'=>array('boolean','default'=>'1'),
         'weight'=>array('integer[5]','unsigned','default'=>'0'),
         'created_at'=>array('integer[10]','unsigned','default'=>'0'),
+        'metaheader'=>array('string[255]','default'=>'[group] [name]'),
         'metatitle'=>array('string','default'=>'[name] [articule]'),
         'metakeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'metadescription'=>array('content','default'=>''),
+        'priceheader'=>array('string[255]','default'=>'[group] [name]'),
         'pricetitle'=>array('string','default'=>'[name] [articule]'),
         'pricekeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'pricedescription'=>array('content','default'=>'[name] [articule]'),
+        'feedheader'=>array('string[255]','default'=>'[group] [name]'),
         'feedtitle'=>array('string','default'=>'[name] [articule]'),
         'feedkeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'feeddescription'=>array('content','default'=>'[name] [articule]'),
+        'servheader'=>array('string[255]','default'=>'[group] [name]'),
         'servtitle'=>array('string','default'=>'[name] [articule]'),
         'servkeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'servdescription'=>array('content','default'=>'[name] [articule]'),
+        'allheader'=>array('string[255]','default'=>'[group] [name]'),
         'alltitle'=>array('string','default'=>''),
         'allkeywords'=>array('content','default'=>''),
         'alldescription'=>array('content','default'=>''),
@@ -59,18 +65,23 @@ class Shop_Group extends X3_Module_Table {
             'usename'=>'Имя с граббера',
             'bbracket'=>'Имя до скобок',
             'weight'=>'Порядок',
+            'metaheader'=>'Заголовок H1',
             'metatitle'=>'metatitle',
             'metadescription'=>'metadescription',
             'metakeywords'=>'metakeywords',
+            'priceheader'=>'Заголовок H1',
             'pricetitle'=>'metatitle',
             'pricedescription'=>'metadescription',
             'pricekeywords'=>'metakeywords',
+            'feedheader'=>'Заголовок H1',
             'feedtitle'=>'metatitle',
             'feeddescription'=>'metadescription',
             'feedkeywords'=>'metakeywords',
+            'servheader'=>'Заголовок H1',
             'servtitle'=>'metatitle',
             'servdescription'=>'metadescription',
             'servkeywords'=>'metakeywords',
+            'allheader'=>'Заголовок H1',
             'alltitle'=>'metatitle',
             'alldescription'=>'metadescription',
             'allkeywords'=>'metakeywords',
@@ -127,26 +138,27 @@ class Shop_Group extends X3_Module_Table {
         $metatitle = "{$prefix}title";
         $metakeywords = "{$prefix}keywords";
         $metadescription = "{$prefix}description";
+        $metaheader = "{$prefix}header";
         $mt = $this->$metatitle;
         $mk = $this->$metakeywords;
         $md = $this->$metadescription;
-        $ms = array(&$mt,&$mk,&$md);
+        $mh = $this->$metaheader;
+        $ms = array(&$mt,&$mk,&$md,&$mh);
         foreach($props as $prop){
             $m = array();
-            
             foreach($ms as &$mz){
                 if(preg_match("/\[([@!]{0,2}){$prop['id']}\]/",$mz,$m)>0){
                     if($prop['type'] == 'string' || $prop['type'] == 'content'){
                         $val = X3::db()->fetch("SELECT value, title FROM shop_proplist WHERE id={$item->{$prop['name']}}");
                         $val = $val['title']!=''?$val['title']:$val['value'];
                     }elseif($prop['type']=='decimal'){
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
-                        $val = preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm";
+                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        $val = $item->{$prop['name']}>0?preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm":'';
                     }elseif($prop['type'] == 'boolean'){
                         $val = ($item->{$prop['name']}==1)?$prop['label']:'';
                     }else{
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
-                        $val = $item->{$prop['name']} . " $mm";
+                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        $val = $item->{$prop['name']}>0?trim((int)$item->{$prop['name']}) . " $mm":"";
                     }
                     if(!empty($m) && $m[1]!=''){
                         if(strpos($m[1], '!')!==false){
@@ -215,15 +227,17 @@ class Shop_Group extends X3_Module_Table {
                 }
             }
         }
-        $model->metatitle = $mt;
-        $model->metakeywords = $mk;
-        $model->metadescription = $md;
+        $model->metatitle = str_replace("  "," ",$mt);
+        $model->metakeywords = str_replace("  "," ",$mk);
+        $model->metadescription = str_replace("  "," ",$md);
+        $model->header = $mh;
     }
     
     public function prepareGeneralMeta($filters) {
         $mt = $this->alltitle;
         $mk = $this->allkeywords;
         $md = $this->alldescription;
+        $mh = $this->allheader;
         $manuf = '';
         if(X3::app()->group>0){
             $manuf = Manufacturer::getByPk(X3::app()->group)->title;        
@@ -321,9 +335,10 @@ class Shop_Group extends X3_Module_Table {
                 }
             }            
         }
-        $this->alltitle = $mt;
-        $this->allkeywords = $mk;
-        $this->alldescription = $md;
+        $this->alltitle = str_replace("  "," ",$mt);
+        $this->allkeywords = str_replace("  "," ",$mk);
+        $this->alldescription = str_replace("  "," ",$md);
+        $this->allheader = $mh;
     }
     
     public function handleFilters($bsession=true) {

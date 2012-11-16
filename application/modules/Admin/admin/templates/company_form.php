@@ -126,7 +126,7 @@ if(!$modules->table->getIsNewRecord()){
 }
 ?>
 <table class="formtable">
-<?=$form->renderPartial(array('title','site','delivery','isfree','image','login'));?>
+<?=$form->renderPartial(array('title','site','delivery','isfree','isfree1','isfree2','image','login'));?>
 <tr><td>Пароль</td><td><input type="text" value="<?=$modules->password?>" name="Company[password]" id="Company_password"></td><td>&nbsp;</td></tr>    
 <?=$form->renderPartial(array('email_private','text','servicetext','status','weight'));?>
 </table>
@@ -255,7 +255,6 @@ if(!$modules->table->getIsNewRecord()){
 <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>
 </div>
-    
 <div id="services">
     <?php
         if($subaction == 'edit'){
@@ -324,8 +323,7 @@ if(!$modules->table->getIsNewRecord()){
 <table>
     <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>        
-</div>
-    
+</div>    
 <?=$form->end();?>
 <?if(count($bill)>0):?>
 <div id="bills">
@@ -344,10 +342,12 @@ if(!$modules->table->getIsNewRecord()){
         <?
         $s=0;
         $k = $b['type'];
-        endif;?>
+        endif;
+        $s+=$b['paysum'];
+        ?>
         <p>
             &nbsp;<b><i><?=$b['document']?></i></b><br/>
-            <span><?=date('d.m.Y',$b['created_at'])?></span> - <span><?=date('d.m.Y',$b['ends_at'])?></span> оплата <?=$s+=$b['paysum']?>.
+            <span><?=date('d.m.Y',$b['created_at'])?></span> - <span><?=date('d.m.Y',$b['ends_at'])?></span> оплата <?=$b['paysum']?>.
         </p>
         <? endforeach; ?>
         <?='<p><b>Итого:'.$s.'</b></p></div></li>'?>
@@ -378,7 +378,7 @@ if(!$modules->table->getIsNewRecord()){
     }
     $('.addr-type').buttonset();
     <?if(isset($_POST['Address']) || !$address->table->getIsNewRecord()):
-        
+       
         //if(isset($_POST['Address'][0]['phones']))
             //$phones = $_POST['Address'][0]['phones'];
         //else

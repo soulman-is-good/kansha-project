@@ -93,6 +93,40 @@ class JobCommand extends X3_Command{
                 Notify::sendMail('Company.NotifyAdmin',array('companies'=>$warnin_companies,'hidden_companies'=>$out_companies));
             }
         }
+        /////////////////////////////
+        // Take care of debiters
+        /////////////////////////////
+        if(!isset(X3::app()->global['skipdebiters'])){
+            for($type=0;$type<3;$type++){
+                $isfree = ($type>0)?"isfree$type":"isfree";
+                $cmps = X3::db()->query("SELECT dc.title title, dc.email_private email, cb.ends_at, cb.created_at, document, cb.paysum payment, cb.type FROM company_bill cb INNER JOIN data_company dc ON cb.company_id=dc.id WHERE dc.$isfree=0 AND cb.type=$type AND cb.ends_at<=".time()." ORDER BY cb.ends_at DESC LIMIT 1");
+                if(is_resource($cmps) && false!=($cmp = mysql_fetch_array($cmps))){
+                    X3::db()->query("UPDATE data_company SET isfree=1");
+                    $data = array(
+                        'company'=>$cmp['title'],
+                        'document'=>$cmp['document'],
+                        'end_date'=>date('d.m.Y',$cmp['ends_at']),
+                        'pay_date'=>date('d.m.Y',$cmp['created_at']),
+                        'payment'=>$cmp['payment'],
+                    );
+                    Notify::sendMail('Company.PaymentEnd', $data, $cmp['email']);
+                }
+            }
+            for($type=0;$type<3;$type++){
+                $isfree = ($type>0)?"isfree$type":"isfree";
+                $cmps = X3::db()->query("SELECT dc.title title, dc.email_private email, cb.ends_at, cb.created_at, document, cb.paysum payment, cb.type FROM company_bill cb INNER JOIN data_company dc ON cb.company_id=dc.id WHERE dc.$isfree=0 AND cb.type=$type AND cb.ends_at<=".(time()-86400*7)." ORDER BY cb.ends_at DESC GROUP BY cb.type LIMIT 1");
+                if(is_resource($cmps) && false!=($cmp = mysql_fetch_array($cmps))){
+                    $data = array(
+                        'company'=>$cmp['title'],
+                        'document'=>$cmp['document'],
+                        'end_date'=>date('d.m.Y',$cmp['ends_at']),
+                        'pay_date'=>date('d.m.Y',$cmp['created_at']),
+                        'payment'=>$cmp['payment'],
+                    );
+                    Notify::sendMail('Company.PaymentRequires', $data, $cmp['email']);
+                }
+            }
+        }
     }
     
     public function runTest() {

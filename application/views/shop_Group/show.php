@@ -272,8 +272,12 @@ if(!empty(X3::app()->group_description)){
             $i = 0;
             $fs = X3::db()->fetch("SELECT SUM(`rank`) `summ` FROM shop_feedback WHERE item_id IN (SELECT id FROM shop_item WHERE group_id=$model->id)");
             if((int)$fs['summ']==0) $fs['summ']=1;
-            while($item = mysql_fetch_object($items)):
+            while($item = mysql_fetch_array($items)):
             //foreach ($items as $i=>$item): 
+                $mdl = new Shop_Item();
+                $mdl->getTable()->acquire($item);
+                $mdl->getTable()->setIsNewRecord(false);
+                $item = (object)$item;
                 $image = false;
                 if(strpos($item->image,'http://')===0){
                     $image = $item->image;
@@ -291,7 +295,8 @@ if(!empty(X3::app()->group_description)){
                 $sc = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups REGEXP '(,|\[)$item->group_id(,|\])'");
                 $url = '/'.strtolower(X3_String::create($item->title)->translit()).($item->articule!=''?"-($item->articule)-":'-').$item->id;
                 $rank = floor(5*$fc['summ']/$fs['summ']);
-                $_s = 5-$rank;                
+                $_s = 5-$rank;
+                $itemtitle = $model->allheader==''?(I18n::single(X3::app()->groupTitle)." ".$item->title.($item->articule!=''?" ($item->articule)":'')):$mdl->prepareAttr($model->allheader);
                 ?>
         <div class="expand_box<?=($i==$c-1)?' last':''?>" itemscope itemtype="http://schema.org/Offer">
             <?if($image):?>
@@ -304,14 +309,14 @@ if(!empty(X3::app()->group_description)){
             <?endif;?>
 
             <div class="expand_box_text">
-                <h2 class="expand_header"><a itemprop="name" href="<?=$url?>.html"><?=($model->usename?$item->title.($item->articule!=''?" ($item->articule)":''):$item->suffix)?></a></h2>
-                <p><?=$item->properties_text//$item->propstext?>...</p>
-                <?if($stat['cnt']>0):?>
+                <h2 class="expand_header"><a itemprop="name" href="<?=$url?>.html"><?=($model->usename?$itemtitle:$item->suffix)?></a></h2>
+                <h3><?=$item->properties_text//$item->propstext?>...</h3>
+                <?/*if($stat['cnt']>0):?>
                 <a class="blue" href="<?=$url?>/prices.html"><span>Цены</span><sup><?=$stat['cnt']?></sup></a>
                 <?endif;?>
                 <a class="blue" href="<?=$url?>.html"><span>Характеристики</span></a>
                 <a class="blue" href="<?=$url?>/feedback.html"><span>Отзывы</span><sup><?=(int)$fc['cnt']?></sup></a>
-                <a class="blue" href="<?=$url?>/services.html"><span>Услуги</span><sup><?=$sc['cnt']?></sup></a>
+                <a class="blue" href="<?=$url?>/services.html"><span>Услуги</span><sup><?=$sc['cnt']?></sup></a>*/?>
                 <br>
                 <?if($stat['cnt']>0):?>
                 <?if($stat['min']>0 && $stat['min']<$stat['max']):?>
@@ -323,12 +328,12 @@ if(!empty(X3::app()->group_description)){
                     <div class="star_links">
                         <meta itemprop="ratingValue" content="<?=$rank?>" />
                         <?for($j=0;$j<$rank;$j++):?>
-                        <a class="stars" href="#"><img height="16" width="16" src="/images/ostar.png"></a>
+                        <a class="stars" href="<?=$url?>/feedback.html"><img height="16" width="16" src="/images/ostar.png"></a>
                         <?endfor;?>
                         <?for($j=0;$j<$_s;$j++):?>
-                        <a class="stars" href="#"><img height="16" width="16" src="/images/gstar.png"></a>
+                        <a class="stars" href="<?=$url?>/feedback.html"><img height="16" width="16" src="/images/gstar.png"></a>
                         <?endfor;?>
-                        <a class="comment" href="/<?=$url?>/feedback.html"><?=(int)$fc['cnt']?> <?=X3_String::create("Отзыва")->numeral($fc['cnt'],array("Отзыв","Отзыва","Отзывов"))?></a>
+                        <a class="comment" href="<?=$url?>/feedback.html"><?=(int)$fc['cnt']?> <?=X3_String::create("Отзыва")->numeral($fc['cnt'],array("Отзыв","Отзыва","Отзывов"))?></a>
                     </div>
                     <?if($stat['cnt']>0):?>
                     <a class="product_info_price" href="<?=$url?>/prices.html">Сравнить цены</a>

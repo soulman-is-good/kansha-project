@@ -1,7 +1,7 @@
 <?X3::profile()->start('servicesMain.widget');?>
 
 <?php
-$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE status ORDER BY weight");
+$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE type=1 AND status ORDER BY weight");
 $services = X3::db()->fetchAll("SELECT * FROM data_service WHERE status ORDER BY title");
 $companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status ORDER BY isfree, title LIMIT 3");
 $scomp = X3::db()->fetchAll("SELECT * FROM company_service");

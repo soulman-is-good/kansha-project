@@ -12,20 +12,20 @@ if(isset($_GET['city'])){
     }
 }
 if(X3::user()->region!=null)
-    $query.=' AND id IN (SELECT company_id FROM data_address WHERE city='.X3::user()->region[0].')';
-$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE status ORDER BY weight");
-$cities = X3::db()->fetchAll("SELECT * FROM data_region INNER JOIN data_address ON data_address.city=data_region.id WHERE data_region.status GROUP BY `name` ORDER BY data_region.title");
+    $query.=' AND id IN (SELECT company_id FROM data_address WHERE type=1 AND city='.X3::user()->region[0].')';
+$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE type=1 AND status ORDER BY weight");
+$cities = X3::db()->fetchAll("SELECT * FROM data_region INNER JOIN data_address ON data_address.city=data_region.id WHERE data_address.type=1 AND data_region.status GROUP BY `name` ORDER BY data_region.title");
 $services = X3::db()->fetchAll("SELECT id,name,title FROM data_service ds WHERE status ORDER BY title");
 $cnt = X3::db()->fetchAll("SELECT COUNT(0) cnt FROM data_company WHERE status $query");
 $paginator = new Paginator('Service',$cnt['cnt']);
-$companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status $query ORDER BY isfree, title LIMIT $paginator->offset, $paginator->limit");
+$companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status $query ORDER BY isfree, weight, title LIMIT $paginator->offset, $paginator->limit");
 $scomp = X3::db()->fetchAll("SELECT * FROM company_service");
 $igr = array();
 foreach ($scomp as $i => $sc) {
     $serv = json_decode($sc['services']);
     $grs = json_decode($sc['groups']);
     $igr = array_merge($igr,  array_diff($grs, $igr));
-    foreach($companies as $j=>$comp){        
+    foreach($companies as $j=>$comp){
         if($comp['id'] == $sc['company_id']){
             foreach($services as $k=>$ss){
                 if(in_array($ss['id'], $serv))
@@ -138,7 +138,7 @@ $ccount = count($companies);
 
                         <div class="phone_number">
                             <ul>
-                                <? foreach ($phones as $z => $phone): if($z>3) break; ?>
+                                <? if(!empty($phones)) foreach ($phones as $z => $phone): if($z>3) break; ?>
 				<li><?=$phone?></li>
                                 <? endforeach; ?>
                             </ul>

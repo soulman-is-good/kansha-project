@@ -46,14 +46,15 @@ class Company_Bill extends X3_Module_Table {
         $bill = $_POST['Bill'];
         $model = new self;
         $model->getTable()->acquire($bill);
-        $sum = X3::db()->fetch("SELECT SUM(paysum) AS `summ` FROM `company_bill` WHERE `type`=$model->type AND company_id=$model->company_id");
-        $sum = $sum['summ'];
-        $model->paysum+=$sum;
+        //$sum = X3::db()->fetch("SELECT SUM(paysum) AS `summ` FROM `company_bill` WHERE `type`=$model->type AND company_id=$model->company_id");
+        //$sum = $sum['summ'];
+        //$model->paysum+=$sum;
+        $isfree = ($model->type>0)?"isfree$model->type":"isfree";
         if(0 && self::num_rows(array('company_id'=>$bill['company_id']))>0){
             $model->getTable()->setIsNewRecord(false);
         }
         if($model->save()){
-            Company::update(array('isfree'=>'0'),array('id'=>$model->company_id));
+            Company::update(array("$isfree"=>'0'),array('id'=>$model->company_id));
             echo 'OK';
         }else
             echo 'ERROR';

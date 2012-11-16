@@ -123,7 +123,8 @@ class Service extends X3_Module_Table {
             $description = '';
         }elseif(isset($_GET['name'])){
             $name = mysql_real_escape_string($_GET['name']);
-            $service = self::get(array('name'=>$name),1);
+            $service = self::get(array('@condition'=>array('name'=>$name,'status')),1);
+            if($service===NULL) throw new X3_404();
             $description = '';
             if($service!==null){
                 $query = "AND id IN (SELECT company_id FROM company_service WHERE services REGEXP '\"$service->id\"')";

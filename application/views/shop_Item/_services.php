@@ -12,9 +12,9 @@ if(isset($_GET['city'])){
     }
 }
 if(X3::user()->region!=null)
-    $query.=' AND id IN (SELECT company_id FROM data_address WHERE city='.X3::user()->region[0].')';
-$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE status ORDER BY weight");
-$cities = X3::db()->fetchAll("SELECT * FROM data_region INNER JOIN data_address ON data_address.city=data_region.id WHERE data_region.status GROUP BY `name` ORDER BY data_region.title");
+    $query.=' AND id IN (SELECT company_id FROM data_address WHERE type=1 AND city='.X3::user()->region[0].')';
+$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE status AND type=1 ORDER BY weight");
+$cities = X3::db()->fetchAll("SELECT * FROM data_region INNER JOIN data_address ON data_address.city=data_region.id WHERE data_address.type=1 AND data_region.status GROUP BY `name` ORDER BY data_region.title");
 $cnt = X3::db()->fetchAll("SELECT COUNT(0) cnt FROM data_company WHERE status $query");
 $paginator = new Paginator('Service',$cnt['cnt']);
 $companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status $query AND id IN (SELECT company_id FROM company_service WHERE groups LIKE '%\"$model->group_id\"%') ORDER BY isfree, title LIMIT $paginator->offset, $paginator->limit");

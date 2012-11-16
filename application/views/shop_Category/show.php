@@ -2,7 +2,9 @@
     <table class="production">
         <tbody><tr>
                 <td style="padding-right:10px;white-space:nowrap;height:47px">
-                    <h2><?=$model->title?><sup><?=$count?></sup></h2>
+                    <header>
+                    <h1><?=$model->title?><sup><?=$count?></sup></h1>
+                    </header>
                 </td>
                 <td style="width:100%">
                     <div class="black_stripe">
@@ -110,5 +112,8 @@
             </tbody></table>*/?>
 
     </div><!--product_right-->
+    <article><h6 style="color: #cccccc;font-weight:normal;">
+            <?=$model->text?>
+        </h6></article>
     <div class="clear-both">&nbsp;</div>
 </div>

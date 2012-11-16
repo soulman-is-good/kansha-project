@@ -1,5 +1,8 @@
 <?php
 $group = $model->getGroup();
+$megatitle = $title;
+if($group->allheader!='')
+    $megatitle = $model->prepareAttr($group->allheader);
 $pgroups = json_decode($group->properties,1);
 if(empty($pgroups)) $pgroups = array();
 array_push($pgroups, array('title'=>'Прочие','ids'=>'*'));
@@ -183,7 +186,7 @@ foreach($plabels as $i=>$prop){
                                 <span><?=$pg['title']?></span>
                             </a>
                                 <?endif;?>
-                            <span class="link"><?=$title?></span>
+                            <h6 class="link"><?=$megatitle?></h6>
                         </td>
                     </tr>
                     <?if(!empty($pvals[$i])) foreach($pvals[$i] as $p=>$v):

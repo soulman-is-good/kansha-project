@@ -21,18 +21,27 @@ while($gr = mysql_fetch_assoc($models)){
     $x++;
     
 }*/
-$models = X3::db()->query("SELECT * FROM shop_category WHERE status ORDER BY weight, title");
 $groups = array();
 $z = 0;
 $x = 0;
-while($m = mysql_fetch_assoc($models)){
-    if($x>0 && $x%6 == 0)
-        $z++;
-    $groups[$z][] = array("/".strtolower(X3_String::create($m['title'])->translit(false,"'"))."-c".$m['id'].".html",$m['title']);
-    $x++;
+if(Page::num_rows(array('type'=>"Для товаров",'status'))>0){
+    $models = Page::get(array('type'=>"Для товаров",'status'));
+    foreach($models as $model){
+        if($x>0 && $x%6 == 0)
+            $z++;
+        $groups[$z][] = array("/page/$model->name.html",$model->title);
+    }
+}else{
+    $models = X3::db()->query("SELECT * FROM shop_category WHERE status ORDER BY weight, title");
+    while($m = mysql_fetch_assoc($models)){
+        if($x>0 && $x%6 == 0)
+            $z++;
+        $groups[$z][] = array("/".strtolower(X3_String::create($m['title'])->translit(false,"'"))."-c".$m['id'].".html",$m['title']);
+        $x++;
+    }
 }
 $servs = X3::db()->query("SELECT name,title FROM data_service WHERE status ORDER BY weight, title, id DESC LIMIT 6");
-$pages = X3::db()->query("SELECT name,short_title as title FROM data_page WHERE status AND parent_id IS NULL ORDER BY weight, created_at DESC, title LIMIT 6");
+$pages = X3::db()->query("SELECT name,short_title as title FROM data_page WHERE status AND parent_id IS NULL AND type='Общие' ORDER BY weight, created_at DESC, title LIMIT 6");
 ?>
 <div id="long_gray_stripe">
     <div class="long_gray_content">
@@ -48,6 +57,7 @@ $pages = X3::db()->query("SELECT name,short_title as title FROM data_page WHERE 
                         </ul>
                     </div>
                 </td>
+                <?if(!empty($groups[1])):?>
                 <td>
                     <div class="variants">
                         <ul>
@@ -57,6 +67,8 @@ $pages = X3::db()->query("SELECT name,short_title as title FROM data_page WHERE 
                         </ul>
                     </div>
                 </td>
+                <?endif;?>
+                <?if(!empty($groups[1])):?>
                 <td>
                     <div class="variants">
                         <ul>
@@ -66,6 +78,7 @@ $pages = X3::db()->query("SELECT name,short_title as title FROM data_page WHERE 
                         </ul>
                     </div>
                 </td>
+                <?endif;?>
 
                 <td>
                     <div class="variants_turn">

@@ -1028,7 +1028,7 @@ div.expand_box_text {margin-left:94px;}
 div.expand_box_text h2.expand_header a {color:#2068a5;font-size:16px;font-family:Tahoma,sans-serif;}
 div.expand_box_text h2.expand_header a:hover {text-decoration:none;}
 div.expand_box_text h2.expand_header {background:none;margin-bottom:0px;margin-top:12px;}
-div.expand_box_text p {font-size:12px;font-family:Tahoma,sans-serif;color:#555555;margin-bottom:10px;line-height:180%;margin-top:10px;}
+div.expand_box_text p, div.expand_box_text h3 {font:normal 12px Tahoma,sans-serif;color:#555555;margin-bottom:10px;line-height:180%;margin-top:10px;}
 div.expand_box_text a.blue {color:#2068a5;font-size:12px;font-family:Tahoma,sans-serif;text-decoration:none;background:url(../images/pin2.png) no-repeat right 50%;padding-right:8px;display:inline-block;margin-bottom:8px;}
 div.expand_box_text a.blue span:hover {text-decoration:underline;}
 div.expand_box_text a.blue sup {color:#777777;font-size:10px;font-family:Tahoma,sans-serif;}
@@ -1071,8 +1071,8 @@ div.product_left_text a:hover {text-decoration:none;}
 div.sale_selector.expand {float:right;margin-top:10px;}
 div.sale_selector.expand select {color:#555555;}
 
-div.product_expand table.production h2 {background:none;font-family:Verdana,sans-serif;color:#000000;font-size:16px;margin-top:0px;word-spacing:4px;margin-bottom:20px;}
-div.product_expand table.production h2 sup {color:#777777;font-size:12px;font-family:Tahoma,sans-serif;font-weight:normal;margin-left:6px;}
+div.product_expand table.production h1, div.product_expand table.production h2 {background:none;font-family:Verdana,sans-serif;color:#000000;font-size:16px;margin-top:0px;word-spacing:4px;margin-bottom:20px;}
+div.product_expand table.production h1 sup, div.product_expand table.production h2 sup {color:#777777;font-size:12px;font-family:Tahoma,sans-serif;font-weight:normal;margin-left:6px;}
 div.product_expand table.production div.black_stripe {
 width:auto;height:3px;margin-top:9px;position:relative;
 background: #424242;
@@ -1521,7 +1521,7 @@ div.des_info div.star_links a.comment {color:#333333;font-size:11px;font-family:
 div.des_info div.star_links a.comment:hover {text-decoration:none;}
 div.des_info div.star_links {float:right;}
 div.des_info_text span.blue-text {color:#2e6b99;font-size:12px;font-family:Tahoma,sans-serif;margin-top:10px;display:inline-block;}
-div.des_info_text p {color:#555555;font-size:12px;font-family:Tahoma,sans-serif;line-height:160%;}
+div.des_info_text h2, div.des_info_text p {font-weight:normal;color:#555555;font-size:12px;font-family:Tahoma,sans-serif;line-height:160%;padding:0;margin:12px 0;}
 div.des_info  span.gray {color:#a4a4a4;font-size:11px;font-family:Tahoma,sans-serif;margin-left:20px;position:relative;top:-14px;} 
 div.des_info table.des_lower  a.gray {color:#a4a4a4;font-size:11px;font-family:Tahoma,sans-serif;margin-left:10px;position:relative;top:-2px;text-decoration:none;} 
 a.blue_question {text-decoration:none;background:url(../images/pin.png) no-repeat left center;height:9px;width:11px;padding-left:15px;
@@ -1605,7 +1605,7 @@ div.info_info a.brown span {font-size:15px;font-family:Tahoma,sans-serif;color:#
 
 
 div.table_des table.des_main tr td.gray_long {background:#f7f7f7;}
-div.table_des table.des_main tr td.gray_long span.link {color:#888888;font-size:11px;font-family:Tahoma,sans-serif;padding-left:4px;}
+div.table_des table.des_main tr td.gray_long h6.link, div.table_des table.des_main tr td.gray_long span.link {font-weight:normal;display:inline;margin:0;color:#888888;font-size:11px;font-family:Tahoma,sans-serif;padding: 0 0 0 4px;}
 div.table_des table.des_main tr td.gray_long a {text-decoration:none;padding-left:10px;display:inline-block;padding-top:6px;padding-bottom:8px;}
 div.table_des table.des_main tr td.gray_long a span {color:#555555;font-size:14px;font-family:Tahoma,sans-serif;font-weight:bold;border-bottom:1px dotted #555555;}
 div.table_des table.des_main tr td.gray_long a span:hover {border:none;}
@@ -1622,7 +1622,7 @@ table.des_main tr td h4 {color:#555555;font-size:14px;font-family:Tahoma,sans-se
 div.table_des table.des_size tr td.gray_long {background:#f7f7f7;}
 div.table_des table.des_size tr td {border-bottom:1px solid #e6e6e6;}
 div.table_des table.des_size tr td.gray_long {background:#f7f7f7;}
-div.table_des table.des_size tr td.gray_long span.link {color:#888888;font-size:11px;font-family:Tahoma,sans-serif;padding-left:4px;}
+div.table_des table.des_size tr td.gray_long h6.link, div.table_des table.des_size tr td.gray_long span.link {color:#888888;font:normal 11px Tahoma,sans-serif;display:inline;margin:0;padding:0 0 0 4px;}
 div.table_des table.des_size tr td.gray_long a {text-decoration:none;padding-left:10px;display:inline-block;padding-top:6px;padding-bottom:8px;}
 div.table_des table.des_size tr td.gray_long a span {color:#555555;font-size:14px;font-family:Tahoma,sans-serif;font-weight:bold;border-bottom:1px dotted #555555;}
 div.table_des table.des_size tr td.gray_long a span:hover {border:none;}

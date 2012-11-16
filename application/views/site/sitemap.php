@@ -27,7 +27,7 @@
                             <ul class="black_list">
                                     <li><a href="/articles.html">Обзоры</a></li>
                                     <li><a href="/page/contacts.html">Контакты</a></li>
-                                    <li><a href="/page/help.html">Помощь</a></li>
+                                    <li><a href="/manufacturers.html">Производители</a></li>
                             </ul>
 			</td>
 			<td>

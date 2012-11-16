@@ -21,7 +21,10 @@ class Shop_Category extends X3_Module_Table {
         'text'=>array('text','default'=>'NULL'),
         'status'=>array('boolean','default'=>'1','orderable'),
         'weight'=>array('integer[5]','unsigned','default'=>'0'),
-        'created_at'=>array('integer[10]','unsigned','default'=>'0')
+        'created_at'=>array('integer[10]','unsigned','default'=>'0'),
+        'metatitle' => array('string', 'default' => '', 'language'),
+        'metakeywords' => array('content', 'default' => '', 'language'),
+        'metadescription' => array('content', 'default' => '', 'language'),        
     );
     
     public function fieldNames() {
@@ -95,6 +98,7 @@ class Shop_Category extends X3_Module_Table {
         $count = Shop_Item::num_rows(array('@condition'=>array('group_id'=>array('IN'=>"(".implode(',',$ids).")"),'status','ci.price'=>array('>'=>'0')),
             '@join'=>'INNER JOIN company_item as ci ON ci.item_id = shop_item.id'));
         $bread = Breadcrumbs::category($model);
+        SeoHelper::setMeta($model->metatitle,$model->metakeywords,$model->metadescription);
         $this->template->render('show',array('model'=>$model,'count'=>$count,'groups'=>$grs,
             'bread'=>$bread
         ));        

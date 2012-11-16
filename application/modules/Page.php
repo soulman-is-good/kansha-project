@@ -21,10 +21,12 @@ class Page extends X3_Module_Table {
     public $_fields = array(
         'id'=>array('integer[10]','unsigned','primary','auto_increment'),
         'parent_id'=>array('integer[10]','unsigned','index','default'=>'NULL','ref'=>array('Page','id','default'=>'short_title','query'=>array('@condition'=>array('parent_id'=>'NULL')))),
+        'group_id'=>array('integer[10]','unsigned','index','default'=>'NULL','ref'=>array('Shop_Group','id','default'=>'title','query'=>array('@order'=>'title'))),
         'short_title'=>array('string[255]'),
         'title'=>array('string[255]'),
         'name'=>array('string[255]','unique'),
         'text'=>array('text','language'),
+        'type'=>array('enum["Общие","Для товаров"]','default'=>'Общие'),
         'status'=>array('boolean','default'=>'1'),
         'ontop'=>array('boolean','default'=>'0'),
         'weight'=>array('integer[10]','default'=>'0'),
@@ -50,6 +52,8 @@ class Page extends X3_Module_Table {
         return array(
             'parent_id'=>'Верхний уровень',
             'short_title'=>'Короткий заголовок',
+            'type'=>'Тип страницы',
+            'group_id'=>'Привязка к группе',
             'title'=>'Заголовок',
             'name'=>'Имя в URL',
             'text'=>'Содержание',
@@ -71,6 +75,13 @@ class Page extends X3_Module_Table {
             //'cache'=>array('actions'=>'show','role'=>'*','expire'=>'+1 day'),
             'nocache'=>array('actions'=>'*','role'=>'admin')
         );
+    }
+    
+    public function getPageType() {
+        //$array = array('Общие','Для товаров');
+        //if($this->type == '')
+            //return $array[(int)$this->type];
+        return $this->type;
     }
 
     public function actionShow(){
@@ -143,6 +154,7 @@ class Page extends X3_Module_Table {
         if($this->short_title == '')
             $this->short_title = $this->title;
         if($this->parent_id=="" || $this->parent_id=="0") $this->parent_id = NULL;
+        if($this->group_id=="" || $this->group_id=="0") $this->group_id = NULL;
     }
 
 }
