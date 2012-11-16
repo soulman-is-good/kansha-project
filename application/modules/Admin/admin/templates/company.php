@@ -1,4 +1,11 @@
-<?=$this->renderPartial("@views:admin:templates:default.kansha.php",
+<?
+$filter = isset($_POST['filter'])?$_POST['filter']:0;
+$func = '<form method="post"><select name="filter" onchange="$(this).parent().submit();">';
+$func .= '<option '.($filter==0?'selected="selected"':'').' value="0">Все компании</option>';
+$func .= '<option '.($filter==1?'selected="selected"':'').' value="1">Магазины</option>';
+$func .= '<option '.($filter==2?'selected="selected"':'').' value="2">Сервис-центры</option>';
+$func .= '</select>';
+echo $this->renderPartial("@views:admin:templates:default.kansha.php",
         array(
             'modules'=>$modules,
             'moduleTitle'=>$moduleTitle,
@@ -15,7 +22,7 @@
             'action'=>$action,
             'subaction'=>$subaction,
             'paginator'=>$paginator,
-            'functional'=>''            
+            'functional'=>$func,
             )
         )?>
 <script type="text/javascript">

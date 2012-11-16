@@ -26,6 +26,25 @@
 </style>
 <div style="margin-left:10px;">
 <h1>Добро пожаловать!</h1>
+<div class="x3-informer">
+    <h3>Seo на главной странице</h3>
+    <div class="informer-content new_property-content">
+        <form id="seomain" action="/sysSettings/seoupdate" method="post" >
+        <div class="inf">
+            <input name="SysSettings[0][name]" type="hidden" value="SeoTitleSite" />
+            Заголовок:
+            <input name="SysSettings[0][value]" type="text" style="width:100%" value="<?=  SysSettings::getValue('SeoTitleSite')?>" />
+            <input name="SysSettings[1][name]" type="hidden" value="SeoKeywordsSite" />
+            Ключевые слова:
+            <input name="SysSettings[1][value]" type="text" style="width:100%" value="<?=  SysSettings::getValue('SeoKeywordsSite')?>" />
+            <input name="SysSettings[2][name]" type="hidden" value="SeoDescriptionSite" />
+            Описание:
+            <input name="SysSettings[2][value]" type="text" style="width:100%" value="<?=  SysSettings::getValue('SeoDescriptionSite')?>" />
+            <button type="submit">Сохранить</button>
+        </div>
+        </form>
+    </div>
+</div>
 <?php
 $noinfo = true;
 $informers = Informer::get(array('@condition'=>array('category'=>'new_property','status'=>'0'),'@order'=>'created_at DESC','@limit'=>50));
@@ -52,4 +71,8 @@ $noinfo = false;
             $('.'+cat+'-content').html('');
         });
     }
+    $('#seomain').submit(function(){
+        $.post($(this).attr('action'),$(this).serialize(),function(){$.growl('Сохранено','ok')}).error(function(){$.growl('Ошибка сохранения')})
+        return false;
+    })
 </script>

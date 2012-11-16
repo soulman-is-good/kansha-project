@@ -14,7 +14,9 @@ $_s = 5-$rank;
     <table class="product_des">
         <tbody><tr>
                 <td style="white-space:nowrap;height:19px;padding-right:10px">
+                    <header>
                     <h1 class="long"><?= $title ?><sup><?=$mm['cnt']?></sup></h1>
+                    </header>
                 </td>
                 <td width="100%">
                     <div class="black_stripe">
@@ -81,7 +83,7 @@ $_s = 5-$rank;
 
                             <div class="clear-both">&nbsp;</div>
                             <span class="blue-text"><?=$mm['cnt']?> <?=  X3_String::create("Предложений")->numeral($mm['cnt'],array('Предложение','Предложения','Предложений'))?></span>
-                            <p><?=$model->propstext?></p>
+                            <h2><?=$model->propstext?></h2>
 
                             <table width="100%" class="des_lower">
                                 <tbody><tr>
@@ -139,7 +141,7 @@ $_s = 5-$rank;
         <?=  X3_Widget::run('@views:shop_Item:_services.php',array('url'=>$url,'title'=>$title,'mm'=>$mm,'model'=>$model,'fcount'=>$fcount,'scount'=>$scount));?>
 <?endif;?>
 
-        <div style="padding:10px 0 10px 10px;font:12px Tahoma, sans-serif;color:#222">Смотреть другие <a href="#TODO"><?=X3::app()->groupTitle?> <?=$model->manufacturerTitle()?></a></div>
+        <div style="padding:10px 0 10px 10px;font:12px Tahoma, sans-serif;color:#222">Смотреть другие <a href="/<?=Shop_Group::getLink($model->getGroup()->id,X3::app()->property)?>/<?=$model->getManufacturer()->name?>.html"><?=X3::app()->groupTitle?> <?=$model->manufacturerTitle()?></a></div>
 
         <div class="brown_table">
             <div><span><img width="21" height="20" src="/images/star.png">Увидели ошибку - выделите слово или предложение мышкой и нажмите <b>Ctrl+Enter</b></span></div>

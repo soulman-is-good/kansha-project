@@ -6,6 +6,7 @@
 if(isset($_GET['parent_id']))
 $labels = array(
                 'short_title'=>'Кратко',
+                'type'=>'Тип',
                 'title'=>array('@value'=>'Полно','@wrapper'=>'<a href="/admin/page/edit/{@id}">{@title}</a>'),
                 'status'=>'Видимость',
                 'ontop'=>'Верхнее меню',
@@ -14,6 +15,7 @@ else
 $labels = array(
                 'parent_id'=>array('@value'=>'Родитель','@wrapper'=>'<a href="/admin/page/parent_id/{@parent_id}">{{=$modules->parentM()->short_title}}</a>'),
                 'short_title'=>'Кратко',
+                'type'=>array('@value'=>'Тип','@wrapper'=>'{{=$modules->getPageType()}}'),
                 'title'=>array('@value'=>'Полно','@wrapper'=>'<a href="/admin/page/edit/{@id}">{@title}</a>'),
                 'status'=>'Видимость',
                 'ontop'=>'Верхнее меню',

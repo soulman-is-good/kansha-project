@@ -27,8 +27,8 @@ class Manufacturer extends X3_Module_Table {
         'status' => array('boolean', 'default' => '1'),
         'weight' => array('integer[5]', 'unsigned', 'default' => '0', 'orderable'),
         'metatitle'=>array('string','default'=>'','language'),
-        'metakeywords'=>array('string','default'=>'','language'),
-        'metadescription'=>array('string', 'default'=>'','language'),        
+        'metakeywords'=>array('content','default'=>'','language'),
+        'metadescription'=>array('content', 'default'=>'','language'),        
         'created_at' => array('integer[10]', 'unsigned', 'default' => '0')
     );
 

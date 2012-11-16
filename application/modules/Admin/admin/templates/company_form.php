@@ -29,11 +29,14 @@
     }
     .shop {
         border:1px solid black;
-        width:340px;
-        padding:15px;
+        width:380px;
+        top:-15px;
+        background:#fff;
         position:absolute;
         z-index:0;
-        height:100%;
+        overflow:hidden;
+        height:200px;
+        padding:15px;
     }
     .shop .overlay{
         position: absolute;
@@ -48,6 +51,9 @@
     .shop.active {
         position:relative;
         z-index:1;
+        height:100%;
+        overflow: visible;
+        top:0px;
     }
     .shop.active .overlay{
         -moz-animation: linear;
@@ -120,7 +126,7 @@ if(!$modules->table->getIsNewRecord()){
 }
 ?>
 <table class="formtable">
-<?=$form->renderPartial(array('title','site','delivery','isfree','image','login'));?>
+<?=$form->renderPartial(array('title','site','delivery','isfree','isfree1','isfree2','image','login'));?>
 <tr><td>Пароль</td><td><input type="text" value="<?=$modules->password?>" name="Company[password]" id="Company_password"></td><td>&nbsp;</td></tr>    
 <?=$form->renderPartial(array('email_private','text','servicetext','status','weight'));?>
 </table>
@@ -151,23 +157,24 @@ if(!$modules->table->getIsNewRecord()){
 <div id="addresses">
     <fieldset style="border:1px solid #666666;border-radius: 5px;padding:10px;poition:relative;">
         <legend style="padding:5px;margin-left:10px;font-weight: bold;color: #666666">Адреса</legend>
+        <div style="position:relative;height:100%">
         <? foreach ($addreses as $i=>$address): ?>
+        <div class="shop shop<?=$i?> <?=($i==0)?'active':''?>" style="left:<?=$i*20?>px;">
+        <div class="overlay">&nbsp;</div>
 <?
     if(!$address->table->getIsNewRecord()){
         echo X3_Html::form_tag('input', array('type'=>'hidden','name'=>"Address[$i][id]",'value'=>$address->id));
     }
 ?>
-        <div class="shop shop<?=$i?> active" style="left:<?=$i*20?>px;top:0px">
-        <div class="overlay">&nbsp;</div>
         <table>
             <tr>
                 <td>Тип</td>
                 <td>
                     <div class="addr-type">
-                        <input id="type0" type="radio" name="Address[<?=$i?>][type]" value="0" <?=$address->type==0?'checked="true"':''?> />
-                        <label for="type0">Магазин</label>
-                        <input id="type1" type="radio" name="Address[<?=$i?>][type]" value="1" <?=$address->type==1?'checked="true"':''?> />
-                        <label for="type1">Сервис-центр</label>
+                        <input id="type0<?=$i?>" type="radio" name="Address[<?=$i?>][type]" value="0" <?=$address->type==0?'checked="true"':''?> />
+                        <label for="type0<?=$i?>">Магазин</label>
+                        <input id="type1<?=$i?>" type="radio" name="Address[<?=$i?>][type]" value="1" <?=$address->type==1?'checked="true"':''?> />
+                        <label for="type1<?=$i?>">Сервис-центр</label>
                     </div>
                 </td>
                 <td>&nbsp;</td>
@@ -187,7 +194,7 @@ if(!$modules->table->getIsNewRecord()){
                 <td>Телефоны</td>
                 <td>
                     <div class="phones-<?=$i?>"></div>
-                    <button type="button" onclick="addmorephone()">+Добавить еще</button>
+                    <button type="button" onclick="addmorephone('','<?=$i?>')">+Добавить еще</button>
                 </td>
                 <td>&nbsp;</td>
             </tr>
@@ -221,7 +228,7 @@ if(!$modules->table->getIsNewRecord()){
                 <td><input type="text" name="Address[<?=$i?>][delivery]" value="<?=$address->delivery?>" /></td>
                 <td>&nbsp;</td>
             </tr>
-            <tr>
+            <?/*<tr>
                 <td>Время работы</td>
                 <td>
                     <div id="worktime">
@@ -237,17 +244,17 @@ if(!$modules->table->getIsNewRecord()){
                     </div>
                 </td>
                 <td>&nbsp;</td>
-            </tr>
+            </tr>*/?>
         </table>
         </div>
         <? endforeach; ?>
+        </div>
         <a href="#" class="x3-button" id="add-shop">Добавить магазин</a>
     </fieldset>
 <table>
 <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>
 </div>
-    
 <div id="services">
     <?php
         if($subaction == 'edit'){
@@ -316,8 +323,7 @@ if(!$modules->table->getIsNewRecord()){
 <table>
     <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>        
-</div>
-    
+</div>    
 <?=$form->end();?>
 <?if(count($bill)>0):?>
 <div id="bills">
@@ -336,10 +342,12 @@ if(!$modules->table->getIsNewRecord()){
         <?
         $s=0;
         $k = $b['type'];
-        endif;?>
+        endif;
+        $s+=$b['paysum'];
+        ?>
         <p>
             &nbsp;<b><i><?=$b['document']?></i></b><br/>
-            <span><?=date('d.m.Y',$b['created_at'])?></span> - <span><?=date('d.m.Y',$b['ends_at'])?></span> оплата <?=$s+=$b['paysum']?>.
+            <span><?=date('d.m.Y',$b['created_at'])?></span> - <span><?=date('d.m.Y',$b['ends_at'])?></span> оплата <?=$b['paysum']?>.
         </p>
         <? endforeach; ?>
         <?='<p><b>Итого:'.$s.'</b></p></div></li>'?>
@@ -349,37 +357,40 @@ if(!$modules->table->getIsNewRecord()){
 </div>
 </div>
 <script>    
-    var pno = 0;
+    var pno = {};
     var ano = 0
+    var acnt = <?=$addreses->count();?>;
     var services = <?=  json_encode($js_services)?>;
     var groups = <?=  json_encode($js_cats);?>;
     function addmorephone(val,id){
         if(typeof val == 'undefined') val = '';
         var div = $('<div />').addClass('phone');
-        var ph = $('<input />').attr({'name':'Address['+ano+'][phones]['+pno+']'}).val(val);
+        if(typeof pno[id] == 'undefined' || pno[id] === null) pno[id] = 0;
+        var ph = $('<input />').attr({'name':'Address['+id+'][phones]['+pno[id]+']'}).val(val);
         div.append(ph);
-        if(pno>0){
+        if(pno[id]>0){
             div.append($('<img />').attr({'src':'/images/cross.png'}).css({'margin':'-3px 0 0 3px'}).click(function(){
                 $(this).parent().remove();
             }))
         }
         $(".phones-"+id).append(div);
-        pno++;
+        pno[id]++;
     }
     $('.addr-type').buttonset();
     <?if(isset($_POST['Address']) || !$address->table->getIsNewRecord()):
-        
+       
         //if(isset($_POST['Address'][0]['phones']))
             //$phones = $_POST['Address'][0]['phones'];
         //else
-        foreach($addreses as $i=>$address)
+        foreach($addreses as $i=>$address):
             $phones = $address->phones;
         ?>
         <?foreach($phones as $phone):?>
-            addmorephone('<?=  addslashes($phone)?>');
+            addmorephone('<?=  addslashes($phone)?>','<?=$i?>');
+        <?  endforeach;?>
         <?  endforeach;?>
     <?else:?>
-        addmorephone('');
+        addmorephone('','0');
     <?endif;?>
      
      
@@ -388,6 +399,103 @@ if(!$modules->table->getIsNewRecord()){
       */
      $(function(){
          $('#tabs').tabs();
+         $('.overlay').live('click',function(e){
+             $('.shop.active').removeClass('active');
+             $(this).parent().addClass('active');
+         })
+         $('#add-shop').click(function(){
+            var tmpl = $('<div />').attr({'class':'shop shop'+acnt});
+            tmpl.append('<div class="overlay">&nbsp;</div>');
+            var tbl = $('<table />');
+            tbl
+            .append($('<tr />').append(
+                    '<td>Тип</td>'
+                ).append(
+                    $('<td />').append($('<div class="addr-type">')
+                        .append($('<input />').attr({'id':"type0"+acnt, 'type':"radio", 'name':"Address["+acnt+"][type]", 'value':"0",'checked':"true"}))
+                        .append($('<label />').attr({'for':"type0"+acnt}).html('Магазин'))
+                        .append($('<input />').attr({'id':"type1"+acnt, 'type':"radio", 'name':"Address["+acnt+"][type]", 'value':"1"}))
+                        .append($('<label />').attr({'for':"type1"+acnt}).html('Сервис-центр'))
+                        .buttonset()
+                    )
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>Город</td>'
+                ).append(
+                    $('<td />').append($('<select name="Address['+acnt+'][city]">')
+                        .append($('.shop:first td select[name$="[city]"]').html().replace('selected="selected"',''))
+                    )
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>Телефоны</td>'
+                ).append(
+                    $('<td />').append('<div class="phones-'+acnt+'"></div>').append($('<button type="button" onclick="addmorephone(\'\',\''+acnt+'\')">+Добавить еще</button>').button())
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>Факс</td>'
+                ).append(
+                    $('<td />').append('<input type="text" name="Address['+acnt+'][fax]" value="" />')
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>Skype</td>'
+                ).append(
+                    $('<td />').append('<input type="text" name="Address['+acnt+'][skype]" value="" />')
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>ICQ</td>'
+                ).append(
+                    $('<td />').append('<input type="text" name="Address['+acnt+'][icq]" value="" />')
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>E-mail</td>'
+                ).append(
+                    $('<td />').append('<input type="text" name="Address['+acnt+'][email]" value="" />')
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>Адрес</td>'
+                ).append(
+                    $('<td />').append('<input type="text" name="Address['+acnt+'][address]" value="" />')
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>Доставка</td>'
+                ).append(
+                    $('<td />').append('<input type="text" name="Address['+acnt+'][delivery]" value="" />')
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            tmpl.append(tbl);
+            $('.shop.active').removeClass('active');
+            tmpl.css({'left':(20*acnt)+'px'}).addClass('active');
+            tmpl.insertAfter($('.shop:last'));
+            addmorephone('',acnt);
+            acnt++;
+            return false;
+         })
          $('#addservo').click(function(){
              var isnew = $(this).attr('isnew')==1;
              var sel = null;

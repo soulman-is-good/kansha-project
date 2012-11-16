@@ -105,6 +105,20 @@ class I18n extends X3_Component {
                 return (is_null($number)||$number>11?$fullMonths[X3::user()->lang]:$fullMonths[X3::user()->lang][$number]);
         }
     }
+    
+    public function single($val) {
+        $ml = trim(SysSettings::getValue('Shop_Group.Multiword','content','Единственные числа',null,''),"\r\n ");
+        $ml = explode("\n",$ml);
+        foreach($ml as $Mm){
+            $Mm = trim($Mm,"\r\n\ ");
+            $Mm = array_map(function($item){return $item;},explode('=',$Mm));
+            $val = str_replace($Mm[0],$Mm[1],$val);
+        }
+        if(preg_match("/[иы]$/", $val)>0){
+            $val = mb_substr($val, 0,-1,X3::app()->encoding);
+        }
+        return $val;
+    }
 }
 
 ?>

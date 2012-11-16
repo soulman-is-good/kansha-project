@@ -17,6 +17,8 @@ class Shop_Item extends X3_Module_Table {
     public static $_props = array();
     public static $_groups = array();
     private $_mans = array();
+    public $header = false;
+    
     public $_fields = array(
         'id' => array('integer[10]', 'unsigned', 'primary', 'auto_increment'),
         'group_id' => array('integer[10]', 'unsigned', 'index', 'ref' => array('Shop_Group' => 'id', 'default' => 'title')),
@@ -206,7 +208,7 @@ class Shop_Item extends X3_Module_Table {
             $m = array();
             if(preg_match("/\[([@!]{0,2}){$prop['id']}\]/",$suf,$m)>0){
                 if($prop['type'] == 'string' || $prop['type'] == 'content'){
-                    $val = Shop_Proplist::getGently($prop['id']);
+                    $val = Shop_Proplist::getGently($props->{$prop['name']});
                 }elseif($prop['type']=='decimal'){
                     $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
                     $val = preg_replace("/[0]+$/", "",$props->{$prop['name']})."0 $mm";
@@ -783,20 +785,22 @@ class Shop_Item extends X3_Module_Table {
         $scount = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups LIKE '%\"$model->group_id\"%'");
         $group = $model->getGroup();
         $bread = Breadcrumbs::items($model);
-        
-        $gtitle = X3::app()->groupTitle;
-        $ml = trim(SysSettings::getValue('Shop_Group.Multiword','content','Единственные числа',null,''),"\r\n ");
-        $ml = explode("\n",$ml);
-        foreach($ml as $Mm){
-            $Mm = trim($Mm,"\r\n\ ");
-            $Mm = array_map(function($item){return $item;},explode('=',$Mm));
-            $gtitle = str_replace($Mm[0],$Mm[1],$gtitle);
-        }
-        if(preg_match("/[иы]$/", $gtitle)>0){
-            $gtitle = mb_substr($gtitle, 0,-1,X3::app()->encoding);
-        }        
-        $title = $gtitle . " " . ($group->usename==='1'?($model->title.$model->withArticule()):$model->suffix);
         $group->prepareMeta($model);
+        $title = $model->header;
+        if(trim($title)==''){
+            $gtitle = X3::app()->groupTitle;
+            $ml = trim(SysSettings::getValue('Shop_Group.Multiword','content','Единственные числа',null,''),"\r\n ");
+            $ml = explode("\n",$ml);
+            foreach($ml as $Mm){
+                $Mm = trim($Mm,"\r\n\ ");
+                $Mm = array_map(function($item){return $item;},explode('=',$Mm));
+                $gtitle = str_replace($Mm[0],$Mm[1],$gtitle);
+            }
+            if(preg_match("/[иы]$/", $gtitle)>0){
+                $gtitle = mb_substr($gtitle, 0,-1,X3::app()->encoding);
+            }        
+            $title = $gtitle . " " . ($group->usename==='1'?($model->title.$model->withArticule()):$model->suffix);
+        }
         $bread[] = array('/'.X3::app()->request->url . '.html'=>$modelTitle);
         //statistics
         $cs = X3::db()->query("SELECT * FROM company_item WHERE price>0 AND item_id=$model->id GROUP BY company_id");
@@ -1027,6 +1031,88 @@ class Shop_Item extends X3_Module_Table {
         $this->id = NULL;
         $this->table->setIsNewRecord(true);
     }
+
+    public function prepareAttr($prefix="[name]") {
+        $item = $this->getProperties();
+        $props = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE group_id=$this->group_id");
+        $mh = $prefix;
+        $ms = array(&$mh);
+        foreach($props as $prop){
+            $m = array();
+            foreach($ms as &$mz){
+                if(preg_match("/\[([@!]{0,2}){$prop['id']}\]/",$mz,$m)>0){
+                    if($prop['type'] == 'string' || $prop['type'] == 'content'){
+                        $val = X3::db()->fetch("SELECT value, title FROM shop_proplist WHERE id={$item->{$prop['name']}}");
+                        $val = $val['title']!=''?$val['title']:$val['value'];
+                    }elseif($prop['type']=='decimal'){
+                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        $val = $item->{$prop['name']}>0?preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm":'';
+                    }elseif($prop['type'] == 'boolean'){
+                        $val = ($item->{$prop['name']}==1)?$prop['label']:'';
+                    }else{
+                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        $val = $item->{$prop['name']}>0?trim((int)$item->{$prop['name']}) . " $mm":"";
+                    }
+                    if(!empty($m) && $m[1]!=''){
+                        if(strpos($m[1], '!')!==false){
+                            $ml = trim(SysSettings::getValue('Shop_Group.Multiword','content','Единственные числа',null,''),"\r\n ");
+                            $ml = explode("\n",$ml);
+                            foreach($ml as $Mm){
+                                $Mm = trim($Mm,"\r\n\ ");
+                                $Mm = array_map(function($item){return $item;},explode('=',$Mm));
+                                $val = str_replace($Mm[0],$Mm[1],$val);
+                            }
+                            if(preg_match("/[иы]$/", $val)>0){
+                                $val = mb_substr($val, 0,-1,X3::app()->encoding);
+                            }
+                        }
+                        if(strpos($m[1], '@')!==false){
+                            $val = X3_String::create($val)->toLowerCase();
+                        }
+                    }
+                    $mz = str_replace($m[0], $val, $mz);
+                }
+            }
+        }
+        foreach ($ms as &$mz){
+            $m = array();
+            if(preg_match_all("/\[([@!]{0,2})(group|manufacturer|name|articule)\]/",$mz,$m)>0){
+                foreach($m[0] as $i=>$mx){
+                    if(isset($m[2][$i]) && $m[2][$i] == 'group'){
+                        $val = $this->getGroup()->title;
+                    }elseif(isset($m[2][$i]) && $m[2][$i] == 'manufacturer'){
+                        $val = $this->manufacturerTitle();
+                    }elseif(isset($m[2][$i]) && $m[2][$i] == 'name'){
+                        $val = $this->title;
+                    }elseif(isset($m[2][$i]) && $m[2][$i] == 'articule'){
+                        $val = $this->articule!=''?'('.$this->articule.')':'';
+                    }else
+                        $val = '';
+                    if(!empty($m) && $m[1][$i]!=''){
+                        if(strpos($m[1][$i], '!')!==false){
+                            $val = I18n::single($val);
+                        }
+                        if(strpos($m[1][$i], '@')!==false){
+                            $val = X3_String::create($val)->toLowerCase();
+                        }
+                    }
+                    $mz = str_replace($mx, $val, $mz);
+                }
+            }
+            $m = array();
+            if(preg_match_all("/\{([^\}]+)\}/",$mz,$m)>0){
+                foreach($m[0] as $i=>$m1){
+                    $condition = explode('|',$m[1][$i]);
+                    if(trim($condition[0])!='')
+                        $val = $condition[1];
+                    else
+                        $val = $condition[2];
+                    $mz = str_replace($m1, $val, $mz);
+                }
+            }
+        }
+        return $mh;
+    }    
     
     public function prepareDescription($desc) {
         $item = $this->getProperties();

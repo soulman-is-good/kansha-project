@@ -30,6 +30,8 @@ class Company extends X3_Module_Table {
         'text' => array('text', 'default' => 'NULL'),
         'servicetext' => array('text', 'default' => 'NULL'),
         'isfree' => array('boolean', 'default' => '1', 'orderable'),
+        'isfree1' => array('boolean', 'default' => '1', 'orderable'),
+        'isfree2' => array('boolean', 'default' => '1', 'orderable'),
         'status' => array('boolean', 'default' => '1', 'orderable'),
         'weight' => array('integer[5]', 'unsigned', 'default' => '0', 'orderable'),
         'rate' => array('integer[11]', 'unsigned', 'default' => '0', 'orderable'),
@@ -58,19 +60,25 @@ class Company extends X3_Module_Table {
             'email_private' => 'E-mail для внутренней рассылки',
             'text' => 'Описание компании',
             'servicetext' => 'Описание для услуг',
-            'isfree' => 'Бесплатный пакет',
+            'isfree' => 'Бесплатный пакет услуг',
+            'isfree1' => 'Бесплатный пакет магазина',
+            'isfree2' => 'Бесплатный пакет распродаж',
             'status' => 'Видимость',
             'rate' => 'Рейтинг',
             'weight' => 'Порядок',
         );
     }
     
-    public function getAddress() {
+    public function getAddress($type=0) {
         if ($this->table->getIsNewRecord())
             return array();
         if (isset($this->addresses[$this->id]))
             return $this->addresses[$this->id];
-        return $this->addresses[$this->id] = Address::get(array('company_id' => $this->id), 1);
+        if($type === false)
+            $cond = array('company_id' => $this->id);
+        else
+            $cond = array('company_id' => $this->id,'type'=>"$type ");
+        return $this->addresses[$this->id] = Address::get($cond, 1);
     }
 
     public function getItems() {
@@ -115,7 +123,17 @@ class Company extends X3_Module_Table {
     }
 
     public function getDefaultScope() {
-        return array('@order' => 'title, weight ASC');
+        $scope = array('@order' => 'title, weight ASC');
+        if(isset($_POST['filter'])){
+            if($_POST['filter']=='1'){
+                $scope['@join'] = "INNER JOIN company_item ci ON ci.company_id=data_company.id";
+                $scope['@group'] = "ci.company_id";
+            }
+            if($_POST['filter']=='2')
+                $scope['@join'] = "INNER JOIN company_service cs ON cs.company_id=data_company.id";
+                $scope['@group'] = "cs.company_id";
+        }
+        return $scope;
     }
 
     public function menu($cur = 'edit') {
@@ -1010,12 +1028,12 @@ class Company extends X3_Module_Table {
         }
         $add = '';
         if(X3::user()->city>0)
-            $add = " INNER JOIN data_address a ON a.company_id = c.id AND a.city=".X3::user()->city;
-        $q = "SELECT c.id id, c.title title, c.image image, c.site site,
+            $add = " INNER JOIN data_address a ON a.company_id = c.id AND a.type=0 AND a.city=".X3::user()->city;
+        $q = "SELECT DISTINCT c.id id, c.title title, c.image image, c.site site,
             (SELECT COUNT(0) FROM company_feedback cf WHERE status AND cf.company_id=c.id) `fcount`,
             (SELECT COUNT(0) FROM company_stat cs WHERE cs.company_id=c.id) `stats`,
             (SELECT COUNT(0) FROM company_item ci WHERE ci.company_id=c.id) `icount`
-            FROM data_company c $add WHERE c.status AND (SELECT COUNT(0) FROM company_item ci WHERE ci.company_id=c.id)>0 ORDER BY c.isfree, $order, c.title";
+            FROM data_company c $add INNER JOIN company_item ci ON ci.company_id=c.id WHERE c.status AND ci.price>0 AND (SELECT COUNT(0) FROM company_item ci WHERE ci.company_id=c.id)>0 ORDER BY c.isfree1, $order, c.title";
         $ms = X3::db()->query($q);
         
         if($ms===false) throw new X3_Exception(X3::db()->getErrors());
@@ -1151,8 +1169,7 @@ class Company extends X3_Module_Table {
         }else
             $this->redirect($_SERVER['HTTP_REFERER']);
         exit;
-    }
-    
+    }    
 
     public function beforeSave() {
         if ($this->created_at == 0) {

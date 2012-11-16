@@ -1,5 +1,5 @@
 <?php
-$address = $model->getAddress();
+$address = $model->getAddress(false);
 $name = X3_String::create($model->title)->translit();
 $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);    
 $url = "/{$name}-company$model->id";
@@ -12,7 +12,7 @@ $image = is_file(X3::app()->basePath.'/uploads/Company/'.$model->image);
 <div class="product_expand">
     <table style="width:100%" class="blue_stripes shops">
         <tbody><tr>
-                <td style="paddign-right:10px;white-space:nowrap;height:19px">
+                <td style="padding-right:10px;white-space:nowrap;height:19px">
                     <h2 class="shops"><?=$model->title?></h2>
                 </td>
                 <td>
@@ -108,7 +108,7 @@ $image = is_file(X3::app()->basePath.'/uploads/Company/'.$model->image);
                                 </td>
                                 <td>
                                     <ul>
-                                        <? foreach ($address->phones as $phone): ?>
+                                        <?if(!empty($address->phones)) foreach ($address->phones as $phone): ?>
                                         <li><?=$phone?></li>
                                         <? endforeach; ?>
                                     </ul>

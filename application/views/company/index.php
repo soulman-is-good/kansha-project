@@ -43,6 +43,9 @@ $models = X3::db()->query($q);
     $phones = $address->phones;
     $name = X3_String::create($model->title)->translit();
     $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);    
+    $region = '';
+    if($address && $address->getRegion() == null)
+        $region = $address->getRegion()->title . ' ';
     if(is_file('uploads/Company/'.$model->image)){
         $image = "/uploads/Company/88x31xh/$model->image";
     }    
@@ -63,7 +66,7 @@ $models = X3::db()->query($q);
                 <td style="width:182px">
                     <div class="shops_contact">
                         <ul class="number">
-                            <? foreach ($phones as $z => $phone): ?>
+                            <? if(!empty($phones)) foreach ($phones as $z => $phone): ?>
                             <li><?=$phone?></li>
                             <? endforeach; ?>
                         </ul>
@@ -83,7 +86,7 @@ $models = X3::db()->query($q);
                 <td>
                     <div class="shops_adress">
                         <p><?=$m['title']?><br/>
-                            <?=$address->getRegion()->title . " " . $address->address?></p>
+                            <?=$region . $address->address?></p>
                     </div>
                     <a href="/<?=$name?>-company<?=$model->id?>.html" style="color: #2068A5;font-size: 11px;">Посмотреть профиль продавца</a>
                 </td>

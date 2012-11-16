@@ -437,7 +437,7 @@ class CompanyCommand extends X3_Command {
                         $url = str_replace('[ID]', $v[0], $st->autoload_shopurl);
                     $url = str_replace('&amp;', '&', $url);
 
-                    if (empty($url) || !X3_String::create($url)->check_protocol() || !X3_Thread::create($url)->run(X3_Thread::CHECK_CONNECTION)) {
+                    if (empty($url) || !X3_String::create($url)->check_protocol() || (($rco=X3_Thread::create($url)->run(X3_Thread::RESPONSE_CODE))<309 && $rco>100)) {
                         $url = '';
                     }
                     $item = NULL;
