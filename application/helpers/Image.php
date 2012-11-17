@@ -42,8 +42,8 @@ class Image {
         }
         return $this;
     }
-    
-    function save($filename=null, $image_type=IMAGETYPE_JPEG, $compression=75, $permissions=null) {
+
+    function save($filename = null, $image_type = IMAGETYPE_JPEG, $compression = 75, $permissions = null) {
         if ($filename == null)
             $filename = $this->filename;
         if ($image_type == IMAGETYPE_JPEG) {
@@ -62,7 +62,7 @@ class Image {
         return true;
     }
 
-    function output($image_type=IMAGETYPE_JPEG) {
+    function output($image_type = IMAGETYPE_JPEG) {
 
         if ($image_type == IMAGETYPE_JPEG) {
             imagejpeg($this->image);
@@ -121,8 +121,8 @@ class Image {
         }
         return $this;
     }
-    
-    public function gray($percent=100) {
+
+    public function gray($percent = 100) {
         $imgw = imagesx($this->image);
         $imgh = imagesy($this->image);
 
@@ -140,7 +140,7 @@ class Image {
                 $bb = $rgb & 0xFF;
 
                 // get the Value from the RGB value
-                
+
                 $g = round(($rr + $gg + $bb) / 3);
 
                 // grayscale values have r=g=b=g
@@ -151,10 +151,10 @@ class Image {
 
                 imagesetpixel($this->image, $i, $j, $val);
             }
-        }     
+        }
         return $this;
     }
-    
+
     function resize($width, $height) {
         $new_image = imagecreatetruecolor($width, $height);
         imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
@@ -162,5 +162,60 @@ class Image {
         return $this;
     }
 
+    public static function AddWatermark($img_file, $filetype, $output=null, $watermark = 'images/watermark.png') {
+        $offset = 5; //отступ от правого нижнего края
+        $image = GetImageSize($img_file);
+        $xImg = $image[0];
+        $yImg = $image[1];
+        switch ($image[2]) {
+            case 1:
+                $img = imagecreatefromgif($img_file);
+                break;
+            case 2:
+                $img = imagecreatefromjpeg($img_file);
+                break;
+            case 3:
+                $img = imagecreatefrompng($img_file);
+                break;
+        }
+
+        $r = imagecreatefrompng($watermark);
+        $x = imagesx($r);
+        $y = imagesy($r);
+
+        $xDest = $xImg - ($x + $offset);
+        $yDest = $yImg - ($y + $offset);
+        imageAlphaBlending($img, 1);
+        imageAlphaBlending($r, 1);
+        imagesavealpha($img, 1);
+        imagesavealpha($r, 1);
+        imagecopyresampled($img, $r, $xDest, $yDest, 0, 0, $x, $y, $x, $y);
+        switch ($filetype) {
+            case "jpg":
+                if(is_null($output))
+                    header('Content-type: image/jpg');
+                imagejpeg($img, $output, 100);
+                break;
+            case "jpeg":
+                if(is_null($output))
+                    header('Content-type: image/jpeg');
+                imagejpeg($img, $output, 100);
+                break;
+            case "gif":
+                if(is_null($output))
+                    header('Content-type: image/gif');
+                imagegif($img, $output);
+                break;
+            case "png":
+                if(is_null($output))
+                    header('Content-type: image/png');
+                imagepng($img, $output);
+                break;
+        }
+        imagedestroy($r);
+        imagedestroy($img);
+    }
+
 }
+
 ?>

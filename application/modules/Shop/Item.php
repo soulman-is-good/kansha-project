@@ -152,6 +152,24 @@ class Shop_Item extends X3_Module_Table {
         }
         return ($g!=null)?$g->title:'';
     }
+    
+    public function realGroupTitle() {
+        $sps = X3::db()->query("SELECT type,label,name FROM shop_properties sp WHERE sp.group_id=$this->group_id AND sp.isgroup");
+        $shop = $this->getProperties();
+        if(is_resource($sps) && mysql_num_rows($sps)>0){
+            while($sp = mysql_fetch_assoc($sps)){
+                if(($sp['type']=='string' || $sp['type']=='content')){
+                    $group = Shop_Proplist::getGently($shop->{$sp['name']});
+                    break;
+                }elseif($sp['type']=='boolean'){
+                    $group = $sp['label'];
+                    break;
+                }
+            }
+        }else
+            $group = $this->groupTitle ();
+        return $group;
+    }
 
     public function withArticule() {
         if ($this->articule != '') {
@@ -466,13 +484,24 @@ class Shop_Item extends X3_Module_Table {
                     $url = preg_replace("/\&.+$/", "", $shopurl);
                     $ext = pathinfo($url, PATHINFO_EXTENSION);
                     if($ext=='') $ext = 'jpg';
-                    $filename = 'Shop_Item-' . time() . "." . $ext;
+                    $filename = I18n::single($model->realGroupTitle()) . "_" . $model->title . $model->withArticule() . "." . $ext;
+                    $filename = strtolower(X3_String::create($filename)->translit(false,array("'",'"','!','@','#','$','%','^','&','*','=','+',"\\",'/','?',':',';')));
                     @file_put_contents('uploads/Shop_Item/' . $filename, file_get_contents($url));
+                    Image::AddWatermark(X3::app()->basePath . DIRECTORY_SEPARATOR . 'uploads/Shop_Item/' . $filename, $ext,X3::app()->basePath . DIRECTORY_SEPARATOR . 'uploads/Shop_Item/' . $filename);
                     $model->image = $filename;
+                    isset($shop['image_source']) && Uploads::cleanUp($model, $shop['image_source']);
                 } else {
                     $h = new Upload($model, 'image');
-                    if (!$h->source && !$h->save())
+                    $ext = pathinfo($h->filename, PATHINFO_EXTENSION);
+                    if($ext=='') $ext = 'jpg';
+                    $filename = I18n::single($model->realGroupTitle()) . "_" . $model->title . $model->withArticule() . "." . $ext;
+                    $filename = strtolower(X3_String::create($filename)->translit(false,array("'",'"','!','@','#','$','%','^','&','*','=','+',"\\",'/','?',':',';')));
+                    if (!$h->source && !$h->saveAs($filename))
                         $model->image = NULL;
+                    if($h->source == false) {
+                        isset($shop['image_source']) && Uploads::cleanUp($model, $shop['image_source']);
+                        Image::AddWatermark(X3::app()->basePath . DIRECTORY_SEPARATOR . 'uploads/Shop_Item/' . $model->image, $ext,X3::app()->basePath . DIRECTORY_SEPARATOR . 'uploads/Shop_Item/' . $model->image);
+                    }
                 }
             }
             $model->properties_text = '';

@@ -131,7 +131,7 @@ function generate_form(props){
         <?else:?>
         if(props['image'][1]!=null && props['image'][1].indexOf('http://')==0)
         div.html('')
-        .append('<img src="'+props['image'][1]+'" /><br/><div class="head"><b>Фото url</b>:<input value="'+props['image'][1]+'" name="Shop[imageurl]" type="text" /><div>')
+        .append('<img width="100" src="'+props['image'][1]+'" /><br/><div class="head"><b>Фото url</b>:<input value="'+props['image'][1]+'" name="Shop[imageurl]" type="text" /><div>')
         .append('<div class="head"><b>Фото</b>:<input name="Shop_Item[image]" type="file" /></div>');
         else
         div.html('')

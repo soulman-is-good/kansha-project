@@ -37,7 +37,7 @@ class Uploads extends X3_Module {
     }
 
     public function beforeAction(&$action) {
-        if ($this->controller->action == 'captcha')
+        if ($this->controller->action == 'captcha' || $this->controller->action == 'watermark')
             return true;
         if(!X3_DEBUG && !X3::user()->isAdmin())
             throw new X3_404();
@@ -46,6 +46,17 @@ class Uploads extends X3_Module {
         $resize = new Resize($act);
         exit;
         return false;
+    }
+    
+    public function actionWatermark() {
+        $model = key($_GET);
+        if(class_exists($model)){
+            $src = X3::app()->basePath . DIRECTORY_SEPARATOR . 'uploads' . 
+                    DIRECTORY_SEPARATOR . $model . DIRECTORY_SEPARATOR . $_GET[$model];
+            Image::AddWatermark($src, 'jpg');
+        }else
+            echo "Class '$model' does not exists";
+        exit;
     }
 
     public function actionCaptcha() {

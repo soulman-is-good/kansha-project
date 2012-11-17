@@ -106,7 +106,7 @@ class I18n extends X3_Component {
         }
     }
     
-    public function single($val) {
+    public static function single($val) {
         $ml = trim(SysSettings::getValue('Shop_Group.Multiword','content','Единственные числа',null,''),"\r\n ");
         $ml = explode("\n",$ml);
         foreach($ml as $Mm){

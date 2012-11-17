@@ -17,7 +17,8 @@ var name_re = /<h1 class="b-page-title[^"]*">([\s\S]+?)<\/h1>/;
 var imgtable_re = /<div class="b-model-microcard__img">(.+?)<\/div>/;
 var cimg_re = /<img .*?src="([^"]+?)"[^>]+?class="b\-compare__img"/g
 var img_re = /<img .*?src="([^"]+)"/g
-var iimg_re = /<span class="b-model-pictures__big"><a target="_blank" href="([^"]+)" id="([^"]+)"/g
+var iimg_re = /<span class="b-model-pictures__big"><a id="([^"]+)" href="([^"]+)"/g
+var mimg_re = /mvc\.map\("model-pictures",\[\["x","y","src"\],\["[^"]+",[0-9]+,[0-9]+,"([^"]+)"/g
 var bigimg_re = /<td class="bigpic"><a href="(http\:\/\/mdata\.yandex\.net\/i\?path=.+?)"/
 var group_re = /<div class="b-breadcrumbs"><a class="b-breadcrumbs__link" href="\/catalog\.xml\?hid=([0-9]+)[^"]*">([^<]+)<\/a>/
 //var trans_data = eval(fs.readFileSync('ya.conf', 'utf8'));
@@ -77,11 +78,29 @@ http.createServer(function(req, res) {
 			//query = 'modelid=' + r.query.modelid+'&hid='+r.query.hid;
 			query = 'CMD=-CMP=';
 			fetchItemSpecs(query, r.query.modelid, function(err, data) {
-				res.writeHead(200, {'Content-type' : 'text/plain'});
-				var str = JSON.stringify(data);
-				res.write(str,'utf8');
-				//fs.writeFileSync('last_grab.log', '('+str+')');
-				res.end();
+                            var rr = http.createClient(80,host).request('GET', '/model.xml?modelid='+r.query.modelid, {'host' : host});
+                            rr.end();
+                            rr.on('response',function(ire){
+                                ire.setEncoding('utf8');
+                                var idata = '';
+                                ire.on('data', function (chunk) {
+                                        idata += chunk;				
+                                });
+                                ire.on('end', function() {
+                                    //var timg = iimg_re.exec(idata);
+                                    //if(!timg)
+                                    timg = mimg_re.exec(idata);
+                                    if(typeof timg == 'object'){
+                                        data['image'][1] = timg[1].replace(/\\\//g,'/');
+                                    }
+                                    res.writeHead(200, {'Content-type' : 'text/plain'});
+                                    var str = JSON.stringify(data);
+                                    res.write(str,'utf8');
+                                    //fs.writeFileSync('last_grab.log', '('+str+')');
+                                    res.end();
+                                });
+                            });
+
 			});
 		}
 	} catch(e) {
@@ -153,25 +172,6 @@ function fetchItemSpecs(query, iid, cb) {
 			var group = [];
 			var current = '';
 			var img = cimg_re.exec(data);
-                        http.get({'host':host,'port':80,'path':'/model.xml?modelid='+iid},function(ire){
-                            ire.setEncoding('utf8');
-                            var idata = '';
-                            ire.on('data', function (chunk) {
-                                    idata += chunk;				
-                            });
-                            ire.on('end', function() {
-                                var timg = iimg_re.exec(idata);
-                                img[0] = timg;
-                                if(timg){
-                                    var ilnk = timg[1];
-                                    var iid = timg[2];
-                                    ilink = ilnk.split('_')
-                                    var tmp = ilink.pop();
-                                    ilink.push(iid+'.'+tmp.split('.').pop());
-                                    img[1] = ilink.join('_');
-                                }
-                            });
-                        });
 			cimg_re.lastIndex = 0;
 			var title = get_title_re.exec(data);
 			get_title_re.lastIndex = 0;

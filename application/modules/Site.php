@@ -425,7 +425,6 @@ class Site extends X3_Module {
     }
     
     public function actionWeights() {
-        echo '1111';
         $model = ucfirst($_POST['module']);
         $ids = explode(',',$_POST['ids']);
         if(empty($ids)) exit;
@@ -438,7 +437,6 @@ class Site extends X3_Module {
         X3::db()->commit();
         exit;
     }
-    
 
     public function actionError() {
         $this->template->render('error',array('class'=>'error'));
