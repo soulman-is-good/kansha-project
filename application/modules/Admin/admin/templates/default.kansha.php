@@ -53,7 +53,7 @@ $settings = X3::db()->fetchAll("SELECT * FROM sys_settings WHERE name LIKE '$cla
         }else
             $wrappers[$name] = "{@$name}";
     }
-    if(in_array('orderable',$info[$name])):?>
+    if(isset($info[$name]) && in_array('orderable',$info[$name])):?>
         <th x3-order="<?=$class?>:<?=$name?>" class="col-<?=$name?>"><a href="/admin/<?=$action?>/order/<?=$name."@".(X3::user()->{$action.'-sort'}[1]=='DESC'?'ASC':'DESC')?>"><?=$value?></a></th>
     <?else:?>
         <th class="col-<?=$name?>"><?=$value?></th>

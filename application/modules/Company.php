@@ -947,6 +947,12 @@ class Company extends X3_Module_Table {
         exit;
     }
     
+    public function getLink() {
+        $name = X3_String::create($this->title)->translit();
+        $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
+        return "/$name-company$this->id";
+    }
+    
     public function actionUpdatefield() {
         if(!X3::user()->isAdmin())
             throw new X3_404();

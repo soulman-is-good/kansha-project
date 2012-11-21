@@ -14,6 +14,7 @@ class Shop_Feedback extends X3_Module_Table {
     
     public $encoding = 'UTF-8';
     public $tableName = 'shop_feedback';
+    private static $_items = array();
     const KEY = 'X3_Shop_Feedback_id';
 
     public $_fields = array(
@@ -23,7 +24,6 @@ class Shop_Feedback extends X3_Module_Table {
         'name'=>array('string[255]'),
         'plus'=>array('string[255]'),
         'minus'=>array('string[255]'),
-        'title'=>array('string[255]','default'=>'NULL'),
         'long'=>array('string[255]'),
         'exp'=>array('content'),
         'rank'=>array('integer[1]','default'=>'0'),
@@ -40,7 +40,6 @@ class Shop_Feedback extends X3_Module_Table {
             'name'=>'Имя',
             'plus'=>'Плюсы',
             'minus'=>'Минусы',
-            'title'=>'Заголовок',
             'long'=>'Продолжительность использования',
             'exp'=>'Опыт использования',
             'rank'=>'Оценка',
@@ -59,7 +58,7 @@ class Shop_Feedback extends X3_Module_Table {
         else $cookie = array();
         if(!is_array($cookie)) $cookie = array();
         $cookie[] = $value;
-        setcookie(self::KEY, json_encode($cookie), time()+31536000, '/');//year
+        setcookie(self::KEY, json_encode($cookie), time()+84600, '/');//day
     }
     
     public function log($mid) {
@@ -81,6 +80,12 @@ class Shop_Feedback extends X3_Module_Table {
         return $m->save();
     }
     
+    public function getItem() {
+        if(isset(self::$_items[$this->item_id]))
+            return self::$_items[$this->item_id];
+        return self::$_items[$this->item_id] = Shop_Item::getByPk($this->item_id);
+    }    
+    
 /**
  * 
  * DEFAULT OVERLOADED FUNCTIONS
@@ -88,10 +93,7 @@ class Shop_Feedback extends X3_Module_Table {
  */
     
     public function getDefaultScope() {
-        $scope = array('@order'=>'created_at DESC, id DESC, weight');
-        if(isset($_GET['groups']) && $_GET['groups']>0){
-            $scope['@condition'] = array('group_id'=>$_GET['groups']);
-        }
+        $scope = array('@order'=>'created_at DESC, id DESC');
         return $scope;
     }
         

@@ -41,7 +41,7 @@ class Admin extends X3_Module {
         'shop'=>'Shop_Item','admin_menu'=>'Admin_Menu','shopcategory'=>'Shop_Category','shopsearch'=>array('Shop_Item','search'),
         'company'=>'Company','manufacturer'=>'Manufacturer','tools'=>'Admin_Tools','grabber'=>'Grabber','settings'=>'SysSettings',
         'props'=>'Shop_Properties','region'=>'Region','service'=>'Service','page'=>'Page','banner'=>'Banner','news'=>'News','article'=>'Article',
-        'seo'=>'Meta','notify'=>'Notify','storage'=>'User_Storage');
+        'seo'=>'Meta','notify'=>'Notify','storage'=>'User_Storage','feedback'=>'Site_Feedback','feedcompany'=>'Company_Feedback','feedshop'=>'Shop_Feedback');
 
     public $modules = array(
         'admin' => array(
@@ -164,6 +164,24 @@ class Admin extends X3_Module {
                 'common'=>array('edit','delete'),
                 'direct'=>array('save'),
                 'labels'=>array('add'=>'+ Баннер')
+            ),
+            'Site_Feedback'=>array(
+                'general'=>array('add'),
+                'common'=>array('edit','delete'),
+                'direct'=>array('save'),
+                'labels'=>array('add'=>'+ Отзыв')
+            ),
+            'Shop_Feedback'=>array(
+                'general'=>array('add'),
+                'common'=>array('edit','delete'),
+                'direct'=>array('save'),
+                'labels'=>array('add'=>'+ Отзыв')
+            ),
+            'Company_Feedback'=>array(
+                'general'=>array('add'),
+                'common'=>array('edit','delete'),
+                'direct'=>array('save'),
+                'labels'=>array('add'=>'+ Отзыв')
             ),
         )
     );
