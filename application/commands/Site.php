@@ -25,10 +25,11 @@ class SiteCommand extends X3_Command{
     }
     
     public function runTest() {
-        //$mailer = new X3_Mailer();
-        //$mailer->send('soulman.is.good@gmail.com','Тест',"RAEA ываадлоаыдлваоывлдао");
-        var_dump(mail('maxim@instinct.kz','TEST','TEST'));
-        var_dump(error_get_last());
+        $mailer = new X3_Mailer();
+        $mailer->setCopy('maxim@instinct.kz');
+        $mailer->send('soulman.is.good@gmail.com','Тест',"RAEA ываадлоаыдлваоывлдао");
+        //var_dump(mail('maxim@instinct.kz','TEST','TEST'));
+        //var_dump(error_get_last());
     }
     
     public function runDump() {

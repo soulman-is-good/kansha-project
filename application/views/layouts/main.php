@@ -151,6 +151,7 @@
 
 <?if(!in_array($class,array('error','login'))):?>
                                             <div class="main_banner_block">
+                                                <?=isset($tender)?$tender:''?>
                                                 <?=$this->renderPartial('@layouts:widgets:BannerRight.php');?>
                                                 <?//$this->renderPartial('@layouts:widgets:specialOffer.php');?>
                                                 <?=X3_Widget::run('@layouts:widgets:topShops.php',array(),array('cache'=>true,'cacheConfig'=>array('expire'=>'+1 hour')));?>

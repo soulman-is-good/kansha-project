@@ -81,6 +81,8 @@ class Shop_Category extends X3_Module_Table {
                     }else
                         $img = false;
                     $grs[] = array(
+                        'id'=>$gr->id,
+                        'pid'=>$pr['property_id'],
                         'url'=>"/".Shop_Group::getLink($gr->id,$pr['id'],false,$pr['title']).".html",
                         'image'=>$img,
                         'title'=>$pr['title']
@@ -89,6 +91,8 @@ class Shop_Category extends X3_Module_Table {
             }else{
                 $img = Shop_Item::get(array('@condition'=>array('group_id'=>$gr->id,'image'=>array('<>'=>"''"),'image'=>array(' IS'=>' NOT NULL')),'@order'=>'created_at DESC, id'),1)->image;
                 $grs[] = array(
+                    'id'=>$gr->id,
+                    'pid'=>0,
                     'url'=>"/".Shop_Group::getLink($gr->id,false,$gr->title).".html",
                     'image'=>'/uploads/Shop_Item/135x107xf/'.$img,
                     'title'=>$gr->title

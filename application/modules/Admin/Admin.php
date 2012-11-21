@@ -774,6 +774,12 @@ class Admin extends X3_Module {
             if($props==null)
                 echo '[]';
             else{
+                $imgfile = file_get_contents('http://market.yandex.ru/model-spec.xml?modelid='.$model_id);
+                //if(preg_match('/mvc\.map\("model-pictures",\[\["x","y","src"\],\["[^"]+",[0-9]+,[0-9]+,"([^"]+)"/',$imgfile,$m)>0){
+                if(preg_match('/<div class="b\-model\-microcard__img"><img src="([^"]+)"/',$imgfile,$m)>0){
+                    if(isset($m[1]))
+                        $props['image'] = array($m[1],$m[1]);
+                }
                 //check if such group already exists
                 $gid = Grabber::getGroupId($group_id);
                 $props['item_id'] = 0;
@@ -962,20 +968,26 @@ class Admin extends X3_Module {
         }        
         $ads = $_POST['Address'];
         foreach ($ads as $key => $address) {
-            $a = new Address();
-            $a->table->acquire($address);
-            if($address['id']>0){
-                $a->table->setIsNewRecord(false);
-            }
-            $a->worktime = $address['worktime'];
-            $a->phones = $address['phones'];
-            if($key==0)
-                $a->ismain = 1;
-            $a->weight = $key;
-            $a->company_id = $model->id;
-            if(!$a->save()){
-                var_dump($a->table->getErrors());
-                exit;
+            if(isset($address['delete'])){
+                if($address['id']>0){
+                    Address::deleteByPk($address['id']);
+                }
+            }else{
+                $a = new Address();
+                $a->table->acquire($address);
+                if($address['id']>0){
+                    $a->table->setIsNewRecord(false);
+                }
+                $a->worktime = $address['worktime'];
+                $a->phones = $address['phones'];
+                if($key==0)
+                    $a->ismain = 1;
+                $a->weight = $key;
+                $a->company_id = $model->id;
+                if(!$a->save()){
+                    var_dump($a->table->getErrors());
+                    exit;
+                }
             }
         }
         $this->redirect('/admin/company/edit/'.$model->id);

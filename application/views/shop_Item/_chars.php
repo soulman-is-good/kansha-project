@@ -1,5 +1,6 @@
 <?php
 $group = $model->getGroup();
+$props = $model->getProperties();
 $megatitle = $title;
 if($group->allheader!='')
     $megatitle = $model->prepareAttr($group->allheader);
@@ -8,19 +9,16 @@ if(empty($pgroups)) $pgroups = array();
 array_push($pgroups, array('title'=>'Прочие','ids'=>'*'));
 $last_index = count($pgroups)-1;
 $pvals = array();
-$props = $model->getProperties();
 $plabels = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE group_id=$model->group_id AND status ORDER BY weight");
-$_pvalues = X3::db()->fetchAll("SELECT id, value, title FROM shop_proplist WHERE group_id=$model->group_id AND status ORDER BY weight");
+$_pvalues = X3::db()->query("SELECT id, value, title FROM shop_proplist WHERE group_id=$model->group_id AND status ORDER BY weight");
 $pvalues = array();
-foreach($_pvalues as $pv){
+while($pv = mysql_fetch_assoc($_pvalues)){
    $pvalues[$pv['id']] = $pv['title']!=''?$pv['title']:$pv['value'];
 }
 unset($_pvalues);
 $megaPROP = '';
 $lfound = array();
 foreach($plabels as $i=>$prop){
-    //echo "<h3>".$prop['boris']."</h3>";
-    //if($prop[''] == 'id') continue;
     if(!isset($props->_fields[$prop['name']])) continue;
     $name = $prop['name'];
     $label = $plabels[$i];//plabel($plabels,$name);
@@ -108,8 +106,8 @@ foreach($plabels as $i=>$prop){
                                 $dType = $arr[1];
                         $val = $props->$name;
                         if(strpos($prop['type'],'decimal')===0){
-                            $val = trim($val,'0');
-                            if(substr($val, -1,1)=='.') $val .= '0';
+                            $val = X3_String::create($val)->format("%.02f");
+                            //if(substr($val, -1,1)=='.') $val .= '0';
                         }
                         if(isset($pvals[$j][$p])){
                             $pvals[$j][$p]['value'][] = $val.$dType;
@@ -128,8 +126,8 @@ foreach($plabels as $i=>$prop){
                     $lfound[] = $label['label'];
                     $val = $props->$name;
                     if(strpos($prop['type'],'decimal')===0){
-                        $val = trim($val,'0');
-                        if(substr($val, -1,1)=='.') $val .= '0';
+                        $val = X3_String::create($val)->format("%.02f");//trim($val,'0');
+                        //if(substr($val, -1,1)=='.') $val .= '0';
                     }                    
                     $pvals[$j][$label['label']] = array('value'=>$val,'id'=>$label['id'],'type'=>$prop['type']);
                     break;
@@ -150,7 +148,7 @@ foreach($plabels as $i=>$prop){
     }elseif(strpos($prop['type'],'boolean')===0){
         $pvals[$last_index][$label['label']] = array('value'=>(($props->$name)?'<img width="15" height="15" src="/images/green_cross.jpg">':'<img width="15" height="15" src="/images/cross.jpg">'),'id'=>$label['id'],'type'=>$prop['type']);
     }elseif($props->$name!=0){
-        $pvals[$last_index][$label['label']] = array('value'=>$props->$name,'id'=>$label['id'],'type'=>$prop['type']);
+        $pvals[$last_index][$label['label']] = array('value'=>X3_String::create($props->$name)->format("%.02f"),'id'=>$label['id'],'type'=>$prop['type']);
     }
 }
 ?>

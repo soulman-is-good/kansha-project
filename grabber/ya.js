@@ -78,7 +78,7 @@ http.createServer(function(req, res) {
 			//query = 'modelid=' + r.query.modelid+'&hid='+r.query.hid;
 			query = 'CMD=-CMP=';
 			fetchItemSpecs(query, r.query.modelid, function(err, data) {
-                            var rr = http.createClient(80,host).request('GET', '/model.xml?modelid='+r.query.modelid, {'host' : host});
+                            /*var rr = http.createClient(80,host).request('GET', '/model.xml?modelid='+r.query.modelid, {'host' : host});
                             rr.end();
                             rr.on('response',function(ire){
                                 ire.setEncoding('utf8');
@@ -99,7 +99,12 @@ http.createServer(function(req, res) {
                                     //fs.writeFileSync('last_grab.log', '('+str+')');
                                     res.end();
                                 });
-                            });
+                            });*/
+                            res.writeHead(200, {'Content-type' : 'text/plain'});
+                            var str = JSON.stringify(data);
+                            res.write(str,'utf8');
+                            //fs.writeFileSync('last_grab.log', '('+str+')');
+                            res.end();
 
 			});
 		}

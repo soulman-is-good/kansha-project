@@ -38,7 +38,7 @@ $companies = X3::db()->fetchAll("SELECT id, title, image, login,
         $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
         ?>
     <div class="market_box<?=($i==$c-1)?' last':''?>">
-        <a href="/company-<?=$comp['login']?>.html" title="<?=$comp['title']?>"><div class="market_box_picture" style="background-image:url(/uploads/Company/80x27xw/<?=$comp['image']?>)">&nbsp;</div></a>
+        <a href="/<?=$name?>-company<?=$comp['id']?>.html" title="<?=$comp['title']?>"><div class="market_box_picture" style="background-image:url(/uploads/Company/80x27xw/<?=$comp['image']?>)">&nbsp;</div></a>
         <p class="market_text">Просмотрено товаров:<br/>
             Сегодня <span><?=$comp['d1']?></span><br/>
             <?=I18n::months($mnth-1)?> <span><?=$comp['d2']?></span> </p>

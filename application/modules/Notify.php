@@ -82,12 +82,11 @@ class Notify extends X3_Module_Table{
         if($mail->status==0)
             return "Письмо '$mailName' не открыто к рассылке";
         $mailer = new X3_Mailer();
-        $mailer->copy = $cc;
         $mailer->email = 'info@kansha.kz';
         $mailer->encoding = 'UTF-8';
-        $mail->title = $mail->formLetter($data,$mailer,$mail->title);
+        $title = $mail->formLetter($data,$mailer,$mail->title);
         if(!isset($data['title']))
-            $data['title'] = $mail->title;
+            $data['title'] = $title;
         $message = $mail->formLetter($data,$mailer);
         if(is_null($from) && !empty($mail->from)){
             $from = $mailer->email = $mail->from;
@@ -98,10 +97,11 @@ class Notify extends X3_Module_Table{
             $rcps = array('info@kansha.kz');
         else 
             $rcps = explode(',',$to);
+        $mailer->setCopy($cc);
         foreach($rcps as $to)
             try{
                 $to = trim($to);
-                $msg = $mailer->send($to, $mail->title, $message,$from);
+                $msg = $mailer->send($to, $title, $message,$from);
                 $mail->sent_at = time();
                 if(is_string($msg))
                     X3::log($msg,'mailer');

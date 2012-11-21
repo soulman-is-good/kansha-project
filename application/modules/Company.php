@@ -75,9 +75,11 @@ class Company extends X3_Module_Table {
         if (isset($this->addresses[$this->id]))
             return $this->addresses[$this->id];
         if($type === false)
-            $cond = array('company_id' => $this->id);
+            $cond = array('@condition'=>array('company_id' => $this->id),'@order'=>'id');
         else
-            $cond = array('company_id' => $this->id,'type'=>"$type ");
+            $cond = array('@condition'=>array('company_id' => $this->id,'type'=>"$type "),'@order'=>'id');
+        if(X3::user()->city>0)
+            $cond['@condition']['city'] = X3::user()->city;
         return $this->addresses[$this->id] = Address::get($cond, 1);
     }
 
@@ -1116,7 +1118,7 @@ class Company extends X3_Module_Table {
     
     public function actionAsk() {
         $errors = array();
-        if(isset($_POST['Ask']) && X3::user()->ip != $_SERVER['REMOTE_ADDR']){
+        if(isset($_POST['Ask']) && X3_Session::readOnce('ip') != $_SERVER['REMOTE_ADDR']){
             $ask = $_POST['Ask'];
             if(!isset($ask['shop']) || ($ask['shop']==0 && $ask['shop']!='common')){
                 $errors['shop'] = 'Выберите магазин, которому хотите отправить вопрос';
@@ -1151,8 +1153,8 @@ class Company extends X3_Module_Table {
                 $data = array('item'=>$item->title,'url'=>$link,'company'=>$company->title,
                     'username'=>$ask['name'],'usermail'=>$ask['email'],'question'=>$ask['question']);
                 $email = $company->getAddress()->email;
-                X3::user()->ip = $_SERVER['REMOTE_ADDR'];
-                if(($msg=Notify::sendMail('Company.Ask', $data,$email,"info@kansha.kz"))!==TRUE){
+                X3_Session::writeOnce('ip',$_SERVER['REMOTE_ADDR']);
+                if(($msg=Notify::sendMail('Company.Ask', $data,$email,null,"info@kansha.kz"))!==TRUE){
                     $errors['name'] = $msg;
                     Informer::add("Пользователю с IP '{$_SERVER['REMOTE_ADDR']}' не удалось отправить вопрос компании '$company->title'.<br/>\n$msg", 'errors', $data);
                     User_Storage::store($ask['email'], $ask['name'], $data, $msg);
@@ -1161,7 +1163,6 @@ class Company extends X3_Module_Table {
                     User_Storage::store($ask['email'], $ask['name'],$data, 'ok!');
                 }
             }
-            X3::user()->ip = null;
         }else
             $errors['name'] = 'Ошибка в данных';
         if(IS_AJAX){

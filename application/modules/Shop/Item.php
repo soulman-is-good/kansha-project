@@ -18,6 +18,7 @@ class Shop_Item extends X3_Module_Table {
     public static $_groups = array();
     private $_mans = array();
     public $header = false;
+    private static $realgrouptitles = array();
     
     public $_fields = array(
         'id' => array('integer[10]', 'unsigned', 'primary', 'auto_increment'),
@@ -121,17 +122,7 @@ class Shop_Item extends X3_Module_Table {
         }elseif(!empty($desc))
             $this->prepareDescription($desc);
         $m = array();
-        if(preg_match_all("/\{([^\}]+)\}/",$this->properties_text,$m)>0){
-            foreach($m[0] as $i=>$m1){
-                $condition = explode('|',$m[1][$i]);
-                $cond = trim($condition[0]);
-                if($cond!='')
-                    $val = $condition[1];
-                else
-                    $val = $condition[2];
-                $this->properties_text = str_replace($m1, $val, $this->properties_text);
-            }
-        }
+        $this->properties_text = Shop_Item::condition($this->properties_text);
         return $this->properties_text;
     }
 
@@ -154,6 +145,8 @@ class Shop_Item extends X3_Module_Table {
     }
     
     public function realGroupTitle() {
+        if(isset(self::$realgrouptitles[$this->group_id]))
+            return self::$realgrouptitles[$this->group_id];
         $sps = X3::db()->query("SELECT type,label,name FROM shop_properties sp WHERE sp.group_id=$this->group_id AND sp.isgroup");
         $shop = $this->getProperties();
         if(is_resource($sps) && mysql_num_rows($sps)>0){
@@ -168,7 +161,7 @@ class Shop_Item extends X3_Module_Table {
             }
         }else
             $group = $this->groupTitle ();
-        return $group;
+        return self::$realgrouptitles[$this->group_id] = $group;
     }
 
     public function withArticule() {
@@ -228,13 +221,15 @@ class Shop_Item extends X3_Module_Table {
                 if($prop['type'] == 'string' || $prop['type'] == 'content'){
                     $val = Shop_Proplist::getGently($props->{$prop['name']});
                 }elseif($prop['type']=='decimal'){
-                    $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
-                    $val = preg_replace("/[0]+$/", "",$props->{$prop['name']})."0 $mm";
+                    //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
+                    //$val = preg_replace("/[0]+$/", "",$props->{$prop['name']})."0 $mm";
+                    $val = X3_String::create($props->{$prop['name']})->format("%.02f");
                 }elseif($prop['type'] == 'boolean'){
-                    $val = ($props->{$prop['name']}==1)?$prop['label']:'';
+                    $val = ($props->{$prop['name']}==1)?$prop['label']:''; 
                 }else{
-                    $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
-                    $val = $props->{$prop['name']} . " $mm";
+                    //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
+                    //$val = $props->{$prop['name']} . " $mm";
+                    $val = $props->{$prop['name']};
                 }
                 if(!empty($m) && $m[1]!=''){
                     if(strpos($m[1], '!')!==false){
@@ -289,16 +284,7 @@ class Shop_Item extends X3_Module_Table {
                 $suf = str_replace($mx, $val, $suf);
             }
             $m = array();
-            if(preg_match_all("/\{([^\}]+)\}/",$suf,$m)>0){
-                foreach($m[0] as $i=>$m1){
-                    $condition = explode('|',$m[1][$i]);
-                    if(trim($condition[0])!='')
-                        $val = $condition[1];
-                    else
-                        $val = $condition[2];
-                    $suf = str_replace($m1, $val, $suf);
-                }
-            }            
+            $suf = Shop_Item::condition($suf);
         }
         return trim($suf,'|');
     }
@@ -837,7 +823,8 @@ class Shop_Item extends X3_Module_Table {
             Company_ItemStat::log($model->id, $c['company_id']);
         }
         SeoHelper::setMeta($model->metatitle, $model->metakeywords, $model->metadescription);
-        $this->template->render('show', array('model' => $model, 'bread' => $bread,'image'=>$image,'modelTitle'=>$modelTitle,'mm'=>$mm,'title'=>$title,'type'=>'chars','fcount'=>(int)$fcount['cnt'],'rank'=>$fcount['summ'],'scount'=>(int)$scount['cnt']));
+        $same_items = X3_Widget::run('@layouts:widgets:itemAlike.php',array('group_id'=>$group->id,'price'=>$mm,'not'=>(int)$model->id),array('cache'=>false));
+        $this->template->render('show', array('model' => $model, 'bread' => $bread,'image'=>$image,'modelTitle'=>$modelTitle,'mm'=>$mm,'title'=>$title,'type'=>'chars','fcount'=>(int)$fcount['cnt'],'rank'=>$fcount['summ'],'scount'=>(int)$scount['cnt'],'tender'=>$same_items));
     }
     
     public function actionPrices() {
@@ -1074,13 +1061,14 @@ class Shop_Item extends X3_Module_Table {
                         $val = X3::db()->fetch("SELECT value, title FROM shop_proplist WHERE id={$item->{$prop['name']}}");
                         $val = $val['title']!=''?$val['title']:$val['value'];
                     }elseif($prop['type']=='decimal'){
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
-                        $val = $item->{$prop['name']}>0?preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm":'';
+                        //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        //$val = $item->{$prop['name']}>0?preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm":'';
+                        $val = $item->{$prop['name']}>0?X3_String::create($item->{$prop['name']})->format("%.02f"):'';
                     }elseif($prop['type'] == 'boolean'){
                         $val = ($item->{$prop['name']}==1)?$prop['label']:'';
                     }else{
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
-                        $val = $item->{$prop['name']}>0?trim((int)$item->{$prop['name']}) . " $mm":"";
+                        //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        $val = $item->{$prop['name']}>0?trim((int)$item->{$prop['name']}):"";
                     }
                     if(!empty($m) && $m[1]!=''){
                         if(strpos($m[1], '!')!==false){
@@ -1129,16 +1117,7 @@ class Shop_Item extends X3_Module_Table {
                 }
             }
             $m = array();
-            if(preg_match_all("/\{([^\}]+)\}/",$mz,$m)>0){
-                foreach($m[0] as $i=>$m1){
-                    $condition = explode('|',$m[1][$i]);
-                    if(trim($condition[0])!='')
-                        $val = $condition[1];
-                    else
-                        $val = $condition[2];
-                    $mz = str_replace($m1, $val, $mz);
-                }
-            }
+            $mz = Shop_Item::condition($mz);
         }
         return $mh;
     }    
@@ -1156,14 +1135,16 @@ class Shop_Item extends X3_Module_Table {
                     $val = $val['title']!=''?$val['title']:$val['value'];
                 }elseif($prop['type']=='decimal'){
                     $i=mb_strrpos($prop['label'], '(')+1;
-                    $mm = mb_substr($prop['label'],$i,mb_strrpos($prop['label'], ')')-$i);
-                    $val = preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm";
+                    //$mm = mb_substr($prop['label'],$i,mb_strrpos($prop['label'], ')')-$i);
+                    //$val = preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm";
+                    $val = X3_String::create($item->{$prop['name']})->format("%.02f");
                 }elseif($prop['type'] == 'boolean'){
                     $val = ($item->{$prop['name']}==1)?$prop['label']:'';
                 }else{
                     $i=mb_strrpos($prop['label'], '(');
-                    $mm = trim(mb_substr($prop['label'],$i,mb_strrpos($prop['label'], ')')-$i),'() ');
-                    $val = $item->{$prop['name']} . " $mm";
+                    //$mm = trim(mb_substr($prop['label'],$i,mb_strrpos($prop['label'], ')')-$i),'() ');
+                    //$val = $item->{$prop['name']} . " $mm";
+                    $val = $item->{$prop['name']};
                 }
                 if(!empty($m) && $m[1]!=''){
                     if(strpos($m[1], '!')!==false){
@@ -1204,16 +1185,7 @@ class Shop_Item extends X3_Module_Table {
                 $result = str_replace($mx, $val, $result);
             }
             $m = array();
-            if(preg_match_all("/\{([^\}]+)\}/",$result,$m)>0){
-                foreach($m[0] as $i=>$m1){
-                    $condition = explode('|',$m[1][$i]);
-                    if(trim($condition[0])!='')
-                        $val = $condition[1];
-                    else
-                        $val = $condition[2];
-                    $result = str_replace($m1, $val, $result);
-                }
-            }            
+            $result = Shop_Item::condition($result);
         }
         return $this->properties_text = $result;
     }
@@ -1240,6 +1212,20 @@ class Shop_Item extends X3_Module_Table {
             $models->push($table);
         }
         return $models;
+    }
+    
+    public static function condition($suf) {
+        if(preg_match_all("/\{([^\}]+)\}/",$suf,$m)>0){
+            foreach($m[0] as $i=>$m1){
+                $condition = explode('|',$m[1][$i]);
+                if(trim($condition[0])!='')
+                    $val = $condition[1];
+                else
+                    $val = $condition[2];
+                $suf = str_replace($m1, $val, $suf);
+            }
+        }
+        return $suf;
     }
     
     public static function countByProperty($pid,$criteria = 'withPrice') {

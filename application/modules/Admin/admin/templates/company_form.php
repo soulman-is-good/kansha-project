@@ -187,6 +187,7 @@ if(!$modules->table->getIsNewRecord()){
                         <option <?if($city['id'] == $address->city):?>selected="selected"<?endif;?> value="<?=$city['id']?>"><?=$city['title']?></option>
                         <?endforeach;?>
                     </select>
+                    <label for="Address[<?=$i?>][delete]">Удалить?</label><input type="checkbox" name="Address[<?=$i?>][delete]" />
                 </td>
                 <td>&nbsp;</td>
             </tr>

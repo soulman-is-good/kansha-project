@@ -5,7 +5,8 @@ $trank = (int)$trank['rank'];
 if($trank==0)$trank=1;
 $rank = floor(5*$rank/$trank);
 $_s = 5-$rank;
-
+$wdth = (int)mb_strlen($title,'UTF-8')*12;
+if($wdth>730) $wdth = 730;
 //var_dump($pvals);exit;
 //var_dump($pgroups[5],$pvals[6]);exit;
 ?>
@@ -13,9 +14,9 @@ $_s = 5-$rank;
 
     <table class="product_des">
         <tbody><tr>
-                <td style="white-space:nowrap;height:19px;padding-right:10px">
+                <td style="height:19px;padding-right:10px">
                     <header>
-                    <h1 class="long"><?= $title ?><sup><?=$mm['cnt']?></sup></h1>
+                    <h1 class="long" style="width:<?=$wdth;?>px"><?= $title ?><sup><?=$mm['cnt']?></sup></h1>
                     </header>
                 </td>
                 <td width="100%">
@@ -146,8 +147,8 @@ $_s = 5-$rank;
         <div class="brown_table">
             <div><span><img width="21" height="20" src="/images/star.png">Увидели ошибку - выделите слово или предложение мышкой и нажмите <b>Ctrl+Enter</b></span></div>
         </div>
-<?=$this->renderPartial('@layouts:widgets:servicesFor.php',array('model'=>$model))?>
-<?=$this->renderPartial('@layouts:widgets:buyWith.php',array('model'=>$model))?>
+<?=X3_Widget::run('@layouts:widgets:servicesFor.php',array('model'=>$model))?>
+<?=X3_Widget::run('@layouts:widgets:buyWith.php',array('model'=>$model))?>
 
         <div class="red_info">
             <img width="39" height="29" src="/images/tungle.png">

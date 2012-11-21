@@ -24,31 +24,31 @@ class Shop_Group extends X3_Module_Table {
         'text'=>array('text','default'=>'NULL'),
         'properties'=>array('text','default'=>'NULL'),
         'filters'=>array('text','default'=>'[]'),
-        'suffix'=>array('string[255]','default'=>'NULL'),
-        'short_desc'=>array('string[255]','default'=>'NULL'),
+        'suffix'=>array('string[512]','default'=>'NULL'),
+        'short_desc'=>array('string[512]','default'=>'NULL'),
         'status'=>array('boolean','default'=>'1'),
         'usename'=>array('boolean','default'=>'1'),
         'bbracket'=>array('boolean','default'=>'0'),
         'status'=>array('boolean','default'=>'1'),
         'weight'=>array('integer[5]','unsigned','default'=>'0'),
         'created_at'=>array('integer[10]','unsigned','default'=>'0'),
-        'metaheader'=>array('string[255]','default'=>'[group] [name]'),
+        'metaheader'=>array('string[512]','default'=>'[group] [name]'),
         'metatitle'=>array('string','default'=>'[name] [articule]'),
         'metakeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'metadescription'=>array('content','default'=>''),
-        'priceheader'=>array('string[255]','default'=>'[group] [name]'),
+        'priceheader'=>array('string[512]','default'=>'[group] [name]'),
         'pricetitle'=>array('string','default'=>'[name] [articule]'),
         'pricekeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'pricedescription'=>array('content','default'=>'[name] [articule]'),
-        'feedheader'=>array('string[255]','default'=>'[group] [name]'),
+        'feedheader'=>array('string[512]','default'=>'[group] [name]'),
         'feedtitle'=>array('string','default'=>'[name] [articule]'),
         'feedkeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'feeddescription'=>array('content','default'=>'[name] [articule]'),
-        'servheader'=>array('string[255]','default'=>'[group] [name]'),
+        'servheader'=>array('string[512]','default'=>'[group] [name]'),
         'servtitle'=>array('string','default'=>'[name] [articule]'),
         'servkeywords'=>array('content','default'=>'[name] [articule], [name], [articule]'),
         'servdescription'=>array('content','default'=>'[name] [articule]'),
-        'allheader'=>array('string[255]','default'=>'[group] [name]'),
+        'allheader'=>array('string[512]','default'=>'[group] [name]'),
         'alltitle'=>array('string','default'=>''),
         'allkeywords'=>array('content','default'=>''),
         'alldescription'=>array('content','default'=>''),
@@ -152,13 +152,15 @@ class Shop_Group extends X3_Module_Table {
                         $val = X3::db()->fetch("SELECT value, title FROM shop_proplist WHERE id={$item->{$prop['name']}}");
                         $val = $val['title']!=''?$val['title']:$val['value'];
                     }elseif($prop['type']=='decimal'){
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
-                        $val = $item->{$prop['name']}>0?preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm":'';
+                        //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        //$val = $item->{$prop['name']}>0?preg_replace("/[0]+$/", "",$item->{$prop['name']})."0 $mm":'';
+                        $val = $item->{$prop['name']}>0?X3_String::create($item->{$prop['name']})->format("%.02f"):'';
                     }elseif($prop['type'] == 'boolean'){
                         $val = ($item->{$prop['name']}==1)?$prop['label']:'';
                     }else{
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
-                        $val = $item->{$prop['name']}>0?trim((int)$item->{$prop['name']}) . " $mm":"";
+                        //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '(')+1,mb_strrpos($prop['label'], ')')-$i);
+                        //$val = $item->{$prop['name']}>0?trim((int)$item->{$prop['name']}) . " $mm":"";
+                        $val = $item->{$prop['name']}>0?trim((int)$item->{$prop['name']}):"";
                     }
                     if(!empty($m) && $m[1]!=''){
                         if(strpos($m[1], '!')!==false){
@@ -216,16 +218,8 @@ class Shop_Group extends X3_Module_Table {
                 }
             }
             $m = array();
-            if(preg_match_all("/\{([^\}]+)\}/",$mz,$m)>0){
-                foreach($m[0] as $i=>$m1){
-                    $condition = explode('|',$m[1][$i]);
-                    if(trim($condition[0])!='')
-                        $val = $condition[1];
-                    else
-                        $val = $condition[2];
-                    $mz = str_replace($m1, $val, $mz);
-                }
-            }
+            //echo $mz . '<br/>';
+            $mz = Shop_Item::condition($mz);
         }
         $model->metatitle = str_replace("  "," ",$mt);
         $model->metakeywords = str_replace("  "," ",$mk);
@@ -262,13 +256,15 @@ class Shop_Group extends X3_Module_Table {
                             $val = $val['title']!=''?$val['title']:$val['value'];
                         }
                     }elseif($prop['type']=='decimal'){
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
-                        $val = preg_replace("/[0]+$/", "",$filters['scalar'][$prop['name']])."0 $mm";
+                        //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
+                        //$val = preg_replace("/[0]+$/", "",$filters['scalar'][$prop['name']])."0 $mm";
+                        $val = X3_String::create($filters['scalar'][$prop['name']])->format("%.02f");
                     }elseif($prop['type'] == 'boolean'){
                         $val = ($item->{$prop['name']}==1)?$prop['label']:'';
                     }else{
-                        $mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
-                        $val = $filters['scalar'][$prop['name']] . " $mm";
+                        //$mm = mb_substr($prop['label'],$i=mb_strrpos($prop['label'], '('),mb_strrpos($prop['label'], ')')-$i);
+                        //$val = $filters['scalar'][$prop['name']] . " $mm";
+                        $val = $filters['scalar'][$prop['name']];
                     }
                     if(!empty($m) && $m[1]!=''){
                         if(strpos($m[1], '!')!==false){
@@ -324,16 +320,7 @@ class Shop_Group extends X3_Module_Table {
                 }
             }
             $m = array();
-            if(preg_match_all("/\{([^\}]+)\}/",$mz,$m)>0){
-                foreach($m[0] as $i=>$m1){
-                    $condition = explode('|',$m[1][$i]);
-                    if(trim($condition[0])!='')
-                        $val = $condition[1];
-                    else
-                        $val = $condition[2];
-                    $mz = str_replace($m1, $val, $mz);
-                }
-            }            
+            $mz = Shop_Item::condition($mz);
         }
         $this->alltitle = str_replace("  "," ",$mt);
         $this->allkeywords = str_replace("  "," ",$mk);
