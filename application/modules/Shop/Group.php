@@ -227,11 +227,11 @@ class Shop_Group extends X3_Module_Table {
         $model->header = $mh;
     }
     
-    public function prepareGeneralMeta($filters) {
-        $mt = $this->alltitle;
-        $mk = $this->allkeywords;
-        $md = $this->alldescription;
-        $mh = $this->allheader;
+    public function prepareGeneralMeta($filters,$mt=null,$mk=null,$md=null,$mh=null) {
+        $mt = empty($mt)?$this->alltitle:$mt;
+        $mk = empty($mk)?$this->allkeywords:$mk;
+        $md = empty($md)?$this->alldescription:$md;
+        $mh = empty($mh)?$this->allheader:$mh;
         $manuf = '';
         if(X3::app()->group>0){
             $manuf = Manufacturer::getByPk(X3::app()->group)->title;        
@@ -367,6 +367,7 @@ class Shop_Group extends X3_Module_Table {
             if($man!==null){
                 $query['@condition']['manufacturer_id'] = $man->id;
                 X3::app()->group = $man->id;
+                X3::app()->manufacturerTitle = $man->title;
             }
         }
         if(isset($_POST['Price']) || X3::app()->user->$price!==null){
@@ -505,16 +506,13 @@ class Shop_Group extends X3_Module_Table {
             $cat = X3::db()->fetchAll("SELECT * FROM shop_category WHERE status AND id IN ($g->category_id) ORDER BY weight, title");
             if(!empty($cat))
             foreach($cat as $ca){
-                $key = $ca['weight'];
+                $key = $ca['weight'].'.'.(99999-$ca['id']);
                 if(!isset($models[$key]['model'])){
                     $models[$key]['model']=(object)$ca;
                     $models[$key]['model']->count = 0;
                 }
                 $models[$key]['model']->count += $g->count;
                 $ps = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE isgroup AND group_id=$g->id ORDER BY weight, label");
-                if(X3::user()->isAdmin()){
-                //    echo "$g->id - $g->title - ".count($ps)."<br/>";
-                }
                 if(!empty($ps)){
                     foreach($ps as $pr){
                         if($pr['type']=='string' || $pr['type']=='content'){
@@ -620,15 +618,20 @@ class Shop_Group extends X3_Module_Table {
         if(empty($model->alltitle)) $model->alltitle = SysSettings::getValue("SeoTitleShop_Group");
         if(empty($model->allkeywords)) $model->allkeywords = SysSettings::getValue("SeoKeywordsShop_Group");
         if(empty($model->alldescription)) $model->alldescription= SysSettings::getValue("SeoDescriptionShop_Group");
-        $model->prepareGeneralMeta(X3::user()->{"prop_$model->id"});
-        SeoHelper::setMeta($model->alltitle, $model->allkeywords, $model->alldescription);
-        $bread = Breadcrumbs::items($model);
+        $at=null;$ak=null;$ad=null;
         if(isset($_GET['manuf'])){
             $manuf = Manufacturer::get(array('name'=>$_GET['manuf']),1);
             if($manuf!=null && NULL!==($md = Manufacturer_Group::get(array('manufacturer_id'=>$manuf->id,'gid'=>''.$id,'pid'=>''.(int)X3::app()->property),1))){
+                $at=$md->metatitle;
+                $ak=$md->metakeywords;
+                $ad=$md->metadescription;
                 X3::app()->group_description = $md->text;
+                X3::app()->manufacturerTitle = $manuf->title;
             }
         }
+        $model->prepareGeneralMeta(X3::user()->{"prop_$model->id"},$at,$ak,$ad);
+        SeoHelper::setMeta($model->alltitle, $model->allkeywords, $model->alldescription);
+        $bread = Breadcrumbs::items($model);
         $this->template->render('show',array('model'=>$model,'items'=>$items,'count'=>$count,'paginator'=>$paginator,
             'minPrice'=>(int)$mm['min'],'maxPrice'=>(int)$mm['max'],'num_prices'=>$mm['cnt'],
             'priceMin'=>$priceMin,'priceMax'=>$priceMax,

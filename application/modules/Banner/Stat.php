@@ -53,6 +53,7 @@ class Banner_Stat extends X3_Module_Table {
     public static function log($mid) {
         $ip = $_SERVER['REMOTE_ADDR'];
         $ua = $_SERVER['HTTP_USER_AGENT'];
+        if(stripos($ua,'bot')!==false) return false;
         //cookie
         if(isset($_COOKIE[self::KEY]) && in_array($mid, json_decode($_COOKIE[self::KEY]))){
             return false;

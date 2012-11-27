@@ -10,6 +10,7 @@
  *
  * @author Soul_man
  */
+
 class Shop_Feedback extends X3_Module_Table {
     
     public $encoding = 'UTF-8';
@@ -19,7 +20,7 @@ class Shop_Feedback extends X3_Module_Table {
 
     public $_fields = array(
         'id'=>array('integer[10]','unsigned','primary','auto_increment'),
-        'item_id'=>array('integer[10]','unsigned','index','ref'=>array('Shop_Item'=>'id','default'=>'title')),
+        'item_id'=>array('integer[10]','unsigned','index'),
         'ip'=>array('string[128]'),
         'name'=>array('string[255]'),
         'plus'=>array('string[255]'),
@@ -41,7 +42,7 @@ class Shop_Feedback extends X3_Module_Table {
             'plus'=>'Плюсы',
             'minus'=>'Минусы',
             'long'=>'Продолжительность использования',
-            'exp'=>'Опыт использования',
+            'exp'=>'Общее впечатление',
             'rank'=>'Оценка',
         );
     }

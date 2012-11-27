@@ -1,6 +1,7 @@
 <?php
     $models = X3::db()->fetchAll("SELECT * FROM shop_feedback WHERE status AND item_id=$model->id ORDER BY created_at DESC LIMIT 0, 5");
     $mark = explode("\n",SysSettings::getValue('FeedbackMarks', 'content', 'Подписи отзывов', null, "ужасно\nплохо\nнормально\nхорошо\nотлично"));
+    $c = count($models);
 ?>
 <div class="table_des">
     <table class="des_header">
@@ -23,9 +24,13 @@
         </tbody></table>
     <div class="product_comment">
         <?if(!isset($_COOKIE[Shop_Feedback::KEY]) || !in_array($model->id,json_decode($_COOKIE[Shop_Feedback::KEY]))):?>
-        <table width="100%" id="form-feed">
+<div class="on_the_side_add" style="float:right">
+    <a onclick="$('#form-feed').slideToggle(function(){if($(this).is(':visible')) $('.on_the_side_add a').html('Свернуть форму');else $('.on_the_side_add a').html('Оставить отзыв');});return false;" class="extra" href="#"><?=($c>0 && empty($errors))?'Оставить отзыв':'Свернуть форму'?></a>
+</div>        
+        <div id="form-feed" style="<?=$c>0 && empty($errors)?'display:none':''?>">
+        <table width="100%">
             <tbody><tr>
-                    <td width="300px">
+                    <td width="300" style="padding-bottom:10px;">
                         <form action="/<?=X3::app()->request->url?>.html" method="post" id="feedback-form">
                             <div class="raiting">
                                 <h4>Рейтинг</h4>
@@ -63,12 +68,7 @@
                             <div class="send"><input type="submit" value="Отправить" class="photo"></div>
                         </form>
                     </td>
-                    <td style="float:right">
-                        <div class="with_links">
-                            <a onclick="$('#form-feed').slideToggle();return false;" class="roal_up" href="#">Свернуть форму</a><a class="up" href="#">&nbsp;</a><a class="down" href="#">&nbsp;</a>
-                        </div>
-                    </td>
-                    <td style="float:right">
+                    <td style="padding-left:25px">
                         <?if(empty($errors)):?>
                         <div class="orange_popup">
                             <h4>Правила</h4>
@@ -89,12 +89,13 @@
                     </td>
                 </tr>
             </tbody></table>
+        </div>
         <?else:?>
         <p>Спасибо за оставленный Вами отзыв.</p>
         <?endif;?>
         <? foreach ($models as $j=>$feedback):?>
         
-        <div class="comment_box<?if($j==0)echo ' top';?>">
+        <div class="comment_box<?if($c==0)echo ' top';?>">
             <table class="upper">
                 <tbody><tr>
                         <td>
@@ -114,7 +115,7 @@
                             </div>
                         </td>
                         <td>
-                            <span class="date"><?=$mark[$feedback['rank']]?></span>
+                            <span class="date"><?=$mark[$feedback['rank']-1]?></span>
                         </td>
                     </tr>
                 </tbody></table>
@@ -190,5 +191,10 @@
                 self.html('Символов: '+l);
             })
         })
+    $(function(){
+    <?if(!empty($errors)):?>  
+        $(document).scrollTop(550);
+    <?endif?>
+    })
     </script>
 </div>

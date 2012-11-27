@@ -85,7 +85,7 @@ class ShopCommand extends X3_Command {
         set_time_limit(0);
         $grp = isset(X3::app()->global['gid'])?X3::app()->global['gid']:false;
         if(!$grp>0) {
-            @file_put_contents(X3::app()->basePath."/uploads/status-models$grp.log",json_encode(array('status'=>'error','message'=>'Не определен id группы. №'.$grp,'percent'=>'0')));
+            @file_put_contents(X3::app()->basePath."/uploads/status-models$grp.log",json_encode(array('status'=>'error','message'=>'Не определен id группы','percent'=>'0')));
             return;
         }
         @file_put_contents(X3::app()->basePath."/uploads/status-models$grp.log",json_encode(array('status'=>'idle','message'=>'Подготовка...','percent'=>'1')));
@@ -191,13 +191,14 @@ class ShopCommand extends X3_Command {
                 }
             }
             
-            $ms = $o->search($model_name,true,true);
-            //echo $_model_name." == ".$ms->count()." $o->group_id=>'$model_name'\n";
-            if(($ms->count()==1 && $ms[0]->id != $o->id) || $ms->count() > 1){
-                $ms = $o->search($model_name." ",true,true);
+            //$ms = Shop_Item::get($o->searchItem($model_name,true,true));
+            //if(strpos($model_name,'635')!==false)
+                //echo $_model_name." == ".$ms->count()." $o->group_id=>'$model_name'\n";
+            //if(($ms->count()==1 && $ms[0]->id != $o->id) || $ms->count() > 1){
+                $ms = Shop_Item::get($o->searchItem($model_name." ",true,true));
                 if(($ms->count()==1 && $ms[0]->id != $o->id) || $ms->count() > 1)
                     $model_name = '';
-            }
+            //}
             if($kk>0)
                 echo str_repeat("\x08",strlen("$percent%"));
             $percent = sprintf("%.02f",($kk/$cnt)*100);

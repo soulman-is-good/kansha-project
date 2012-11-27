@@ -122,9 +122,9 @@ background:url(../images/pin2.png) no-repeat 8px 8px;padding-left:18px;float:rig
 
 div.bg_upper_header a.link_two.active {background:url(../images/pin3.png) no-repeat;padding-left:23px;color:#52687a;float:right;}
 div.bg_upper_header a.link_two:hover {text-decoration:none;}
-#main_content {min-width:1000px;max-width:1280px;margin:0 auto;position:relative;padding:0 10px;}
+#head_content {min-width:1000px;max-width:1280px;margin:0 auto;position:relative;padding:0 10px;}
 @media only screen and (min-width: 1034px) {
-    #main_content {min-width:1000px;max-width:1280px;margin:0 auto;position:relative;padding:0 100px;}
+    #head_content {min-width:1000px;max-width:1280px;margin:0 auto;position:relative;padding:0 100px;}
 }
 div.main_logo{float:left;margin-top:32px;}
 div.main_logo p {width:180px;color:#555555;font-size:11px;font-family:Tahoma,sans-serif;margin-top:9px;}

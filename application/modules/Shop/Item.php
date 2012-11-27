@@ -884,7 +884,8 @@ class Shop_Item extends X3_Module_Table {
         $bread[] = array('/'.X3::app()->request->url . '.html'=>$modelTitle);
         SeoHelper::setMeta($model->metatitle, $model->metakeywords, $model->metadescription);
         X3::app()->ogdescription = $model->metadescription;
-        $this->template->render('show', array('model' => $model, 'bread' => $bread,'image'=>$image,'modelTitle'=>$modelTitle,'mm'=>$mm,'title'=>$title,'type'=>'prices','fcount'=>(int)$fcount['cnt'],'scount'=>(int)$scount['cnt'],'rank'=>$fcount['summ']));
+        $same_items = X3_Widget::run('@layouts:widgets:itemAlike.php',array('group_id'=>$group->id,'price'=>$mm,'not'=>(int)$model->id),array('cache'=>false));
+        $this->template->render('show', array('model' => $model, 'bread' => $bread,'image'=>$image,'modelTitle'=>$modelTitle,'mm'=>$mm,'title'=>$title,'type'=>'prices','fcount'=>(int)$fcount['cnt'],'scount'=>(int)$scount['cnt'],'rank'=>$fcount['summ'],'tender'=>$same_items));
     }
     
     public function actionServices() {

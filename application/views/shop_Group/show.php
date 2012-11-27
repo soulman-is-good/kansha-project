@@ -48,7 +48,7 @@ if(!empty(X3::app()->group_description)){
     <table class="production">
         <tbody><tr>
                 <td style="white-space:nowrap;padding-right:10px;height:19px">
-                    <h2><?=X3::app()->groupTitle?><sup><?=$count?></sup></h2>
+                    <h2><?=X3::app()->groupTitle?><?=X3::app()->manufacturerTitle!=NULL?' '.X3::app()->manufacturerTitle:''?><sup><?=$count?></sup></h2>
                 </td>
                 <td style="width:100%">
                     <div class="black_stripe">

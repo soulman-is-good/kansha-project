@@ -11,21 +11,24 @@ if(isset($_GET['city'])){
         }
     }
 }
-if(X3::user()->region!=null)
-    $query.=' AND id IN (SELECT company_id FROM data_address WHERE type=1 AND city='.X3::user()->region[0].')';
-$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE type=1 AND status ORDER BY weight");
+$aquery = '';
+if(X3::user()->region!=null && X3::user()->region[0]>0){
+    $query.=' AND dc.id IN (SELECT company_id FROM data_address WHERE type=1 AND city='.X3::user()->region[0].')';
+    $aquery = " AND city='".X3::user()->region[0]."'";
+}elseif(X3::user()->region!=null)
+   X3::user()->region = null;
 $cities = X3::db()->fetchAll("SELECT * FROM data_region INNER JOIN data_address ON data_address.city=data_region.id WHERE data_address.type=1 AND data_region.status GROUP BY `name` ORDER BY data_region.title");
-$services = X3::db()->fetchAll("SELECT id,name,title FROM data_service ds WHERE status ORDER BY title");
+$services = X3::db()->query("SELECT ds.id,ds.name,ds.title FROM data_service ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0 ORDER BY title");
 $cnt = X3::db()->fetchAll("SELECT COUNT(0) cnt FROM data_company WHERE status $query");
 $paginator = new Paginator('Service',$cnt['cnt']);
-$companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status $query ORDER BY isfree, weight, title LIMIT $paginator->offset, $paginator->limit");
+$companies = X3::db()->query("SELECT dc.* FROM data_company dc INNER JOIN company_service cs ON cs.company_id=dc.id WHERE dc.status AND (cs.services<>'[]' OR cs.groups<>'[]') $query ORDER BY isfree, weight, title LIMIT $paginator->offset, $paginator->limit");
 $scomp = X3::db()->fetchAll("SELECT * FROM company_service");
 $igr = array();
 foreach ($scomp as $i => $sc) {
-    $serv = json_decode($sc['services']);
+    //$serv = json_decode($sc['services']);
     $grs = json_decode($sc['groups']);
     $igr = array_merge($igr,  array_diff($grs, $igr));
-    foreach($companies as $j=>$comp){
+    /*foreach($companies as $j=>$comp){
         if($comp['id'] == $sc['company_id']){
             foreach($services as $k=>$ss){
                 if(in_array($ss['id'], $serv))
@@ -39,13 +42,13 @@ foreach ($scomp as $i => $sc) {
                     $companies[$j]['address']=$addresses[$k];
             }
         }
-    }
+    }*/
 }
 $igr = implode(',', $igr);
-$groups = X3::db()->fetchAll("SELECT * FROM shop_group WHERE status AND id IN ($igr)");
+$groups = X3::db()->query("SELECT * FROM shop_group WHERE status AND id IN ($igr)");
 
-foreach($companies as $j=>$comp) if(empty($companies[$j]['services'])) unset($companies[$j]);
-$ccount = count($companies);
+//foreach($companies as $j=>$comp) if(empty($companies[$j]['services'])) unset($companies[$j]);
+$ccount = mysql_num_rows($companies);
 ?>
 <noindex>
 <div class="main_services">
@@ -74,11 +77,10 @@ $ccount = count($companies);
             <td width="163">
                 <div class="service_branch">
                     <ul class="list serviceBranch" style="margin-top:5px">
-                        <? foreach ($services as $z=>$value): 
-                        if(X3::db()->count("SELECT id FROM company_service WHERE services LIKE '%\"{$value['id']}\"%'")==0) continue;
+                        <? while ($value = mysql_fetch_assoc($services)):
                             ?>
 			<li><a href="/service/<?=$value['name']?>.html"><?=$value['title']?></a></li>
-                        <? endforeach; ?>
+                        <? endwhile; ?>
                         <!--li><a href="#" class="last">Все услуги</a></li-->
                     </ul>
 
@@ -97,9 +99,9 @@ $ccount = count($companies);
                             </tr>
                         </table>
                         <ul>
-                            <? foreach ($groups as $group): ?>
+                            <? while ($group = mysql_fetch_assoc($groups)): ?>
                             <li><a href="/service/category<?=$group['id']?>.html"><?=$group['title']?></a></li>
-                            <? endforeach; ?>
+                            <? endwhile; ?>
                             <!--li><a href="#" class="all_branch">Все разделы</a></li-->
                         </ul>
                     </div>
@@ -127,10 +129,18 @@ $ccount = count($companies);
                     </div>
                     <?endif;?>
                 </div>
-                <? foreach ($companies as $j=>$comp): 
+                <? $j=0;while ($comp = mysql_fetch_assoc($companies)): 
+                    $services = X3::db()->query("SELECT name, title FROM `data_service` ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.company_id='{$comp['id']}' AND cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0");
+                    $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} AND type=1 $aquery ORDER BY id");
+                    if($address == null)
+                        $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} $aquery ORDER BY id");
+                    if($address == null)
+                        $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} ORDER BY id");
+                    if($address == null)
+                        continue;
                     $name = X3_String::create($comp['title'])->translit();
                     $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
-                    $phones = explode(';;',$comp['address']['phones']);
+                    $phones = explode(';;',$address['phones']);
                     ?>                    
                 <div class="main_services_left indent">
                     <div class="services_inside_right">
@@ -146,15 +156,15 @@ $ccount = count($companies);
                         </div>
                         <div class="clear-both">&nbsp;</div>
                         <div class="m_adress">
-                            <?if($comp['address']['email']!=''):?>
-                                <span>e-mail: <a href="mailto:<?=$comp['address']['email']?>"><?=$comp['address']['email']?></a></span>
+                            <?if($address['email']!=''):?>
+                                <span>e-mail: <a href="mailto:<?=$address['email']?>"><?=$address['email']?></a></span>
                             <?endif;?>
-                            <?if($comp['address']['skype']!=''):?>
-                                <span>skype: <a href="skype:<?=$comp['address']['skype']?>"><?=$comp['address']['skype']?></a></span>
+                            <?if($address['skype']!=''):?>
+                                <span>skype: <a href="skype:<?=$address['skype']?>"><?=$address['skype']?></a></span>
                             <?endif;?>
-                            <?if($comp['address']['icq']!=''):?>
+                            <?if($address['icq']!=''):?>
                             <span>icq: 
-                            <?$icqs = explode(',',$comp['address']['icq']);
+                            <?$icqs = explode(',',$address['icq']);
                             foreach($icqs as $icq):
                             $icq = trim($icq);
                             ?>
@@ -169,15 +179,15 @@ $ccount = count($companies);
 			<a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3><?=$comp['title']?></h3></a>
                         <p><?=  strip_tags($comp['servicetext'])?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
 			<div class="main_services_inside_left_link">
-                        <? foreach ($comp['services'] as $i=>$value): ?>
+                        <? $i=0;while($value = mysql_fetch_assoc($services)): ?>
                             <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?if($i==0)echo' active';?>"><?=$value['title']?></a>
-                        <? endforeach; ?>
+                        <? $i++;endwhile; ?>
 			</div>
                     </div>
                     <div class="pustoi" style="height:15px;clear:right;">&nbsp;</div>
                 </div><!--main_services_left-->
                 <div class="clear-both" style="float:right">&nbsp;</div>
-        <?endforeach;?>
+        <?$j++;endwhile;?>
                 <?if($ccount>0):?>
                 <div class="service_lower">
                     <div class="sale_selector" style="margin-top:20px">

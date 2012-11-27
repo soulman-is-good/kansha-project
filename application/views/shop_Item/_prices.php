@@ -1,10 +1,11 @@
 <?php
-$city = (int)X3::user()->city;
+$city = (int)X3::user()->city || X3::user()->region;
+if(is_array($city)) $city = $city[0];
 $q1 = "";
 $q2 = "";
 if($city>0){
     $q1 = " INNER JOIN data_address a ON a.company_id=dc.id ";
-    $q2 = " AND a.city='$city'";
+    $q2 = " AND a.type=0 AND a.city='$city'";
 }
 $models = X3::db()->query("SELECT DISTINCT ci.id id, ci.item_id, ci.company_id, ci.price, ci.url, dc.delivery, 
     (SELECT COUNT(0) FROM company_stat WHERE company_stat.company_id=ci.company_id) AS `stats`,
@@ -106,7 +107,9 @@ $c = mysql_num_rows($models);
                 if((int)$fs['summ']==0) $fs['summ'] = 1;            
                 $i=0;
             while($model=  mysql_fetch_object($models)): 
-                $address = Address::get(array('company_id'=>$model->company_id),1);
+                $address = Address::get(array(
+                            '@condition'=>array('company_id'=>$model->company_id,'type'=>'0'),
+                            ),1);
                 $phones = $address->phones;
                 $fc = X3::db()->fetch("SELECT COUNT(0) `cnt`, SUM(`rank`) `summ` FROM company_feedback WHERE company_id=$model->company_id");
                 $rank = floor(5*$fc['summ']/$fs['summ']);

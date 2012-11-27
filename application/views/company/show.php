@@ -15,7 +15,7 @@ $image = is_file(X3::app()->basePath.'/uploads/Company/'.$model->image);
                 <td style="padding-right:10px;white-space:nowrap;height:19px">
                     <h2 class="shops"><?=$model->title?></h2>
                 </td>
-                <td>
+                <td width="100%">
                     <div class="one_blue_stripe">
                         <div class="blue_left">&nbsp;</div>
                         <div class="blue_right">&nbsp;</div>

@@ -1,4 +1,4 @@
-window.x3LeftButtonPressed = false;
+/*window.x3LeftButtonPressed = false;
 window.x3TimeoutButtonPass = false;
 $(document).mousedown(function(e){
     if(e.which==1){
@@ -26,4 +26,14 @@ function initMenu(e){
         //console.log(e);
         //$(e.target).css({'border':'1px solid red'})
     }
-}
+}*/
+$('body').append(
+    $('<div />').css({
+        'position':'fixed',
+        'right':'0px',
+        'bottom':'0px',
+        'background':'#fff',
+        'border':'1px solid black',
+        'opacity':'0.5'
+    }).html(users_online.join('::'))
+)

@@ -295,12 +295,12 @@ class CompanyCommand extends X3_Command {
             /////////////////
             @file_put_contents(X3::app()->basePath."/uploads/autoload-$cid.stat", json_encode(array('status' => 'prepare', 'message' => 'Подготовка данных...')));
             $s_array = array();
-            $_items = X3::db()->query("SELECT articule, model_name, shop_item.id, manu.title manufacturer FROM shop_item INNER JOIN manufacturer manu ON shop_item.manufacturer_id=manu.id");
+            /*$_items = X3::db()->query("SELECT articule, model_name, shop_item.id, manu.title manufacturer FROM shop_item INNER JOIN manufacturer manu ON shop_item.manufacturer_id=manu.id");
             $k = 0;
             while ($it = mysql_fetch_assoc($_items)) {
                 $s_array[$it['id']] = array(trim($it['articule']), trim($it['model_name']), $it);
                 $k++;
-            }
+            }*/
             /////////////////
             $xx = 0;
             @file_put_contents(X3::app()->basePath."/uploads/autoload-$cid.stat", json_encode(array('status' => 'loading', 'message' => '0')));
@@ -321,10 +321,10 @@ class CompanyCommand extends X3_Command {
             //price koefficient
             $koef = (double)str_replace(',', '.', $st->autoload_koef);
             if($koef==0) $koef = 1;           
-            $mult = $params['articule']==''?1:2;
+            $mult = $params['articule']>-1?2:1;
             $commonRules = str_replace("\r\n","",SysSettings::getValue('Company.AutoupdateRules'));
             $commonRules = explode(',',$commonRules);
-            foreach($commonRules as $cri=>$cr) {$commonRules[$cri] = trim($cr);if(empty($commonRules[$cri])) unset($commonRules[$cri]);}
+            foreach($commonRules as $cri=>$cr) {if(empty($commonRules[$cri])) unset($commonRules[$cri]);}
             $style_header = array(
                                 'fill' => array(
                                     'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -336,7 +336,7 @@ class CompanyCommand extends X3_Command {
                             );
             //First we search for articules then secondly for unique model. No other way. Very specific model names.
             for($parse_type=0;$parse_type<2;$parse_type++){
-            if(($parse_type == 0 && $params['articule']!=='') || $parse_type == 1)
+            if(($parse_type == 0 && $params['articule']>-1) || $parse_type == 1)
                 foreach($vs as $idx=>$v) {
                     if($xx%500 == 0){
                         if($xx>0){
@@ -370,7 +370,8 @@ class CompanyCommand extends X3_Command {
                     $rus2 = preg_match('~[а-яА-Я]{4,}~', $v[1])>0;
                     $v[1] = str_replace(',', '.', $v[1]);
                     $v[1] *= 1;
-                    if(empty($name) || ((!isset($price[$v[0]]) || empty($articule)) && TRUE === array_reduce($commonRules,function($res,$item)use($name){return $res || mb_stripos($name,$item,null,'UTF-8')!==false;},false))){
+                    if(empty($name) && !isset($price[$v[0]])) continue;
+                    if((!isset($price[$v[0]]) && empty($articule) && TRUE === array_reduce($commonRules,function($res,$item)use($name){return $res || mb_stripos($name,$item,null,'UTF-8')!==false;},false))){
                         $rs->setCellValueExplicit('A' . $rc, $v[3], PHPExcel_Cell_DataType::TYPE_STRING);
                         $rs->setCellValue('B' . $rc, $v[1]);
                         $rs->setCellValueExplicit('C' . $rc, (string) $v[0], PHPExcel_Cell_DataType::TYPE_STRING);
@@ -565,7 +566,30 @@ class CompanyCommand extends X3_Command {
 
     private function searchMeItem($name, $articule, &$se,$type = 0) {
         $res = array();
-        $unset = array();
+        //$unset = array();
+        if($type == 0){
+            $articule = trim($articule);
+            if (!empty($articule)) {
+                $item = X3::db()->fetch("SELECT articule, model_name, shop_item.id, manu.title manufacturer FROM shop_item INNER JOIN manufacturer manu ON shop_item.manufacturer_id=manu.id 
+                    WHERE articule LIKE '$articule'");
+                if($item != null){
+                    $res[] = $item;
+                }
+            }
+        }else if($type == 1){
+            if (!empty($name)) {
+                $itemid = X3::db()->fetch("SELECT searchMeItem('".mysql_real_escape_string($name)."')");
+                if($itemid == null){
+                    echo X3::db()->getErrors() . "\n\n";
+                }else
+                    $itemid = array_pop($itemid);
+                if($itemid>0 && NULL!=($item = X3::db()->fetch("SELECT articule, model_name, shop_item.id, manu.title manufacturer FROM shop_item INNER JOIN manufacturer manu ON shop_item.manufacturer_id=manu.id WHERE shop_item.id='$itemid'"))){
+                    $res[] = $item;
+                }
+            }
+        }
+        return $res;
+        
         foreach ($se as $id => $s) {
             if (empty($s[0]) && empty($s[1]))
                 continue;
@@ -585,13 +609,15 @@ class CompanyCommand extends X3_Command {
                 if (!empty($name)) {
                     $name .= " ";
                     //$name has articule in it
-                    if (!empty($s[0]) && strlen($s[0])>2 && stripos($name, $s[0]) !== false) {
+                    if (!empty($s[0]) && mb_strlen($s[0],'UTF-8')>2 && mb_stripos($name, $s[0],null,'UTF-8') !== false) {
                         $res[] = $se[$id][2];
                         unset($se[$id]);
                         break;
                     } elseif (!empty($s[1])) {
                         $test = trim($se[$id][2]['manufacturer']);
-                        if (stripos($name, trim($s[1])." ") !== false && stripos($name,$test)!==false){
+                        $mame = array(trim($s[1])." ",trim($s[1]).",");
+                        if ((mb_stripos($name, $mame[0],null,'UTF-8') !== false || mb_stripos($name, $mame[1],null,'UTF-8') !== false) 
+                                && mb_stripos($name,$test,null,'UTF-8')!==false){
                             $res[] = $se[$id][2];
                             unset($se[$id]);
                             break;

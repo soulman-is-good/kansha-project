@@ -47,6 +47,24 @@ class Profile extends X3_Component {
     }
 
     public function onRender(&$output) {
+        $time = time() - 300;//5 min
+        if(X3::mongo()!=NULL){
+            X3::mongo()->query(array('visitors:save'=>array('_id'=>X3_Session::getInstance()->getSessionId(),
+                    'time'=>time(),'ip'=>$_SERVER['REMOTE_ADDR'],'user_agent'=>$_SERVER['HTTP_USER_AGENT'])));
+            $notabot = X3::mongo()->query(array("visitors:count"=>array('user_agent'=>array('$not'=>new MongoRegEx('/bot/i')))));
+            $bots = X3::mongo()->query(array("visitors:count"=>array('user_agent'=>new MongoRegEx('/bot/i'))));
+            $googlebot = X3::mongo()->query(array("visitors:count"=>array('user_agent'=>new MongoRegEx('/googlebot/i'))));
+            $yandexbot = X3::mongo()->query(array("visitors:count"=>array('user_agent'=>new MongoRegEx('/yandexbot/i'))));
+            $otherbot = $bots - $googlebot - $yandexbot; 
+            $online = ($notabot+$bots) . ' ['.
+                $notabot . ', '.$bots.'] Bots:(' .
+                $googlebot . '/' .
+                $yandexbot . '/' .
+                $otherbot . ')'
+            ;
+            X3::mongo()->query(array("visitors:remove"=>array('time'=>array('$lt'=>$time))));
+        }else
+            $online = 'информация недоступна';
         if(!$this->enable) return;
         $traced = array();
         $queries = X3::app()->db->query_num;
@@ -66,6 +84,10 @@ class Profile extends X3_Component {
             <tr>
                 <td>Application execution time</td>
                 <td>$time sec</td>
+            </tr>
+            <tr>
+                <td>Total users online [Users, Bots] Bots are:(GoogleBot/YandexBot/Other bots)</td>
+                <td>$online</td>
             </tr>
             <tr>
                 <td>Memory usage</td>

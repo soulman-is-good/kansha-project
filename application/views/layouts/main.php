@@ -89,43 +89,47 @@
                     <div class="enter_market" style="position:absolute;z-index:10;display:none">
                         <a href="#" class="link_green" onclick="$(this).parent().slideUp();return false;"><i>&nbsp;</i><span>Вход для магазинов</span></a>
                         <form name="company-login-form" method="post" action="/company/login.html">
-
                             <input type="text" name="fio" size="12" class="fio_name" placeholder="Имя пользователя" />
-                                <input type="password" name="pass" class="secret" placeholder="Пароль" />
-                                    <a href="/company/restore.html" class="forget">Забыли пароль?</a><br />
-                                    <input type="checkbox" name="remember" value="yes" class="try" ><span class="try_remember">Запомнить</span>
-                                        <button type="submit">Войти</button>
-                                        </form>
-                                        </div>
-                                        </div>	
-                                        <?php
-                                        $toplinks = X3::db()->query("SELECT name, short_title FROM data_page WHERE ontop ORDER BY weight DESC, title DESC");
-                                        if(is_resource($toplinks) && mysql_num_fields($toplinks)):
-                                            while($l = mysql_fetch_assoc($toplinks)):
-                                        ?>
-                                        <a href="/page/<?=$l['name']?>.html" class="link_two"><?=$l['short_title']?></a>
-                                        <?endwhile;?>
-                                        <?endif;?>
-                                        <a href="/page/help.html" class="link_two active">Помощь</a>
-                                        </div>
-                                        </div>
-                                        <div id="main_content">
+                            <input type="password" name="pass" class="secret" placeholder="Пароль" />
+                            <a href="/company/restore.html" class="forget">Забыли пароль?</a><br />
+                            <input type="checkbox" name="remember" value="yes" class="try" ><span class="try_remember">Запомнить</span>
+                            <button type="submit">Войти</button>
+                        </form>
+                    </div>
+                </div>	
+                    <?php
+                    $toplinks = X3::db()->query("SELECT name, short_title FROM data_page WHERE ontop ORDER BY weight DESC, title DESC");
+                    if(is_resource($toplinks) && mysql_num_fields($toplinks)):
+                        while($l = mysql_fetch_assoc($toplinks)):
+                    ?>
+                    <a href="/page/<?=$l['name']?>.html" class="link_two"><?=$l['short_title']?></a>
+                    <?endwhile;?>
+                    <?endif;?>
+                    <a href="/page/help.html" class="link_two active">Помощь</a>
+                </div>
+            </div>
+                                        
+                                        <div id="head_content">
                                             <div class="main_header">
                                                 <div class="main_logo">
                                                     <a href="/"><img src="/images/kansha.jpg" width="184" height="38" /></a>
+                                                    <noindex>
                                                     <p style="width:200px">В нашем каталоге <span class="number"><?=X3::user()->citemCount!==null?X3::user()->citemCount:(X3::user()->citemCount=Company_Stat::getStat('items'))?></span> 
                                                         <?=X3_String::create(" ")->numeral(X3::user()->itemCount,array("предложение","предложения","предложений"))?> от 
                                                         <span class="how_much"><?=X3::user()->shopCount!==null?X3::user()->shopCount:(X3::user()->shopCount=Company_Stat::getStat('companies'))?></span> 
                                                         <?=X3_String::create(" ")->numeral(X3::user()->shopCount,array("интернет-магазин","интернет-магазина","интернет-магазинов"))?>.</p>
+                                                    </noindex>
                                                 </div>
                                                 
                                                 <?=  X3_Widget::run('@layouts:widgets:BannerTop.php')?>
                                                 
                                                 <div class="find_it">
+                                                    <noindex>
                                                     <div style="margin-bottom: 10px;text-align: center;">
                                                         <span>Хотите начать продавать свои товары через kansha.kz</span>
                                                         <a href="/page/start_selling.html" class="main_red_link">Добавить свои товары</a>
                                                     </div>
+                                                    </noindex>
                                                     <div>
                                                         <div class="find_it_inside">
                                                             <form name="search-form" action="/search.html" method="get">
@@ -182,7 +186,7 @@
                                                                             <div class="pustoi" style="height:42px">&nbsp;</div>
                                                                             </div><!--main_lower_info-->
                                                                         <? endif; ?>
-                                                                        </div><!--main_content-->
+                                                                        </div><!--head_content-->
                                                                         <div class="clear-both">&nbsp;</div>
 <?=  X3_Widget::run('@layouts:footer.php',array(),array('cache'=>false))?>
 

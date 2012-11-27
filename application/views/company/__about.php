@@ -1,6 +1,11 @@
-<table class="three_inset">
+<?
+$width = 240;
+$width += $scount>0?140:0;
+$width += $srcount>0?80:0;
+?>
+<table class="three_inset" width="100%">
     <tbody><tr>
-            <td style="padding-right:10px;white-space:nowrap;">
+            <td style="padding-right:10px;white-space:nowrap;width:<?=$width?>px">
                 <a class="nero active" href="#" onclick="return false;"><span>О Компании<i>&nbsp;</i></span></a>
                 <a class="blu" href="<?=$url?>/feedback.html"><span>Отзывы</span><sup><?=$fcount?></sup></a>
                 <?if($scount>0):?>

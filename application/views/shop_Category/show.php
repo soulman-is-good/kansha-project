@@ -2,6 +2,9 @@
 $gids = array();
 ?>
 <style>
+    .product_expand h6, .product_expand p {
+        margin-top:0;
+    }
     .product_expand .mgr_product {
         float: left;
         margin-left: 20px;
@@ -36,29 +39,9 @@ $gids = array();
     </div><!--product_left_side-->
 
     <div class="product_right">
-        <table width="100%" class="article_with_pic">
-            <tbody><tr>
-                    <? $i=0;foreach ($groups as $group): 
-                        $im = trim($group['image'],'/');
-                        if(is_file($im)){
-                            $size = getimagesize($im);
-                        }else
-                            $size = array(135,107);
-                        ?>
-                    <?if($i%3==0 && $i>0) echo'</tr><tr>';?>
-                    <td>
-                        <div class="article_box">
-                            <div style="background-image:url(<?=$group['image']?>)" class="article_box_pic"><a href="<?=$group['url']?>" style="text-decoration: none;">
-                                <img src="/images/_zero.gif" width="<?=$size[0]?>" height="<?=$size[1]?>" />
-                                </a></div>
-                            <div class="article_text">
-                                <a href="<?=$group['url']?>"><?=$group['title']?></a>
-                            </div>
-                        </div>
-                    </td>
-                    <?$i++; endforeach; ?>
-                    <?$i = $i%3; if($i%3>0);while($i-->=0) echo $i==0?'<td></td>':'<td></td>';?>
-            </tbody></table>
+    <article><h6 style="color: #000;font-weight:normal;">
+            <?=$model->text?>
+        </h6></article>
 
 <?//  X3_Widget::run('@layouts:widgets:serviceForCat.php',array('model'=>$model))?>
 
@@ -144,8 +127,40 @@ if(is_resource($items) && mysql_num_rows($items)>0):
             <?$i++;endwhile;?>
         </div>        
 <?endif;?>    
-    <article><h6 style="color: #000;font-weight:normal;">
-            <?=$model->text?>
-        </h6></article>
+<div class="product_expand" style="margin-top:25px;">
+    <table class="production" width="100%">
+        <tbody><tr>
+                <td style="width:100%">
+                    <div class="black_stripe">
+                        <div class="left_stripe_black">&nbsp;</div>
+                        <div class="right_stripe_black">&nbsp;</div>
+                    </div>
+                </td>
+            </tr>
+        </tbody></table>
+</div>
+        <table width="100%" class="article_with_pic" style="margin-top:30px">
+            <tbody><tr>
+                    <? $i=0;foreach ($groups as $group): 
+                        $im = trim($group['image'],'/');
+                        if(is_file($im)){
+                            $size = getimagesize($im);
+                        }else
+                            $size = array(135,107);
+                        ?>
+                    <?if($i%4==0 && $i>0) echo'</tr><tr>';?>
+                    <td>
+                        <div class="article_box" style="float:none;margin:0 auto 22px;">
+                            <div style="background-image:url(<?=$group['image']?>)" class="article_box_pic"><a href="<?=$group['url']?>" style="text-decoration: none;">
+                                <img src="/images/_zero.gif" width="<?=$size[0]?>" height="<?=$size[1]?>" />
+                                </a></div>
+                            <div class="article_text">
+                                <a href="<?=$group['url']?>"><?=$group['title']?></a>
+                            </div>
+                        </div>
+                    </td>
+                    <?$i++; endforeach; ?>
+                    <?$i = $i%4; if($i%4>0);while($i-->=0) echo $i==0?'<td></td>':'<td></td>';?>
+            </tbody></table>    
     <div class="clear-both">&nbsp;</div>
 </div>

@@ -16,9 +16,16 @@ while($g=mysql_fetch_array($grps)){
             );
             $key = $modules->id . '|' . $g['id'] . '|' . $ps['id'];
             if(NULL!==($t = Manufacturer_Group::get(array('manufacturer_id'=>$modules->id,'gid'=>$g['id'],'pid'=>$ps['id']),1))){
-                $text[$key] = $t->text;
-            }else
-                $text[$key] = '';
+                $text[$key]['text'] = $t->text;
+                $text[$key]['mtitle'] = $t->metatitle;
+                $text[$key]['mkeywords'] = $t->metakeywords;
+                $text[$key]['mdesc'] = $t->metadescription;
+            }else{
+                $text[$key]['text'] = '';
+                $text[$key]['mtitle'] = '';
+                $text[$key]['mkeywords'] = '';
+                $text[$key]['mdesc'] = '';
+            }
         }
     }else{
         $groups[]=array(
@@ -28,9 +35,16 @@ while($g=mysql_fetch_array($grps)){
         );
         $key = $modules->id . '|' . $g['id'] . '|0';
         if(NULL!==($t = Manufacturer_Group::get(array('manufacturer_id'=>$modules->id,'gid'=>$g['id'],'pid'=>'0'),1))){
-            $text[$key] = $t->text;
-        }else
-            $text[$key] = '';
+            $text[$key]['text'] = $t->text;
+            $text[$key]['mtitle'] = $t->metatitle;
+            $text[$key]['mkeywords'] = $t->metakeywords;
+            $text[$key]['mdesc'] = $t->metadescription;
+        }else{
+            $text[$key]['text'] = '';
+            $text[$key]['mtitle'] = '';
+            $text[$key]['mkeywords'] = '';
+            $text[$key]['mdesc'] = '';
+        }
     }
     $i++;
 }
@@ -101,7 +115,13 @@ if(!empty($errs)):?>
                 <div style="background: #dadada;padding:5px;font-size:14px;font-weight:bold;cursor:pointer;" onclick="$(this).siblings('.slide').slideToggle();"><?=$g['title']?></div>
                 <div class="slide" style="display:none">
                     <input name="Manufacturer_Group[<?=$modules->id?>][<?=$g['gid']?>|<?=$g['pid']?>][pid]" type="hidden" value="<?=$g['pid']?>" />
-                    <textarea id="<?=md5($key)?>" name="Manufacturer_Group[<?=$modules->id?>][<?=$g['gid']?>|<?=$g['pid']?>][text]" style="width:100%;height:200px"><?=$text[$key]?></textarea>
+                    Metatitle:<br/>
+                    <input style="width:100%" name="Manufacturer_Group[<?=$modules->id?>][<?=$g['gid']?>|<?=$g['pid']?>][metatitle]" type="text" value="<?=$text[$key]['mtitle']?>" /><br/>
+                    Metakewords:<br/>
+                    <textarea style="width:100%" name="Manufacturer_Group[<?=$modules->id?>][<?=$g['gid']?>|<?=$g['pid']?>][metakeywords]"><?=$text[$key]['mkeywords']?></textarea><br/>
+                    Metadescription:<br/>
+                    <textarea style="width:100%" name="Manufacturer_Group[<?=$modules->id?>][<?=$g['gid']?>|<?=$g['pid']?>][metadescription]"><?=$text[$key]['mdesc']?></textarea><br/>
+                    <textarea id="<?=md5($key)?>" name="Manufacturer_Group[<?=$modules->id?>][<?=$g['gid']?>|<?=$g['pid']?>][text]" style="width:100%;height:200px"><?=$text[$key]['text']?></textarea>
                     <script>
                         CKEDITOR.replace( '<?=md5($key)?>' );
                     </script>                    

@@ -19,7 +19,10 @@ class Manufacturer_Group extends X3_Module_Table {
         'manufacturer_id'=>array('integer[10]','unsigned','index'),
         'gid'=>array('integer[10]'),
         'pid'=>array('integer[10]','default'=>'0'),
-        'text'=>array('text')
+        'text'=>array('text','default'=>'NULL'),
+        'metatitle'=>array('string','default'=>'NULL'),
+        'metakeywords'=>array('content','default'=>'NULL'),
+        'metadescription'=>array('content','default'=>'NULL'),        
     );
     
     public function actionUpdate() {
@@ -31,15 +34,22 @@ class Manufacturer_Group extends X3_Module_Table {
                 foreach($grps as $gid=>$attr){
                     $gid = explode('|',$gid);
                     $gid = $gid[0];
-                    if(trim($attr['text'])=='') continue;
                     $pid = (int)$attr['pid'];
                     if(NULL===($t = self::get(array('manufacturer_id'=>''.$mid,'gid'=>''.$gid,'pid'=>''.$pid),1))){
+                        if(trim($attr['text'])=='' 
+                                && trim($attr['metatitle'])==''
+                                && trim($attr['metakeywords'])==''
+                                && trim($attr['metadescription'])==''
+                        ) continue;
                         $t = new self;
                     }
                     $t->gid = $gid;
                     $t->pid = $pid;
                     $t->manufacturer_id = $mid;
                     $t->text = $attr['text'];
+                    $t->metatitle = $attr['metatitle'];
+                    $t->metakeywords = $attr['metakeywords'];
+                    $t->metadescription = $attr['metadescription'];
                     if(!$t->save()){
                         var_dump($t->getTable()->getErrors());die;
                     }
