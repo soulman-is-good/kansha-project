@@ -80,7 +80,14 @@ class Company extends X3_Module_Table {
             $cond = array('@condition'=>array('company_id' => $this->id,'type'=>"$type "),'@order'=>'id');
         if(X3::user()->city>0)
             $cond['@condition']['city'] = X3::user()->city;
-        return $this->addresses[$this->id] = Address::get($cond, 1);
+        else if(is_array(X3::user()->region) && X3::user()->region[0]>0)
+            $cond['@condition']['city'] = X3::user()->region[0];
+        if(null == ($addr = Address::get($cond, 1))){
+            unset($cond['@condition']['city']);
+            $addr = Address::get($cond, 1);
+        }
+        
+        return $this->addresses[$this->id] = $addr;
     }
 
     public function getItems() {
