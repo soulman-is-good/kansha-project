@@ -80,8 +80,20 @@ class Shop_Item extends X3_Module_Table {
             return null;
         if (isset(self::$_props[$this->id]))
             return self::$_props[$this->id];
-        if ($this->group_id > 0)
-            return (self::$_props[$this->id] = Shop_Properties::getProp('prop_' . $this->group_id, array('id' => $this->id), 1));
+        if ($this->group_id > 0){
+            if(false==($data = X3::cache()->get("prop_$this->group_id.$this->id"))){
+                $elem = Shop_Properties::getProp('prop_' . $this->group_id, array('id' => $this->id), 1);
+                if($elem!=null){
+                    $data = $elem->toArray(1);
+                    X3::cache()->set("prop_$this->group_id.$this->id",$data,2592000);
+                }
+            }else{
+                $elem = Shop_Properties::getInstance('prop_' . $this->group_id);
+                $elem->getTable()->acquire($data);
+                $elem->getTable()->setIsNewRecord(false);
+            }
+            return (self::$_props[$this->id] = $elem);
+        }
     }
 
     public function getPropstext($desc = '') {

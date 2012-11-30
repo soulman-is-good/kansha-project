@@ -128,6 +128,7 @@ class News extends X3_Module_Table {
         if ($model === null)
             throw new X3_404;
         X3::cache()->filename .= '.' . $model->id;
+        $model->metatitle = $model->metatitle!=''?$model->metatitle:$model->title;
         SeoHelper::setMeta($model->metatitle, $model->metakeywords, $model->metadescription);
         $this->template->render('show', array('model' => $model,'bread'=>array(array('/news.html'=>'Архив новостей'))));
     }

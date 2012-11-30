@@ -4,12 +4,12 @@
     $c = count($models);
 ?>
 <div class="table_des">
-    <table class="des_header">
+    <table class="des_header" width="100%">
         <tbody><tr>
-                <td style="padding-right:10px;white-space:nowrap;height:19px">
+                <td style="padding-right:10px;white-space:nowrap;height:19px;width:460px">
                     <div style="margin-top:0px" class="des_header_links">
-                                <a class="green_green" href="<?=$url?>/prices.html"><span>Цены<i>&nbsp;</i></span><sup><?=$mm['cnt']?></sup></a>
-                                <a class="black_black" href="<?=$url?>.html"><span>Характеристики<i>&nbsp;</i></span></a>
+                                <a style="margin-left:0px" class="black_black" href="<?=$url?>.html"><span>Характеристики<i>&nbsp;</i></span></a>
+                                <a style="margin-left:10px" class="green_green" href="<?=$url?>/prices.html"><span>Где купить?<i>&nbsp;</i></span><sup><?=$mm['cnt']?></sup></a>
                                 <a class="blue_blue active" href="<?=$url?>/feedback.html"><span>Отзывы<i>&nbsp;</i></span><sup><?=$fcount?></sup></a>
                                 <a class="orange_orange" href="<?=$url?>/services.html"><span>Услуги<i>&nbsp;</i></span><sup><?=$scount?></sup></a>
                     </div>

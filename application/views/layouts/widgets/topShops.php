@@ -15,7 +15,7 @@ $companies = X3::db()->fetchAll("SELECT id, title, image, login,
         (SELECT COUNT(0) FROM company_itemstat WHERE company_id=data_company.id) AS k, 
         (SELECT COUNT(0) FROM company_itemstat WHERE company_id=data_company.id AND time BETWEEN $d1 AND $d2) AS d1, 
         (SELECT COUNT(0) FROM company_itemstat WHERE company_id=data_company.id AND time BETWEEN $d3 AND $d4) AS d2 
-    FROM data_company WHERE status ORDER BY k DESC, weight, title LIMIT 3");
+    FROM data_company WHERE status ORDER BY d1 DESC, k DESC, weight, title LIMIT 3");
 ?>
 <div class="top_markets">
     <table class="market_stripe">

@@ -188,7 +188,7 @@
                                                                         <? endif; ?>
                                                                         </div><!--head_content-->
                                                                         <div class="clear-both">&nbsp;</div>
-<?=  X3_Widget::run('@layouts:footer.php',array(),array('cache'=>false))?>
+<?=  X3_Widget::run('@layouts:footer.php',array(),array('cache'=>true))?>
 
                                                                         <div id="bg_lower">
                                                                             <div class="bg_lower_content">

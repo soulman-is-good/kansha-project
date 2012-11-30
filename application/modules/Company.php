@@ -1084,7 +1084,7 @@ class Company extends X3_Module_Table {
                 if($F->save()){
                     $F->cookie = $model->id;
                     $email = 'info@kansha.kz';
-                    if(!empty($model->getAddress()->email))
+                    if($model->getAddress()!=null && !empty($model->getAddress()->email))
                         $email .= ','.$model->getAddress()->email;
                     User_Storage::store($F->email,$F->name,array('company'=>$model->title,'content'=>$F->content),'ok!');
                     Notify::sendMail('Company.FeedbackUser',array('company'=>$model->title,'username'=>$F->name,'content'=>$F->content),$F->email);
@@ -1100,6 +1100,15 @@ class Company extends X3_Module_Table {
         $mark = ceil($fcount['marks']/$mcnt['m'])*5;
         $fcount = (int)$fcount['cnt'];
         $scount = 0;//TODO Sale count;
+        if($model->metatitle == '')
+            if($type == 'about')
+                $model->metatitle = 'О компании '.$model->title;
+            elseif($type == 'services')
+                $model->metatitle = 'Услуги компании '.$model->title;
+            elseif($type == 'feedback')
+                $model->metatitle = 'Отзывы о компании '.$model->title;
+            elseif($type == 'sale')
+                $model->metatitle = 'Распродажи компании '.$model->title;
         $srcount = X3::db()->count("SELECT `id` FROM company_service WHERE company_id=$id AND (services<>'[]' OR groups<>'[]')");
         SeoHelper::setMeta($model->metatitle,$model->metakeywords,$model->metadescription);
         $this->template->render('show',array('type'=>$type,'model'=>$model,'fcount'=>$fcount,'scount'=>$scount,'srcount'=>$srcount,'rank'=>$mark,'F'=>$F,

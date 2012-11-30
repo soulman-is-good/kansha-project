@@ -12,6 +12,9 @@ return array(
     'locale'=>'ru',
     //'languages'=>array('en','de','fr'),
     'components'=>array(
+        'cache'=>array(
+            'class'=>'X3_Cache_Mem'
+        ),
         'profile'=>array(
             'class'=>'Profile',
             'time'=>microtime(true),

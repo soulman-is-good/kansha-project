@@ -113,7 +113,7 @@ if(!empty(X3::app()->group_description)){
                         </tbody></table>
 
                 </div>
-            <?=  X3_Widget::run('@layouts:widgets:filterItems.php',array('model'=>$model),array('cache'=>true ,'cacheConfig'=>array('filename'=>$cache.'.cache')));?>
+            <?= X3_Widget::run('@layouts:widgets:filterItems.php',array('model'=>$model),array('cache'=>true ,'cacheConfig'=>array('filename'=>$cache.'.cache')));?>
             <script type="text/javascript">
             <?if(!is_null(X3::user()->$Tprop)):?>
                 var filters = <?=json_encode(X3::user()->$Tprop)?>;
@@ -265,14 +265,15 @@ if(!empty(X3::app()->group_description)){
 
 
             <? 
-            X3::profile()->start('test02');
-            $items = X3::db()->query($items);
-            if(!is_resource($items)) die('DB ERROR!');
-            $c = mysql_num_rows($items);
+            X3::profile()->start('item list');
+            $items = X3::db()->fetchAll($items,true);
+            //if(!is_resource($items)) die('DB ERROR!');
+            //$c = mysql_num_rows($items);
+            $c = count($items);
             $i = 0;
-            $fs = X3::db()->fetch("SELECT SUM(`rank`) `summ` FROM shop_feedback WHERE item_id IN (SELECT id FROM shop_item WHERE group_id=$model->id)");
+            $fs = X3::db()->fetch("SELECT SUM(`rank`) `summ` FROM shop_feedback WHERE item_id IN (SELECT id FROM shop_item WHERE group_id=$model->id)",true);
             if((int)$fs['summ']==0) $fs['summ']=1;
-            while($item = mysql_fetch_array($items)):
+            foreach($items as $item):
             //foreach ($items as $i=>$item): 
                 $mdl = new Shop_Item();
                 $mdl->getTable()->acquire($item);
@@ -290,9 +291,9 @@ if(!empty(X3::app()->group_description)){
                         $size = array(122,122);
                     $image = "/$image";
                 }
-                $stat = X3::db()->fetch("SELECT MAX(price) as `max`, MIN(price) as `min`, COUNT(0) as `cnt` FROM company_item INNER JOIN data_company dc ON dc.id=company_item.company_id WHERE dc.status AND item_id=$item->id AND price>0");
-                $fc = X3::db()->fetch("SELECT COUNT(0) `cnt`, SUM(`rank`) `summ` FROM shop_feedback WHERE item_id=$item->id");
-                $sc = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups REGEXP '(,|\[)$item->group_id(,|\])'");
+                $stat = X3::db()->fetch("SELECT MAX(price) as `max`, MIN(price) as `min`, COUNT(0) as `cnt` FROM company_item INNER JOIN data_company dc ON dc.id=company_item.company_id WHERE dc.status AND item_id=$item->id AND price>0",true);
+                $fc = X3::db()->fetch("SELECT COUNT(0) `cnt`, SUM(`rank`) `summ` FROM shop_feedback WHERE item_id=$item->id",true);
+                $sc = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups REGEXP '(,|\[)$item->group_id(,|\])'",true);
                 $url = '/'.strtolower(X3_String::create($item->title)->translit()).($item->articule!=''?"-($item->articule)-":'-').$item->id;
                 $rank = floor(5*$fc['summ']/$fs['summ']);
                 $_s = 5-$rank;
@@ -345,9 +346,9 @@ if(!empty(X3::app()->group_description)){
             </div>
         </div>
         <?
-        $i++; endwhile;
+        $i++; endforeach;
         //endforeach; 
-        X3::profile()->end('test02');
+        X3::profile()->end('item list');
         ?>
         <div class="sale_selector expand">
             <?=X3_Widget::run('@layouts:widgets:pageselect.php',array('paginator'=>$paginator));?>

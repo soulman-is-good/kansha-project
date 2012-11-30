@@ -19,12 +19,12 @@ class Breadcrumbs extends X3_Widget {
         else
             $group = $model;
         $bread = array();
-        $secs = X3::db()->query("SELECT * FROM shop_category WHERE status ORDER BY weight, title");
-        $grs = X3::db()->query("SELECT * FROM shop_group WHERE status AND category_id LIKE '$group->category_id' ORDER BY weight, title");
+        $secs = X3::db()->fetchAll("SELECT * FROM shop_category WHERE status ORDER BY weight, title",true);
+        $grs = X3::db()->fetchAll("SELECT * FROM shop_group WHERE status AND category_id LIKE '$group->category_id' ORDER BY weight, title", true);
         $cats = array();        
         $i=1;
         $catsid = explode(',',$group->category_id);
-        while($ss = mysql_fetch_assoc($secs)){
+        foreach($secs as $ss){
             $url = "/".strtolower(X3_String::create($ss['title'])->translit(false,"'"))."-c".$ss['id'].".html";
             if(in_array($ss['id'],$catsid))
                 $cats[0] = array($url=>$ss['title']);
@@ -36,8 +36,8 @@ class Breadcrumbs extends X3_Widget {
         $bread[] = $cats;
         $cats = array();
         $i=1;
-        while($g = mysql_fetch_assoc($grs)){
-            $prs = X3::db()->fetchAll("SELECT id, value, title, description FROM shop_proplist WHERE status AND property_id IN (SELECT id FROM shop_properties WHERE group_id={$g['id']} AND isgroup)");
+        foreach($grs as $g){
+            $prs = X3::db()->fetchAll("SELECT id, value, title, description FROM shop_proplist WHERE status AND property_id IN (SELECT id FROM shop_properties WHERE group_id={$g['id']} AND isgroup)",true);
             if(!empty($prs)){
                 foreach ($prs as $pr) {
                     $url = "/".Shop_Group::getLink($g['id'],$pr['id'],false,$pr['title']).".html";

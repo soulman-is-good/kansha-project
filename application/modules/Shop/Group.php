@@ -134,7 +134,7 @@ class Shop_Group extends X3_Module_Table {
         
     public function prepareMeta($model,$prefix="meta") {
         $item = $model->getProperties();
-        $props = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE group_id=$this->id");
+        $props = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE group_id=$this->id",true);
         $metatitle = "{$prefix}title";
         $metakeywords = "{$prefix}keywords";
         $metadescription = "{$prefix}description";
@@ -239,7 +239,7 @@ class Shop_Group extends X3_Module_Table {
             $manuf = Manufacturer::getByPk(X3::user()->{"manu_$this->id"}[0])->title;        
         $ms = array(&$mt,&$mk,&$md);
         if($filters != null && !empty($filters)){
-            $props = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE group_id=$this->id");
+            $props = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE group_id=$this->id",true);
             foreach($props as $prop){
                 $m = array();
                 foreach ($ms as &$mz)
@@ -503,7 +503,7 @@ class Shop_Group extends X3_Module_Table {
         while($g = mysql_fetch_object($q)){
             $g->count = X3::db()->count("SELECT `item_id` FROM shop_item si INNER JOIN company_item ci ON ci.item_id=si.id WHERE ci.price>0 AND si.group_id=$g->id GROUP BY `ci`.`item_id`");
             $count += $g->count;
-            $cat = X3::db()->fetchAll("SELECT * FROM shop_category WHERE status AND id IN ($g->category_id) ORDER BY weight, title");
+            $cat = X3::db()->fetchAll("SELECT * FROM shop_category WHERE status AND id IN ($g->category_id) ORDER BY weight, title",true);
             if(!empty($cat))
             foreach($cat as $ca){
                 $key = $ca['weight'].'.'.(99999-$ca['id']);
@@ -512,7 +512,7 @@ class Shop_Group extends X3_Module_Table {
                     $models[$key]['model']->count = 0;
                 }
                 $models[$key]['model']->count += $g->count;
-                $ps = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE isgroup AND group_id=$g->id ORDER BY weight, label");
+                $ps = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE isgroup AND group_id=$g->id ORDER BY weight, label",true);
                 if(!empty($ps)){
                     foreach($ps as $pr){
                         if($pr['type']=='string' || $pr['type']=='content'){

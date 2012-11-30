@@ -51,15 +51,15 @@ $groups = X3::db()->fetchAll("SELECT * FROM shop_group WHERE status AND id IN ($
 $ccount = count($companies);
 ?>
 <div class="table_des">
-    <table class="des_header change">
+    <table class="des_header change" width="100%">
 
         <tbody><tr>
-                <td style="padding-right:10px;white-space:nowrap;height:19px">
+                <td style="padding-right:10px;white-space:nowrap;height:19px;width:460px">
                     <div class="des_header_links" style="margin-top: 0px">
-                                <a class="green_green" href="<?=$url?>/prices.html"><span>Цены</span><sup><?=$mm['cnt']?></sup><i>&nbsp;</i></a>
-                                <a class="black_black" href="<?=$url?>.html"><span>Характеристики</span><i>&nbsp;</i></a>
+                                <a style="margin-left:0px" class="black_black" href="<?=$url?>.html"><span>Характеристики</span><i>&nbsp;</i></a>
+                                <a style="margin-left:10px" class="green_green" href="<?=$url?>/prices.html"><span>Где купить?</span><sup><?=$mm['cnt']?></sup><i>&nbsp;</i></a>
                                 <a class="blue_blue" href="<?=$url?>/feedback.html"><span>Отзывы</span><sup><?=$fcount?></sup><i>&nbsp;</i></a>
-                                <a class="orange_orange active" href="#"><span>Услуги<i>&nbsp;</i></span><sup><?=$scount?></sup></a>
+                                <a class="orange_orange active" href="<?=$url?>/services.html"><span>Услуги<i>&nbsp;</i></span><sup><?=$scount?></sup></a>
                     </div>
                 </td>
                 <td>

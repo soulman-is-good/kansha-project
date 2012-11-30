@@ -121,7 +121,7 @@ class Shop_Properties extends X3_Module_Table {
     }    
     
     public static function update($props,&$values=false) {
-        X3::db()->startTransaction();
+        //X3::db()->startTransaction();
         foreach ($props as $key=>$prop){
             $new = false;
             if(NULL === ($e = self::get(array(array(array('name'=>$prop['name']),array('synonymous'=>array('LIKE'=>"'%{$prop['name']};%'"))),'group_id'=>$prop['group_id']),1))){
@@ -136,15 +136,22 @@ class Shop_Properties extends X3_Module_Table {
                     //to string
                     if($prop['type']=='string'){
                         $values[$e->name] = array('value' => X3::db()->validateSQL($values[$e->name]['value']), 'soundex' => md5($values[$e->name]['value']));
-                        $vals = X3::db()->fetchAll("SELECT `$e->name` FROM prop_{$prop['group_id']}");
-                        X3::db()->startTransaction();
-                        foreach($vals as $val){
-                            $soex = X3_String::create($val[$e->name])->dmstring();
-                            X3::db()->addTransaction("INSERT INTO shop_proplist (`group_id`,`property_id`,`soundex`,`title`,`value`) VALUES 
-                                ('{$e->group_id}','$e->id','$soex','{$val[$e->name]}','{$val[$e->name]}')");
+                        $vals = X3::db()->query("SELECT `id`, `$e->name` FROM prop_{$prop['group_id']}");
+                        if(is_resource($vals) && mysql_num_rows($vals)>0){
+                            $plist = array();
+                            while($val = mysql_fetch_assoc($vals)){
+                                if($val[$e->name]!=0){
+                                    $soex = X3_String::create($val[$e->name])->dmstring();
+                                    if(!isset($plist[$val[$e->name]])){
+                                        X3::db()->query("INSERT INTO shop_proplist (`group_id`,`property_id`,`soundex`,`title`,`value`) VALUES 
+                                            ('{$e->group_id}','$e->id','$soex','{$val[$e->name]}','{$val[$e->name]}')");
+                                        $plist[$val[$e->name]] = mysql_insert_id();
+                                    }
+                                }else
+                                    $plist[$val[$e->name]] = 'NULL';
+                                X3::db()->query("UPDATE TABLE prop_{$prop['group_id']} SET `$e->name`={$plist[$val[$e->name]]} WHERE id={$val['id']}");
+                            }
                         }
-                        if(!X3::db()->commit())
-                            X3::log(X3::db()->getErrors(),'kansha_error');
                     }elseif($e->type=='string'){ //from string
                         $values[$e->name] = array('value' => $values[$e->name]['value'], 'skip');
                         $vals = X3::db()->fetchAll("SELECT `id`,`value` FROM shop_proplist WHERE group_id='$e->group_id' AND property_id='$e->id'");
@@ -170,7 +177,7 @@ class Shop_Properties extends X3_Module_Table {
                     Informer::add("Добавлено новое свойство: <a title=\"Перейти к редактированию\" href=\"/admin/group/edit/$e->group_id\">'$e->label'</a>",'new_property',array('id'=>$e->id));
             }
         }
-        X3::db()->commit();
+        //X3::db()->commit();
         return $props;
     }
     

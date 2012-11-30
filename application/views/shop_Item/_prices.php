@@ -24,14 +24,14 @@ $c = mysql_num_rows($models);
 <div class="table_des">
     <table width="100%" class="des_header">
         <tbody><tr>
-                <td style="white-space:nowrap">
+                <td style="white-space:nowrap;width:460px">
                     <table>
                         <tbody><tr>
                                 <td>
-                                    <a class="des_green active" href="#"><span>Цены</span><sup><?=$mm['cnt']?></sup><i>&nbsp;</i></a>
+                                    <a class="des_black" href="<?=$url?>.html"><span>Характеристики</span><i>&nbsp;</i></a>
                                 </td>
                                 <td>
-                                    <a class="des_black" href="<?=$url?>.html"><span>Характеристики</span><i>&nbsp;</i></a>
+                                    <a class="des_green active" href="<?=$url?>/prices.html"><span>Где купить?</span><sup><?=$mm['cnt']?></sup><i>&nbsp;</i></a>
                                 </td>
                                 <td>
                                     <a class="des_blue" href="<?=$url?>/feedback.html"><span>Отзывы</span><sup><?=$fcount?></sup><i>&nbsp;</i></a>
@@ -53,13 +53,14 @@ $c = mysql_num_rows($models);
     <table width="100%" style="margin-top:0" class="des_header">
         <tbody><tr>
                 <?if($c>0):?>
-                <td style="padding-top:32px">
+                <?if(0):?>
+                <td style="padding-top:20px;padding-left:15px">
                     <a class="product_price" href="#">Поднять ваши предложения выше!</a>
                 </td>
+                <?endif;?>
                 <td>
-
                     <form>
-                        <table width="100%" style="margin-top:28px">
+                        <table width="100%" style="margin-top:4px">
                             <tbody><tr>
                                     <td>
                                     </td>
@@ -79,26 +80,25 @@ $c = mysql_num_rows($models);
                                 </tr>
                             </tbody></table>
                     </form>
-
                 </td>
             </tr>
         </tbody></table>
-    <table class="price_table">
+    <table class="price_table" style="margin-top:13px">
         <tbody>
             <tr class="price_gray">
-                <td style="padding-bottom:19px">
+                <td style="padding-bottom:10px">
                     <span style="margin-left:14px">Цена</span>
                 </td>
-                <td style="padding-bottom:19px">
+                <td>
                     <span>Продавец</span>
                 </td>
-                <td style="padding-bottom:19px">
+                <td>
                     <span>Контакты</span>
                 </td>
-                <td style="padding-bottom:19px">
+                <td>
                     <span>Доставка</span>
                 </td>
-                <td style="padding-bottom:19px">
+                <td>
                     <span>Адрес магазина</span>
                 </td>
             </tr>
@@ -114,15 +114,17 @@ $c = mysql_num_rows($models);
                 $fc = X3::db()->fetch("SELECT COUNT(0) `cnt`, SUM(`rank`) `summ` FROM company_feedback WHERE company_id=$model->company_id");
                 $rank = floor(5*$fc['summ']/$fs['summ']);
                 $_s = 5-$rank;
-                $region = $address->getRegion()->title;
+                $region = $address->getRegion();
+                if($region != null)
+                        $region = $region->title;
                 $name = X3_String::create($model->company)->translit();
                 $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
                 ?>
 
             <tr class="<?=($model->isfree?'':'red_active')?>">
                 <td class="<?=($model->isfree?'':'red_price')?> first">
-                    <div class="price_inside">
-                        <span class="red_cost"><?=  X3_String::create($model->price)->currency()?><i class="money">&nbsp;</i></span>
+                    <div class="price_inside" style="margin-top:0px">
+                        <span class="red_cost" style="margin-top:0px"><?=  X3_String::create($model->price)->currency()?><i class="money">&nbsp;</i></span>
                         <span class="price_date">от <?=date("d.m.Y",$model->updated_at)?></span>
                         <noindex>
                         <a rel="nofollow" href="/buy/<?=$model->id?>.html">Заказать</a>
@@ -130,7 +132,7 @@ $c = mysql_num_rows($models);
                     </div>
                 </td>
                 <td class="<?=($model->isfree?'':'red_price')?>">
-                    <div class="go_site">
+                    <div class="go_site" style="margin-top:0px">
                         <a href="/<?=$name?>-company<?=$model->company_id?>.html" style="text-decoration: none"><img src="/uploads/Company/81x31xh/<?=$model->image?>"></a><br>
                         <div class="star_links">
                             <?for($j=0;$j<$rank;$j++):?>
@@ -150,13 +152,13 @@ $c = mysql_num_rows($models);
                 <td class="<?=($model->isfree?'':'red_price')?>">
                     <div class="shops_contact">
                         <?if(count($phones)>0):?>
-                        <ul class="number">
+                        <ul class="number" style="margin-top:0px;margin-bottom:8px">
                             <? foreach ($phones as $phone): ?>
                             <li><?=$phone?></li>
                             <? endforeach; ?>
                         </ul>
                         <?endif;?>
-                        <ul class="e-mail">
+                        <ul class="e-mail" style="margin-bottom:0px;margin-top:0px">
                             <?if(!empty($address->email)):?>
                             <li>e-mail: <a href="mailto:<?=$address->email?>"><?=$address->email?></a></li>
                             <?endif;?>
@@ -173,17 +175,17 @@ $c = mysql_num_rows($models);
                 <td class="<?=($model->isfree?'':'red_price')?>">
                     <noindex>
                     <?if(!empty($model->delivery)):?>
-                    <p class="city"><a target="_blank" href="<?=$model->delivery?>">Весь Казахстан</a></p>
+                    <p class="city" style="margin-top:0px"><a target="_blank" href="<?=$model->delivery?>">Весь Казахстан</a></p>
                     <?endif;?>
                     <?if(!empty($address->delivery)):?>
                     <p class="city"><a target="_blank" href="<?=$address->delivery?>"><?=$region?></a></p>
                     <?endif;?>
                     </noindex>
                 </td>
-                <td width="100px" class="<?=($model->isfree?'':'red_price')?> last">
+                <td width="100" class="<?=($model->isfree?'':'red_price')?> last">
                     <noindex>
-                    <div class="go_site">
-                        <p><?=$model->title?>
+                    <div class="go_site" style="margin-top:0px">
+                        <p style="margin-top:0px"><?=$model->title?>
                             <?=$region . (!empty($address->address)?", ".$address->address:'')?></p>
 
                     </div>
@@ -197,7 +199,8 @@ $c = mysql_num_rows($models);
         </tbody></table>
             <?else:?>
                 <td style="padding-top:32px">
-                    <h2>Позиции отсутствуют</h2>
+                    <h4>В данное время предложения по этому товару отсутствуют</h4>
+                    
                 </td>    
             </tr>
         </tbody></table>    
