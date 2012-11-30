@@ -144,9 +144,9 @@ class User extends X3_Module_Table {
             if(!is_null($this->email))
                 X3::app()->user->email = $this->email;
         }
-        $path = X3::app()->cache->directory . DIRECTORY_SEPARATOR . "admin.list.user";
-        if(file_exists($path))
-            X3::app()->cache->flush($path);
+//        $path =  . DIRECTORY_SEPARATOR . "admin.list.user";
+//        if(file_exists($path))
+//            X3::app()->cache->flush($path);
         return TRUE;
     }
 
