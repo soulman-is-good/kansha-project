@@ -235,6 +235,11 @@ if(!$modules->table->getIsNewRecord()){
                 <td><input type="checkbox" name="Address[<?=$i?>][ismain]" value="1" <?=$address->ismain?'checked="checked"':''?> /></td>
                 <td>&nbsp;</td>
             </tr>
+            <tr>
+                <td>Порядок офиса</td>
+                <td><input type="text" name="Address[<?=$i?>][weight]" value="<?=$address->weight?>" /></td>
+                <td>&nbsp;</td>
+            </tr>
             <?/*<tr>
                 <td>Время работы</td>
                 <td>
@@ -491,6 +496,14 @@ if(!$modules->table->getIsNewRecord()){
                     '<td>Доставка</td>'
                 ).append(
                     $('<td />').append('<input type="text" name="Address['+acnt+'][delivery]" value="" />')
+                ).append(
+                    $('<td>&nbsp;</td>')
+                )
+            )
+            .append($('<tr />').append(
+                    '<td>Головной офис</td>'
+                ).append(
+                    $('<td />').append('<input type="checkbox" name="Address['+acnt+'][ismain]" value="1" />')
                 ).append(
                     $('<td>&nbsp;</td>')
                 )

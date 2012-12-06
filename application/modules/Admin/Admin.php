@@ -987,10 +987,6 @@ class Admin extends X3_Module {
             }
         }
         $array = array("Monday"=>"1","Tuesday"=>"1","Wednesday"=>"1","Thursday"=>"1","Friday"=>"1","Saturday"=>"1","Sunday"=>"1");
-        foreach($array as $k=>$a){
-            if(is_null($_POST['Address'][0]['worktime']['days'][$k]))
-                $_POST['Address'][0]['worktime']['days'][$k] = $a;
-        }        
         $ads = $_POST['Address'];
         foreach ($ads as $key => $address) {
             if(isset($address['delete'])){
@@ -998,17 +994,19 @@ class Admin extends X3_Module {
                     Address::deleteByPk($address['id']);
                 }
             }else{
+                foreach($array as $k=>$a){
+                    if(is_null($address['worktime']['days'][$k]))
+                        $address['worktime']['days'][$k] = $a;
+                }
                 $a = new Address();
+                $address['ismain'] = isset($address['ismain'])?1:0;
                 $a->table->acquire($address);
                 if($address['id']>0){
                     $a->table->setIsNewRecord(false);
-                }
-                $a->ismain = isset($address['ismain']) && $address['ismain']==1?1:0;
+                }elseif($a->weight == 0)
+                    $a->weight = $key;
                 $a->worktime = $address['worktime'];
                 $a->phones = $address['phones'];
-                if($key==0)
-                    $a->ismain = 1;
-                $a->weight = $key;
                 $a->company_id = $model->id;
                 if(!$a->save()){
                     var_dump($a->table->getErrors());

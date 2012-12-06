@@ -5,7 +5,8 @@ return array(
     'name'=>'Kansha.kz',
     //'grabber'=>'http://localhost:8111',
     'grabber'=>'http://localhost:3435',
-    //'errorController'=>'site/error',
+    //To enable/disable error handling uncomment bellow
+    'errorController'=>'site/error',
     'uri'=>array(
         'suffix'=>'html'
     ),
