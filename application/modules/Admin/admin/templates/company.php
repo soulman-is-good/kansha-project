@@ -1,3 +1,6 @@
+<div class="x3-submenu">
+    <span>Компании</span> :: <a href="/admin/sale">Распродажи</a>
+</div>
 <?
 $filter = isset($_POST['filter'])?$_POST['filter']:0;
 $func = '<form method="post"><select name="filter" onchange="$(this).parent().submit();">';

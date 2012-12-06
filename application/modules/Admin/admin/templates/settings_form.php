@@ -8,6 +8,9 @@
     table.formtable td input[type="text"],table.formtable td select{
         width:400px;
     }
+    table.formtable td textarea{
+        width:100%;
+    }
 </style>
 <?php
 $photos = array();

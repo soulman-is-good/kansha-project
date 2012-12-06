@@ -2,7 +2,8 @@
 
 <?php
 $addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE type=1 AND status ORDER BY weight");
-$services = X3::db()->fetchAll("SELECT * FROM data_service WHERE status ORDER BY title");
+//$services = X3::db()->fetchAll("SELECT * FROM data_service WHERE status ORDER BY title");
+$services = X3::db()->fetchAll("SELECT ds.id,ds.name,ds.title FROM data_service ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0 ORDER BY title");
 $companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status ORDER BY isfree, title LIMIT 3");
 $scomp = X3::db()->fetchAll("SELECT * FROM company_service");
 foreach ($scomp as $i => $sc) {
@@ -194,8 +195,8 @@ if($type==1):
 			<a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3><?=$comp['title']?></h3></a>
                         <p><?=  strip_tags($comp['servicetext'])?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
 			<div class="main_services_inside_left_link">
-                        <? foreach ($comp['services'] as $value): ?>
-                            <a href="/service/<?=$value['name']?>.html" class="main_orange_link active"><?=$value['title']?></a>
+                        <? foreach ($comp['services'] as $i=>$value): ?>
+                            <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?=$i==0?' active':''?>"><?=$value['title']?></a>
                         <? endforeach; ?>
 			</div>
 			</div>

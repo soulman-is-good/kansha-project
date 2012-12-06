@@ -81,11 +81,12 @@ class Shop_Item extends X3_Module_Table {
         if (isset(self::$_props[$this->id]))
             return self::$_props[$this->id];
         if ($this->group_id > 0){
-            if(false==($data = X3::cache()->get("prop_$this->group_id.$this->id"))){
+            if(!X3::app()->hasComponent('cache') || false==($data = X3::cache()->get("prop_$this->group_id.$this->id"))){
                 $elem = Shop_Properties::getProp('prop_' . $this->group_id, array('id' => $this->id), 1);
                 if($elem!=null){
                     $data = $elem->toArray(1);
-                    X3::cache()->set("prop_$this->group_id.$this->id",$data,2592000);
+                    if(X3::app()->hasComponent('cache'))
+                        X3::cache()->set("prop_$this->group_id.$this->id",$data,2592000);
                 }
             }else{
                 $elem = Shop_Properties::getInstance('prop_' . $this->group_id);
@@ -787,7 +788,7 @@ class Shop_Item extends X3_Module_Table {
         $pids = X3::db()->query("SELECT id,name,type,label FROM shop_properties sp WHERE isgroup AND group_id=$model->group_id");
         if(is_resource($pids) && mysql_num_rows($pids)>0){
             while($pid = mysql_fetch_assoc($pids)){
-                if(isset($prop->{$pid['name']}) && $prop->{$pid['name']}>0){
+                if(isset($prop->_fields[$pid['name']]) && $prop->{$pid['name']}>0){
                     if($pid['type'] == 'string'){
                         X3::user()->property_id = X3::app()->property = $prop->{$pid['name']};
                         break;
@@ -860,7 +861,7 @@ class Shop_Item extends X3_Module_Table {
         $pids = X3::db()->query("SELECT id,name,type,label FROM shop_properties sp WHERE isgroup AND group_id=$model->group_id");
         if(is_resource($pids) && mysql_num_rows($pids)>0){
             while($pid = mysql_fetch_assoc($pids)){
-                if(isset($prop->{$pid['name']}) && $prop->{$pid['name']}>0){
+                if(isset($prop->_fields[$pid['name']]) && $prop->{$pid['name']}>0){
                     if($pid['type'] == 'string'){
                         X3::user()->property_id = X3::app()->property = $prop->{$pid['name']};
                         break;
@@ -914,7 +915,7 @@ class Shop_Item extends X3_Module_Table {
         $pids = X3::db()->query("SELECT id,name,type,label FROM shop_properties sp WHERE isgroup AND group_id=$model->group_id");
         if(is_resource($pids) && mysql_num_rows($pids)>0){
             while($pid = mysql_fetch_assoc($pids)){
-                if(isset($prop->{$pid['name']}) && $prop->{$pid['name']}>0){
+                if(isset($prop->_fields[$pid['name']]) && $prop->{$pid['name']}>0){
                     if($pid['type'] == 'string'){
                         X3::user()->property_id = X3::app()->property = $prop->{$pid['name']};
                         break;
@@ -992,7 +993,7 @@ class Shop_Item extends X3_Module_Table {
         $pids = X3::db()->query("SELECT id,name,type,label FROM shop_properties sp WHERE isgroup AND group_id=$model->group_id");
         if(is_resource($pids) && mysql_num_rows($pids)>0){
             while($pid = mysql_fetch_assoc($pids)){
-                if(isset($prop->{$pid['name']}) && $prop->{$pid['name']}>0){
+                if(isset($prop->_fields[$pid['name']]) && $prop->{$pid['name']}>0){
                     if($pid['type'] == 'string'){
                         X3::user()->property_id = X3::app()->property = $prop->{$pid['name']};
                         break;

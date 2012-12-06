@@ -101,9 +101,21 @@ class Article extends X3_Module_Table {
     }
     
     public function actionIndex(){
-        $models = $this->table->select('*')->where('status')->asObject();
+        $q = array('@condition'=>array('status'),'@order'=>'created_at DESC');
+        $nc = News::num_rows($q);
+        $ac = Article::num_rows($q);
+        $pagnews = new Paginator('News', $nc);
+        $pagarts = new Paginator('Article', $ac);
+        $nq = $q;
+        $nq['@offset']=$pagnews->offset;
+        $nq['@limit']=$pagnews->limit;
+        $aq = $q;
+        $aq['@offset']=$pagarts->offset;
+        $aq['@limit']=$pagarts->limit;
+        $news = News::get($nq);
+        $article = Article::get($aq);
         SeoHelper::setMeta();
-        $this->template->render('index',array('novosti'=>$models));
+        $this->template->render('@views:news:index.php', array('news' => $news,'articles'=>$article,'nc'=>$nc,'ac'=>$ac,'pagnews'=>$pagnews,'pagarts'=>$pagarts,'bread'=>'<span style="top:1px" class="sale">Архив</span>'));
     }
     
     public function actionShow(){
@@ -113,7 +125,8 @@ class Article extends X3_Module_Table {
         $model = self::getByPk($id);
         if($model === null)
             throw new X3_404;
-        X3::cache()->filename .= '.'.$model->id;
+        //X3::cache()->filename .= '.'.$model->id;
+        $model->metatitle = $model->metatitle!=''?$model->metatitle:$model->title;
         SeoHelper::setMeta($model->metatitle, $model->metakeywords, $model->metadescription);
         $this->template->render('show',array('model'=>$model,'bread'=>array(array('/articles.html'=>'Архив обзоров'))));
     }

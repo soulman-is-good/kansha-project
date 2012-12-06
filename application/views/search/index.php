@@ -54,7 +54,6 @@
             </tbody></table>
         <div class="search">
 <?= X3_Widget::run('@views:search:left_block.php',array('models'=>$block))?>
-
             <div class="product_right"<?=(empty($block))?' style="margin-left:0"':''?>>
                 <table width="100%" class="for_selector">
                     <tbody><tr>

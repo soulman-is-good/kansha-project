@@ -1210,7 +1210,7 @@ $form = new Form($modules);
             if(m.status == 'idle'){
                 if(typeof $('#message')[0] == 'undefined')
                     $('#x3-container').prepend($('<div />').attr({'id':'message'}).progressbar({value:0}))
-                $('#message').progressbar('value',m.percent);
+                $('#message').progressbar('value',parseInt(m.percent));
                 setTimeout(function(){startj();},1000);
             }
         },'json').error(function(){$('#message').fadeOut();$('#genmodel').css('display','inline-block');});

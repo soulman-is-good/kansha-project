@@ -373,6 +373,9 @@ class Shop_Group extends X3_Module_Table {
         if(isset($_POST['Price']) || X3::app()->user->$price!==null){
             $prices = isset($_POST['Price'])?$_POST['Price']:X3::user()->$price;
             if(isset($_POST['Price'])){
+                $prices['min'] = (double)strip_tags($prices['min']);
+                $prices['max'] = (double)strip_tags($prices['max']);
+                $_POST['Price'] = $prices;
                 if($bsession)
                     X3::app()->user->$price = $prices;
                 $_GET['page'] = 1;
@@ -416,8 +419,8 @@ class Shop_Group extends X3_Module_Table {
             if(!empty($filters['scalar']))
             foreach($filters['scalar'] as $name=>$filter){
                 if(is_array($filter)){
-                    $filter['from'] = str_replace(',', '.', $filter['from']);
-                    $filter['till'] = str_replace(',', '.', $filter['till']);
+                    $filter['from'] = (double)str_replace(',', '.', $filter['from']);
+                    $filter['till'] = (double)str_replace(',', '.', $filter['till']);
                     if(trim($filter['from'])=='')
                         $query['@condition']["$Tprop.$name"]=array('<='=>$filter['till']);
                     elseif(trim($filter['till'])=='')
@@ -427,7 +430,7 @@ class Shop_Group extends X3_Module_Table {
                 }else{
                     $filter = str_replace(',', '.', $filter);
                     if(trim($filter)!='')
-                        $query['@condition']["$Tprop.$name"]=$filter;
+                        $query['@condition']["$Tprop.$name"]=(double)$filter;
                 }
             }
             //boolean
@@ -516,7 +519,7 @@ class Shop_Group extends X3_Module_Table {
                 if(!empty($ps)){
                     foreach($ps as $pr){
                         if($pr['type']=='string' || $pr['type']=='content'){
-                            $pls = X3::db()->query("SELECT * FROM shop_proplist sl WHERE group_id=$g->id AND property_id={$pr['id']} ORDER BY weight, value");
+                            $pls = X3::db()->query("SELECT * FROM shop_proplist sl WHERE group_id=$g->id AND property_id='{$pr['id']}' ORDER BY weight, value");
                             while($pl = mysql_fetch_assoc($pls)){
                                 $gcount++;
                                 $c = X3::db()->count("SELECT DISTINCT si.`id` FROM shop_item si INNER JOIN company_item ci ON ci.item_id=si.id INNER JOIN prop_$g->id p ON p.id=si.id WHERE `p`.`{$pr['name']}`='{$pl['id']}' AND ci.price>0");
@@ -529,7 +532,7 @@ class Shop_Group extends X3_Module_Table {
                             }
                         }elseif($pr['type']=='boolean'){
                             $gcount++;
-                            $c = X3::db()->count("SELECT si.`id` FROM shop_item si INNER JOIN shop_properties sl ON sl.group_id=si.group_id WHERE sl.status AND sl.id={$pr['id']}");
+                            $c = X3::db()->count("SELECT si.`id` FROM shop_item si INNER JOIN shop_properties sl ON sl.group_id=si.group_id WHERE sl.status AND sl.id='{$pr['id']}'");
                             $cnt += $c;
                             $models[$key]['models'][]=(object)array(
                                 'url'=>"/".Shop_Group::getLink($g->id,$pr['id'],false,$pr['label']).".html",
@@ -615,9 +618,9 @@ class Shop_Group extends X3_Module_Table {
             $priceMax = $price['max'];
         //    $prices = "price BETWEEN $priceMin AND $priceMax"; 
         }
-        if(empty($model->alltitle)) $model->alltitle = SysSettings::getValue("SeoTitleShop_Group");
-        if(empty($model->allkeywords)) $model->allkeywords = SysSettings::getValue("SeoKeywordsShop_Group");
-        if(empty($model->alldescription)) $model->alldescription= SysSettings::getValue("SeoDescriptionShop_Group");
+        if($model->alltitle=='') $model->alltitle = SysSettings::getValue("SeoTitleShop_Group");
+        if($model->allkeywords=='') $model->allkeywords = SysSettings::getValue("SeoKeywordsShop_Group");
+        if($model->alldescription=='') $model->alldescription= SysSettings::getValue("SeoDescriptionShop_Group");
         $at=null;$ak=null;$ad=null;
         if(isset($_GET['manuf'])){
             $manuf = Manufacturer::get(array('name'=>$_GET['manuf']),1);

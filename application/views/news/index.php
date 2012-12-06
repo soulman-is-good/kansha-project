@@ -3,9 +3,9 @@
 ?>
 <div class="product_expand">
     <div style="margin-top:20px;" class="news_round_up">
-        <table style="margin-bottom:43px">
+        <table style="margin-bottom:43px;width:100%">
             <tbody><tr>
-                    <td>
+                    <td width="<?=($nc>0 && $ac>0)?'220':'120'?>">
                         <div class="news_round_up_inside">
                             <?if($nc>0 && $ac>0):?>
                             <a class="news active" href="#anews"><span>Новости</span><i>&nbsp;</i></a>
@@ -17,7 +17,7 @@
                             <?endif;?>
                         </div>
                     </td>
-                    <td style="width:100%">
+                    <td>
                         <div class="blue_blue_stripe">
                             <div class="blue_left">&nbsp;</div>
                             <div class="blue_right">&nbsp;</div>

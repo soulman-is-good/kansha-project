@@ -9,6 +9,7 @@ $groups = array();
 if(is_resource($q)){
     while($g = mysql_fetch_assoc($q)){
         $cats = X3::db()->fetchAll("SELECT * FROM shop_category WHERE id IN ({$g['category_id']})");
+        if(!empty($cats))
         foreach($cats as $cat){
             if(!isset($groups[$cat['id']]))
                 $groups[$cat['id']] = array('title'=>$cat['title'],'url'=>"/".strtolower(X3_String::create($cat['title'])->translit(false,"'"))."-c".$cat['id'].".html",'grs'=>array());

@@ -13,7 +13,7 @@ if(isset($_GET['city'])){
 }
 $aquery = '';
 if(X3::user()->region!=null && X3::user()->region[0]>0){
-    $query.=' AND dc.id IN (SELECT company_id FROM data_address WHERE type=1 AND city='.X3::user()->region[0].')';
+    $query.=' AND dc.id IN (SELECT company_id FROM data_address da WHERE type=1 AND city='.X3::user()->region[0].')';
     $aquery = " AND city='".X3::user()->region[0]."'";
 }elseif(X3::user()->region!=null)
    X3::user()->region = null;
@@ -48,7 +48,9 @@ $igr = implode(',', $igr);
 $groups = X3::db()->query("SELECT * FROM shop_group WHERE status AND id IN ($igr)");
 
 //foreach($companies as $j=>$comp) if(empty($companies[$j]['services'])) unset($companies[$j]);
-$ccount = mysql_num_rows($companies);
+$ccount = 0;
+if(is_resource($companies))
+    $ccount = mysql_num_rows($companies);
 ?>
 <noindex>
 <div class="main_services">
@@ -79,7 +81,7 @@ $ccount = mysql_num_rows($companies);
                     <ul class="list serviceBranch" style="margin-top:5px">
                         <? while ($value = mysql_fetch_assoc($services)):
                             ?>
-			<li><a href="/service/<?=$value['name']?>.html"><?=$value['title']?></a></li>
+			<li><a href="/service/<?=urlencode($value['name'])?>.html"><?=$value['title']?></a></li>
                         <? endwhile; ?>
                         <!--li><a href="#" class="last">Все услуги</a></li-->
                     </ul>
@@ -129,7 +131,7 @@ $ccount = mysql_num_rows($companies);
                     </div>
                     <?endif;?>
                 </div>
-                <? $j=0;while ($comp = mysql_fetch_assoc($companies)): 
+                <? $j=0;if(is_resource($companies)) while ($comp = mysql_fetch_assoc($companies)): 
                     $services = X3::db()->query("SELECT name, title FROM `data_service` ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.company_id='{$comp['id']}' AND cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0");
                     $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} AND type=1 $aquery ORDER BY id");
                     if($address == null)

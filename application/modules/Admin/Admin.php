@@ -41,7 +41,8 @@ class Admin extends X3_Module {
         'shop'=>'Shop_Item','admin_menu'=>'Admin_Menu','shopcategory'=>'Shop_Category','shopsearch'=>array('Shop_Item','search'),
         'company'=>'Company','manufacturer'=>'Manufacturer','tools'=>'Admin_Tools','grabber'=>'Grabber','settings'=>'SysSettings',
         'props'=>'Shop_Properties','region'=>'Region','service'=>'Service','page'=>'Page','banner'=>'Banner','news'=>'News','article'=>'Article',
-        'seo'=>'Meta','notify'=>'Notify','storage'=>'User_Storage','feedback'=>'Site_Feedback','feedcompany'=>'Company_Feedback','feedshop'=>'Shop_Feedback');
+        'seo'=>'Meta','notify'=>'Notify','storage'=>'User_Storage','feedback'=>'Site_Feedback','feedcompany'=>'Company_Feedback','feedshop'=>'Shop_Feedback',
+        'sale'=>'Sale');
 
     public $modules = array(
         'admin' => array(
@@ -56,6 +57,12 @@ class Admin extends X3_Module {
                 'common'=>array('edit','delete'),
                 'direct'=>array('save'),
                 'labels'=>array('add'=>'+ Регион')
+            ),
+            'Sale'=>array(
+                'general'=>array('add'),
+                'common'=>array('edit','delete'),
+                'direct'=>array('save'),
+                'labels'=>array('add'=>'+ Распродажа')
             ),
             'Meta'=>array(
                 'general'=>array('add'),
@@ -138,7 +145,7 @@ class Admin extends X3_Module {
             'Company'=>array(
                 'general'=>array('add'),
                 'common'=>array('edit','excel','upload','content','autoupdate','payment'),
-                'direct'=>array('save'),
+                'direct'=>array('save','delete'),
                 'labels'=>array('add'=>'+ Компания','toexcel'=>'в Excel')
             ),
             'Service'=>array(
@@ -960,7 +967,7 @@ class Admin extends X3_Module {
             }
         }
         if(!$model->save()){
-            var_dump($model->table->getErrors());
+            var_dump($model->table->getErrors(),X3::db()->getErrors());
             exit;
         }
         if(isset($_POST['Company_Service'])){
@@ -996,6 +1003,7 @@ class Admin extends X3_Module {
                 if($address['id']>0){
                     $a->table->setIsNewRecord(false);
                 }
+                $a->ismain = isset($address['ismain']) && $address['ismain']==1?1:0;
                 $a->worktime = $address['worktime'];
                 $a->phones = $address['phones'];
                 if($key==0)

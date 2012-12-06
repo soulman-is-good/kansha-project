@@ -1,6 +1,3 @@
-<div class="x3-submenu">
-    <a href="/admin/shop">Товары</a> :: <a href="/admin/shopgroup">Группы</a> :: <span>Категории</span>
-</div>
 <?=$this->renderPartial("@views:admin:templates:default.kansha.php",
         array(
             'modules'=>$modules,

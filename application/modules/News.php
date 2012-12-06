@@ -127,7 +127,7 @@ class News extends X3_Module_Table {
         $model = self::getByPk($id);
         if ($model === null)
             throw new X3_404;
-        X3::cache()->filename .= '.' . $model->id;
+        //X3::cache()->filename .= '.' . $model->id;
         $model->metatitle = $model->metatitle!=''?$model->metatitle:$model->title;
         SeoHelper::setMeta($model->metatitle, $model->metakeywords, $model->metadescription);
         $this->template->render('show', array('model' => $model,'bread'=>array(array('/news.html'=>'Архив новостей'))));
@@ -135,7 +135,7 @@ class News extends X3_Module_Table {
 
     public function date() {
         return date('d', $this->created_at) . " " . I18n::months((int) date('m', $this->created_at)-1, I18n::DATE_MONTH) . " " . date('Y', $this->created_at);
-    }
+    }    
     
     public function beforeValidate() {
         if(strpos($this->created_at,'.')!==false){

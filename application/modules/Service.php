@@ -119,7 +119,7 @@ class Service extends X3_Module_Table {
         if(isset($_GET['id'])){
             $id = (int)($_GET['id']);
             if(!$id>0) throw new X3_404();
-            $query = "AND id IN (SELECT company_id FROM company_service WHERE groups REGEXP '\"$id\"')";
+            $query = "AND dc.id IN (SELECT company_id FROM company_service WHERE groups REGEXP '\"$id\"')";
             $description = '';
         }elseif(isset($_GET['name'])){
             $name = mysql_real_escape_string($_GET['name']);
@@ -127,18 +127,18 @@ class Service extends X3_Module_Table {
             if($service===NULL) throw new X3_404();
             $description = '';
             if($service!==null){
-                $query = "AND id IN (SELECT company_id FROM company_service WHERE services REGEXP '\"$service->id\"')";
+                $query = "AND dc.id IN (SELECT company_id FROM company_service WHERE services REGEXP '\"$service->id\"')";
                 $description = $service->text;
             }
         }
         $bread = Breadcrumbs::service();
         $this->template->render('index',array('query'=>$query,'description'=>$description, 'bread' => $bread));
     }
-
+    
     public function beforeValidate() {
         if($this->created_at == 0)
             $this->created_at = time();
-        $this->name = strtolower(X3_String::create($this->title)->translit());
+        $this->name = strtolower(X3_String::create($this->title)->translit(0,"'"));
     }
 
 }

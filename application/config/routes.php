@@ -61,9 +61,10 @@ array(
     //Page
     '/^\/page\/(.+)?$/' => array('/page/show/name/$1', true),
     //Articles/News
+    '/^\/sale\/([0-9]+)?(.*)$/' => array('/sale/show/id/$1$2', true),
     '/^\/news\/([0-9]+)?(.*)$/' => array('/news/show/id/$1$2', true),
     '/^\/article\/([0-9]+)?(.*)$/' => array('/article/show/id/$1$2', true),
-    '/^\/articles(.*)$/' => array('/news/index/article/1$1', true),
+    '/^\/articles(.*)$/' => array('/article/index/article/1$1', true),
     
         )
 ?>

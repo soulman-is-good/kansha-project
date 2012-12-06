@@ -111,9 +111,9 @@ class ShopCommand extends X3_Command {
         $q = Shop_Item::get($query);
         //X3::db()->fetchAll("SELECT id FROM shop_item WHERE group_id=$grp $pagin");
         $tbl_name = 'prop_' . $grp;
-        @file_put_contents(X3::app()->basePath."/uploads/status-models$grp.log",json_encode(array('status'=>'idle','message'=>'Обработка...','percent'=>'2')));
         $cnt = $q->count();
         X3::db()->startTransaction();
+        @file_put_contents(X3::app()->basePath."/uploads/status-models$grp.log",json_encode(array('status'=>'idle','message'=>'Обработка.....','percent'=>'2')));
         foreach($q as $kk=>$o) {
             $commit = false;
             $_words = $words;
@@ -307,6 +307,8 @@ class ShopCommand extends X3_Command {
             echo "OK\n";
         else
             echo X3::db()->getErrors();
+        $cache = new X3_Cache_Mem();
+        $cache->flush();
         unset($item,$items,$group);
     }
     
@@ -315,8 +317,12 @@ class ShopCommand extends X3_Command {
             $id = (int)X3::app()->global['id'];
             $a = Shop_Item::getByPk($id);
             $a->properties_text = '';
+            echo $a->getGroup()->short_desc;
             echo $a->getPropstext($a->getGroup()->short_desc);
-            $a->save();
+            if($a->save()){
+                $cache = new X3_Cache_Mem();
+                $cache->flush();                
+            }
         }else{
             echo "\tCaching properties list for item.\n";
             echo "\tUSAGE: run.php shop cacheprop id=<shop item id>\n\n";

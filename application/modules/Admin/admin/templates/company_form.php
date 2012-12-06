@@ -123,7 +123,8 @@ if(X3::db()->getErrors()!='' || !empty($errs)):?>
 if(!$modules->table->getIsNewRecord()){
     echo $form->hidden($modules->table->getPK());
     $addreses = Address::get(array('company_id'=>$modules->id));
-}
+}else
+    $addreses = array(new Address());
 ?>
 <table class="formtable">
 <?=$form->renderPartial(array('title','site','delivery','isfree','isfree1','isfree2','image','login'));?>
@@ -227,6 +228,11 @@ if(!$modules->table->getIsNewRecord()){
             <tr>
                 <td>Доставка</td>
                 <td><input type="text" name="Address[<?=$i?>][delivery]" value="<?=$address->delivery?>" /></td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Головной офис</td>
+                <td><input type="checkbox" name="Address[<?=$i?>][ismain]" value="1" <?=$address->ismain?'checked="checked"':''?> /></td>
                 <td>&nbsp;</td>
             </tr>
             <?/*<tr>
@@ -360,7 +366,7 @@ if(!$modules->table->getIsNewRecord()){
 <script>    
     var pno = {};
     var ano = 0
-    var acnt = <?=$addreses->count();?>;
+    var acnt = <?=$modules->getIsNewRecord()?1:$addreses->count();?>;
     var services = <?=  json_encode($js_services)?>;
     var groups = <?=  json_encode($js_cats);?>;
     function addmorephone(val,id){
@@ -378,7 +384,7 @@ if(!$modules->table->getIsNewRecord()){
         pno[id]++;
     }
     $('.addr-type').buttonset();
-    <?if(isset($_POST['Address']) || !$address->table->getIsNewRecord()):
+    <?if(isset($_POST['Address']) || !$modules->getIsNewRecord()):
        
         //if(isset($_POST['Address'][0]['phones']))
             //$phones = $_POST['Address'][0]['phones'];

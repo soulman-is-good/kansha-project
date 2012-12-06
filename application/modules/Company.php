@@ -1226,6 +1226,7 @@ class Company extends X3_Module_Table {
             Company_Feedback::delete(array('company_id' => $model->id));
             Company_Stat::delete(array('company_id' => $model->id));
             Company_ItemStat::delete(array('company_id' => $model->id));
+            Sale::delete(array('company_id' => $model->id));
         }
         return parent::onDelete($tables, $condition);
     }

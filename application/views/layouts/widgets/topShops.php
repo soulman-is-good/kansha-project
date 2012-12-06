@@ -3,14 +3,14 @@
 <?php
 $mnth = (int)date('n');
 $day = (int)date('d');
+$d1 = mktime(0, 0, 1, $mnth, $day);
+$d2 = mktime(23, 59, 29, $mnth, $day);
+$d3 = mktime(0, 0, 0, $mnth, 1);
+$d4 = mktime(23, 59, 29, $mnth, date("t"));
 if($day-1==0)
     $day = date("t",mktime(0, 0, 0, ($mnth-1), 1));
 $k1 = mktime(0, 0, 0, $mnth, $day-1);
 $k2 = mktime(23, 59, 29, $mnth, $day-1);
-$d1 = mktime(0, 0, 0, $mnth, $day);
-$d2 = mktime(23, 59, 29, $mnth, $day);
-$d3 = mktime(0, 0, 0, $mnth, 1);
-$d4 = mktime(23, 59, 29, $mnth, date("t"));
 $companies = X3::db()->fetchAll("SELECT id, title, image, login, 
         (SELECT COUNT(0) FROM company_itemstat WHERE company_id=data_company.id) AS k, 
         (SELECT COUNT(0) FROM company_itemstat WHERE company_id=data_company.id AND time BETWEEN $d1 AND $d2) AS d1, 

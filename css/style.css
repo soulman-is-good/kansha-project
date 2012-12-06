@@ -747,14 +747,14 @@ div.sale_selector span {color:#555555;font-size:12px;font-family:Tahoma,sans-ser
 div.sale_box {border-top:1px solid #e2cbcc;}
 div.sale_box.last {border-top:1px solid #e2cbcc;border-bottom:1px solid #e2cbcc;}
 div.sale_left {margin-left:240px;}
-div.sale_box_pic {background-repeat:no-repeat;float:left;margin-top:15px;margin-right:21px;margin-left:11px;}
+div.sale_box_pic {background-repeat:no-repeat;background-position:0 50%;float:left;margin-top:15px;margin-right:21px;margin-left:11px;}
 div.sale_box_text h1 a {color:#2068a5;font-size:16px;font-family:Tahoma,sans-serif;}
 div.sale_box_text h1  {margin-top:12px;}
 div.sale_box_text h1 a:hover {text-decoration:none;}
 div.sale_box_text p {color:#555555;font-size:12px;font-family:Tahoma,sans-serif;line-height:160%;margin-top:-12px;}
 div.sale_box_text p a {text-decoration:none;color:#2068a5;}
 div.sale_box_text div.old_price span.red_cost{color:#d33232;font-size:13px;font-family:Tahoma,sans-serif;position:relative;text-decoration:line-through;}
-div.sale_box_text div.old_price span.red_price i {background:url(../images/tenge.png) no-repeat;height:9px;width:7px;position:absolute;top:4px;margin-left:1px;text-decoration:none;}
+div.sale_box_text div.old_price span.red_price i {background:url(../images/tenge.png) no-repeat;height:9px;width:7px;position:absolute;top:4px;margin-left:1px;text-decoration:none;right:-10px}
 div.sale_box_text div.old_price span.red_price  {position:relative;}
 div.sale_box_text div.old_price {margin-top:8px;float:left;margin-right:24px;color:#d33232;}
 div.sale_box_text div.green_white span.white_text{font-size:16px;font-family:Tahoma,sans-serif;font-size:16px;font-weight:bold;color:white;padding:0.54em 0.813em 0.42em 0.25em;
@@ -776,7 +776,7 @@ behavior:url(/PIE.htc);}
 div.sale_box_text div.green_white span.white_text_text {font-size:11px;font-weight:normal;position:relative;top:-1px;}
 div.sale_box_text div.green_white {float:left;margin-left:14px;position:relative;top:2px;width:240px;}
 div.sale_box_text div.green_white div.angle {background:url(../images/st_p_s.png) no-repeat;height:34px;width:17px;position:absolute;top:-8px;left:-15px;}
-div.sale_box_text {margin-left:84px;margin-top:10px;}
+div.sale_box_text {margin-left:155px;margin-top:10px;}
 
 
 div.sale_box_text_image a.go_next {text-align:center;position:relative;top:5px;margin-left:20px;}
@@ -1483,8 +1483,8 @@ div.slide_it {cursor:pointer;}
 
 
 /*Product_description*/
-div.product_expand table.product_des h1 {background:none;font-family:Verdana,sans-serif;color:#000000;font-size:16px;margin-top:0px;word-spacing:4px;margin-bottom:20px;}
-div.product_expand table.product_des h1 sup {color:#777777;font-size:12px;font-family:Tahoma,sans-serif;font-weight:normal;margin-left:6px;}
+div.product_expand table.product_des h1, div.product_expand table.product_des h2 {background:none;font-family:Verdana,sans-serif;color:#000000;font-size:16px;margin-top:0px;word-spacing:4px;margin-bottom:20px;}
+div.product_expand table.product_des sup {color:#777777;font-size:12px;font-family:Tahoma,sans-serif;font-weight:normal;margin-left:6px;}
 div.product_expand table.product_des div.black_stripe {
 width:auto;height:3px;margin-top:7px;position:relative;
 background: #424242;
@@ -2099,11 +2099,11 @@ div.mn_news div.big_big_photo {height:307px;width:100%;background-position:50% 5
 
 
 /*Order*/
-div.product_expand table.product_des h1 span {color:#2e6b99;}
-div.product_expand table.product_des h1 span.pink {color:#8b272e;}
+div.product_expand table.product_des h2 span {color:#2e6b99;}
+div.product_expand table.product_des h2 span.pink {color:#8b272e;}
 div.product_expand table.order {width:100%;margin-bottom:30px;}
 div.product_expand table.order span.market {color:#555555;font-size:11px;font-family:Tahoma,sans-serif;}
-div.product_expand table.order div.order_big_pic {width:167px;height:319px;background-repeat:no-repeat;margin-right:17px;}
+div.product_expand table.order div.order_big_pic {width:300px;height:300px;background-repeat:no-repeat;margin-right:17px;}
 div.product_expand table.order span.red_red {color:#cc1212;font-size:30px;font-family:Tahoma,sans-serif;font-weight:bold;display:block;}
 div.product_expand table.order span.red_red img {position:relative;top:-1px;left:1px;}
 div.product_expand table.order span.little_green {color:#478c15;font-size:12px;font-family:Tahoma,sans-serif;display:block;margin-top:4px;}
@@ -2177,14 +2177,13 @@ behavior:url(/PIE.htc);
 }
 
 /*Sale_in*/
-div.product_expand table.product_des h1.sale_in {color:#000000;font-size:16px;font-family:Verdana,sans-serif;}
-div.product_expand table.product_des h1.sale_in span.less {font-size:13px;color:#000000;font-family:Verdana,sans-serif;}
+div.product_expand table.product_des h2.sale_in {color:#000000;font-size:16px;font-family:Verdana,sans-serif;}
+div.product_expand table.product_des h2.sale_in span.less {font-size:13px;color:#000000;font-family:Verdana,sans-serif;}
 div.sale_in_pic {background-repeat:no-repeat;width:176px;height:130px;background-position:50% 50%;margin-right:12px;}
 table.sale_in_box h4 {color:#333333;font-size:16px;font-family:Verdana,sans-serif;margin-bottom:5px;}
 table.sale_in_box p {color:#555555;font-size:12px;font-family:Tahoma,sans-serif;}
 table.blue_stripes sup {color:#777777;font-size:10px;font-family:Verdana,sans-serif;font-weight:normal;margin-left:5px;}
 div.sale_in_vk {background-position:50% 50%;background-repeat:no-repeat;width:100%;height:389px;margin-top:2px;}
-
 
 /*контакты*/
 div.contact_left_side {width:340px;margin-top:-2px;}
