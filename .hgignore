@@ -1,0 +1,17 @@
+syntax: regexp
+\.orig$
+\.orig\..*$
+\.chg\..*$
+\.rej$
+\.conflict\~$
+
+syntax: glob
+./application/extensions/*
+./application/log/*
+./uploads/*
+./images/*
+./css/fonts/*
+./css/ui-lightness/*
+./application/modules/Admin/css/instinct/*
+./nbproject/*
+./js/sfbrowser/*

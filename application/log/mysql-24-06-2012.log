@@ -1,0 +1,232 @@
+[24.06.2012 22:42:15] SHOW TABLES
+[24.06.2012 22:42:15] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 22:42:15] SELECT shop_item.* FROM `shop_item`  WHERE `articule` = ''
+[24.06.2012 22:42:15] SELECT shop_item.* FROM `shop_item`  WHERE `title` LIKE 'Samsung Galaxy Tab 10.1 P7500 16Gb'
+[24.06.2012 22:42:15] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 22:42:15] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 22:42:15] SELECT prop_17.* FROM `prop_17`  WHERE `operacionnaja_sistema` LIKE '%Android%' AND `podderzhka_operacionnoj_sistemy` LIKE '%Android 3.1%' AND `processorchipset` LIKE '%Nvidia Tegra 2%' AND `chastota_processora` LIKE '%1000%' AND `kolichestvo_jader_processora` LIKE '%2%' AND `razmer_operativnoj_pamjati` LIKE '%1 Гб%' AND `tip_operativnoj_pamjati` LIKE '%DDR2%' AND `razmer_vstroennoj_pamjati` LIKE '%16%' AND `razmer_ekrana` LIKE '%10.1%' AND `razreshenie_ekrana` LIKE '%1280x800%' AND `chislo_pikselov_na_djujm` LIKE '%149%' AND `tip_sensornogo_ekrana` LIKE '%емкостный%' AND `multitach-ekran` LIKE '%1%' AND `wi-fi` LIKE '%1%' AND `standart_wi-fi` LIKE '%802.11n%' AND `podderzhka_wimax` LIKE '%%' AND `podderzhka_dlna` LIKE '%%' AND `bluetooth` LIKE '%1%' AND `versija_bluetooth` LIKE '%3.0 HS%' AND `profil_adp` LIKE '%%' AND `sim-karta` LIKE '%mini SIM (обычная)%' AND `rabota_v_rezhime_sotovogo_telefona` LIKE '%%' AND `podderzhka_gprs` LIKE '%1%' AND `podderzhka_g` LIKE '%1%' AND `podderzhka_edge` LIKE '%1%' AND `podderzhka_hsdpa` LIKE '%1%' AND `podderzhka_hsupa` LIKE '%1%' AND `frontalnaja_kamera` LIKE '%1%' AND `kolichestvo_megapikselov_frontalnoj_kamery` LIKE '%2%' AND `kolichestvo_megapikselov_tylovoj_kamery` LIKE '%3%' AND `vspyshka` LIKE '%1%' AND `tylovaja_kamera` LIKE '%1%' AND `avtofokus` LIKE '%1%' AND `vstroennyj_dinamik` LIKE '%1%' AND `zvuk` LIKE '%стерео%' AND `vstroennyj_mikrofon` LIKE '%1%' AND `avtomaticheskaja_orientacija_ekrana` LIKE '%1%' AND `akselerometr` LIKE '%1%' AND `giroskop` LIKE '%1%' AND `gps` LIKE '%1%' AND `a-gps` LIKE '%1%' AND `kompas` LIKE '%1%' AND `datchik_osveschennosti` LIKE '%1%' AND `fm-tjuner` LIKE '%%' AND `fm-transmitter` LIKE '%%' AND `podkljuchenie_k_kompjuteru_po_usb` LIKE '%1%' AND `podkljuchenie_vneshnih_ustrojstv_po_usb` LIKE '%опционально%' AND `vyhod_audionaushniki` LIKE '%1%' AND `interfejs_ethernet` LIKE '%%' AND `podderzhka_aac` LIKE '%1%' AND `podderzhka_ogg` LIKE '%1%' AND `podderzhka_mpeg-` LIKE '%1%' AND `podderzhka_h` LIKE '%1%' AND `vremja_raboty_` LIKE '%9%' AND `emkost_akkumuljatora` LIKE '%7000%' AND `zarjadka_ot_usb` LIKE '%%' AND `dlina` LIKE '%257%' AND `shirina` LIKE '%175%' AND `tolschina` LIKE '%9%' AND `ves` LIKE '%565%'
+[24.06.2012 22:42:15] SELECT COUNT(0) AS `cnt` FROM `shop_item` WHERE `articule`='' 
+[24.06.2012 22:45:39] SHOW TABLES
+[24.06.2012 22:45:39] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 22:45:39] SELECT shop_item.* FROM `shop_item`  WHERE `articule` = ''
+[24.06.2012 22:45:39] SELECT shop_item.* FROM `shop_item`  WHERE `title` LIKE 'Samsung Galaxy Tab 10.1 P7500 16Gb'
+[24.06.2012 22:45:39] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 22:45:39] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 22:45:39] SELECT prop_17.* FROM `prop_17`  WHERE `operacionnaja_sistema` IN (SELECT id FROM shop_proplist WHERE value LIKE 'Android') AND `podderzhka_operacionnoj_sistemy` IN (SELECT id FROM shop_proplist WHERE value LIKE 'Android 3.1') AND `processorchipset` IN (SELECT id FROM shop_proplist WHERE value LIKE 'Nvidia Tegra 2') AND `chastota_processora` IN (SELECT id FROM shop_proplist WHERE value LIKE '1000') AND `kolichestvo_jader_processora` IN (SELECT id FROM shop_proplist WHERE value LIKE '2') AND `razmer_operativnoj_pamjati` IN (SELECT id FROM shop_proplist WHERE value LIKE '1 Гб') AND `tip_operativnoj_pamjati` IN (SELECT id FROM shop_proplist WHERE value LIKE 'DDR2') AND `razmer_vstroennoj_pamjati` IN (SELECT id FROM shop_proplist WHERE value LIKE '16') AND `razmer_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE '10.1') AND `razreshenie_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE '1280x800') AND `chislo_pikselov_na_djujm` IN (SELECT id FROM shop_proplist WHERE value LIKE '149') AND `tip_sensornogo_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE 'емкостный') AND `multitach-ekran` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `wi-fi` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `standart_wi-fi` IN (SELECT id FROM shop_proplist WHERE value LIKE '802.11n') AND `podderzhka_wimax` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_dlna` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `bluetooth` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `versija_bluetooth` IN (SELECT id FROM shop_proplist WHERE value LIKE '3.0 HS') AND `profil_adp` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `sim-karta` IN (SELECT id FROM shop_proplist WHERE value LIKE 'mini SIM (обычная)') AND `rabota_v_rezhime_sotovogo_telefona` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_gprs` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_g` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_edge` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_hsdpa` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_hsupa` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `frontalnaja_kamera` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `kolichestvo_megapikselov_frontalnoj_kamery` IN (SELECT id FROM shop_proplist WHERE value LIKE '2') AND `kolichestvo_megapikselov_tylovoj_kamery` IN (SELECT id FROM shop_proplist WHERE value LIKE '3') AND `vspyshka` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `tylovaja_kamera` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `avtofokus` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `vstroennyj_dinamik` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `zvuk` IN (SELECT id FROM shop_proplist WHERE value LIKE 'стерео') AND `vstroennyj_mikrofon` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `avtomaticheskaja_orientacija_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `akselerometr` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `giroskop` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `gps` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `a-gps` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `kompas` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `datchik_osveschennosti` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `fm-tjuner` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `fm-transmitter` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podkljuchenie_k_kompjuteru_po_usb` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podkljuchenie_vneshnih_ustrojstv_po_usb` IN (SELECT id FROM shop_proplist WHERE value LIKE 'опционально') AND `vyhod_audionaushniki` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `interfejs_ethernet` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_aac` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_ogg` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_mpeg-` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_h` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `vremja_raboty_` IN (SELECT id FROM shop_proplist WHERE value LIKE '9') AND `emkost_akkumuljatora` IN (SELECT id FROM shop_proplist WHERE value LIKE '7000') AND `zarjadka_ot_usb` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `dlina` IN (SELECT id FROM shop_proplist WHERE value LIKE '257') AND `shirina` IN (SELECT id FROM shop_proplist WHERE value LIKE '175') AND `tolschina` IN (SELECT id FROM shop_proplist WHERE value LIKE '9') AND `ves` IN (SELECT id FROM shop_proplist WHERE value LIKE '565')
+[24.06.2012 22:45:39] SELECT COUNT(0) AS `cnt` FROM `shop_item` WHERE `articule`='' 
+[24.06.2012 23:02:50] SHOW TABLES
+[24.06.2012 23:02:50] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 23:02:50] SELECT shop_item.* FROM `shop_item`  WHERE `articule` = ''
+[24.06.2012 23:02:50] SELECT shop_item.* FROM `shop_item`  WHERE `title` LIKE 'Samsung Galaxy Tab 10.1 P7500 16Gb'
+[24.06.2012 23:03:46] SHOW TABLES
+[24.06.2012 23:03:46] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 23:03:46] SELECT shop_item.* FROM `shop_item`  WHERE `articule` = ''
+[24.06.2012 23:03:46] SELECT shop_item.* FROM `shop_item`  WHERE `title` LIKE 'Samsung Galaxy Tab 10.1 P7500 16Gb'
+[24.06.2012 23:03:46] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:03:46] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:03:46] SELECT prop_17.* FROM `prop_17`  WHERE `operacionnaja_sistema` IN (SELECT id FROM shop_proplist WHERE value LIKE 'Android') AND `podderzhka_operacionnoj_sistemy` IN (SELECT id FROM shop_proplist WHERE value LIKE 'Android 3.1') AND `processorchipset` IN (SELECT id FROM shop_proplist WHERE value LIKE 'Nvidia Tegra 2') AND `chastota_processora` IN (SELECT id FROM shop_proplist WHERE value LIKE '1000') AND `kolichestvo_jader_processora` IN (SELECT id FROM shop_proplist WHERE value LIKE '2') AND `razmer_operativnoj_pamjati` IN (SELECT id FROM shop_proplist WHERE value LIKE '1 Гб') AND `tip_operativnoj_pamjati` IN (SELECT id FROM shop_proplist WHERE value LIKE 'DDR2') AND `razmer_vstroennoj_pamjati` IN (SELECT id FROM shop_proplist WHERE value LIKE '16') AND `razmer_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE '10.1') AND `razreshenie_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE '1280x800') AND `chislo_pikselov_na_djujm` IN (SELECT id FROM shop_proplist WHERE value LIKE '149') AND `tip_sensornogo_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE 'емкостный') AND `multitach-ekran` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `wi-fi` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `standart_wi-fi` IN (SELECT id FROM shop_proplist WHERE value LIKE '802.11n') AND `podderzhka_wimax` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_dlna` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `bluetooth` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `versija_bluetooth` IN (SELECT id FROM shop_proplist WHERE value LIKE '3.0 HS') AND `profil_adp` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `sim-karta` IN (SELECT id FROM shop_proplist WHERE value LIKE 'mini SIM (обычная)') AND `rabota_v_rezhime_sotovogo_telefona` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_gprs` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_g` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_edge` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_hsdpa` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_hsupa` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `frontalnaja_kamera` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `kolichestvo_megapikselov_frontalnoj_kamery` IN (SELECT id FROM shop_proplist WHERE value LIKE '2') AND `kolichestvo_megapikselov_tylovoj_kamery` IN (SELECT id FROM shop_proplist WHERE value LIKE '3') AND `vspyshka` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `tylovaja_kamera` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `avtofokus` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `vstroennyj_dinamik` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `zvuk` IN (SELECT id FROM shop_proplist WHERE value LIKE 'стерео') AND `vstroennyj_mikrofon` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `avtomaticheskaja_orientacija_ekrana` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `akselerometr` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `giroskop` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `gps` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `a-gps` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `kompas` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `datchik_osveschennosti` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `fm-tjuner` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `fm-transmitter` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podkljuchenie_k_kompjuteru_po_usb` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podkljuchenie_vneshnih_ustrojstv_po_usb` IN (SELECT id FROM shop_proplist WHERE value LIKE 'опционально') AND `vyhod_audionaushniki` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `interfejs_ethernet` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_aac` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_ogg` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_mpeg-` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_h` IN (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `vremja_raboty_` IN (SELECT id FROM shop_proplist WHERE value LIKE '9') AND `emkost_akkumuljatora` IN (SELECT id FROM shop_proplist WHERE value LIKE '7000') AND `zarjadka_ot_usb` IN (SELECT id FROM shop_proplist WHERE value LIKE '') AND `dlina` IN (SELECT id FROM shop_proplist WHERE value LIKE '257') AND `shirina` IN (SELECT id FROM shop_proplist WHERE value LIKE '175') AND `tolschina` IN (SELECT id FROM shop_proplist WHERE value LIKE '9') AND `ves` IN (SELECT id FROM shop_proplist WHERE value LIKE '565')
+[24.06.2012 23:03:46] SELECT COUNT(0) AS `cnt` FROM `shop_item` WHERE `articule`='' 
+[24.06.2012 23:07:01] SHOW TABLES
+[24.06.2012 23:07:01] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 23:07:01] SELECT shop_item.* FROM `shop_item`  WHERE `articule` = ''
+[24.06.2012 23:07:01] SELECT shop_item.* FROM `shop_item`  WHERE `title` LIKE 'Samsung Galaxy Tab 10.1 P7500 16Gb'
+[24.06.2012 23:07:01] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:07:01] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:07:01] SELECT prop_17.* FROM `prop_17`  WHERE `operacionnaja_sistema`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'Android') AND `podderzhka_operacionnoj_sistemy`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'Android 3.1') AND `processorchipset`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'Nvidia Tegra 2') AND `chastota_processora`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1000') AND `kolichestvo_jader_processora`  =  (SELECT id FROM shop_proplist WHERE value LIKE '2') AND `razmer_operativnoj_pamjati`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1 Гб') AND `tip_operativnoj_pamjati`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'DDR2') AND `razmer_vstroennoj_pamjati`  =  (SELECT id FROM shop_proplist WHERE value LIKE '16') AND `razmer_ekrana`  =  (SELECT id FROM shop_proplist WHERE value LIKE '10.1') AND `razreshenie_ekrana`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1280x800') AND `chislo_pikselov_na_djujm`  =  (SELECT id FROM shop_proplist WHERE value LIKE '149') AND `tip_sensornogo_ekrana`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'емкостный') AND `multitach-ekran`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `wi-fi`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `standart_wi-fi`  =  (SELECT id FROM shop_proplist WHERE value LIKE '802.11n') AND `podderzhka_wimax`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_dlna`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `bluetooth`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `versija_bluetooth`  =  (SELECT id FROM shop_proplist WHERE value LIKE '3.0 HS') AND `profil_adp`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `sim-karta`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'mini SIM (обычная)') AND `rabota_v_rezhime_sotovogo_telefona`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_gprs`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_g`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_edge`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_hsdpa`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_hsupa`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `frontalnaja_kamera`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `kolichestvo_megapikselov_frontalnoj_kamery`  =  (SELECT id FROM shop_proplist WHERE value LIKE '2') AND `kolichestvo_megapikselov_tylovoj_kamery`  =  (SELECT id FROM shop_proplist WHERE value LIKE '3') AND `vspyshka`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `tylovaja_kamera`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `avtofokus`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `vstroennyj_dinamik`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `zvuk`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'стерео') AND `vstroennyj_mikrofon`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `avtomaticheskaja_orientacija_ekrana`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `akselerometr`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `giroskop`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `gps`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `a-gps`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `kompas`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `datchik_osveschennosti`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `fm-tjuner`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `fm-transmitter`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podkljuchenie_k_kompjuteru_po_usb`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podkljuchenie_vneshnih_ustrojstv_po_usb`  =  (SELECT id FROM shop_proplist WHERE value LIKE 'опционально') AND `vyhod_audionaushniki`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `interfejs_ethernet`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `podderzhka_aac`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_ogg`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_mpeg-`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `podderzhka_h`  =  (SELECT id FROM shop_proplist WHERE value LIKE '1') AND `vremja_raboty_`  =  (SELECT id FROM shop_proplist WHERE value LIKE '9') AND `emkost_akkumuljatora`  =  (SELECT id FROM shop_proplist WHERE value LIKE '7000') AND `zarjadka_ot_usb`  =  (SELECT id FROM shop_proplist WHERE value LIKE '') AND `dlina`  =  (SELECT id FROM shop_proplist WHERE value LIKE '257') AND `shirina`  =  (SELECT id FROM shop_proplist WHERE value LIKE '175') AND `tolschina`  =  (SELECT id FROM shop_proplist WHERE value LIKE '9') AND `ves`  =  (SELECT id FROM shop_proplist WHERE value LIKE '565')
+[24.06.2012 23:07:01] SELECT COUNT(0) AS `cnt` FROM `shop_item` WHERE `articule`='' 
+[24.06.2012 23:10:09] SHOW TABLES
+[24.06.2012 23:10:09] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 23:10:09] SELECT shop_item.* FROM `shop_item`  WHERE 1 ORDER BY `weight`
+[24.06.2012 23:10:09] SHOW COLUMNS FROM `shop_group`
+[24.06.2012 23:10:09] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:10:09] SELECT * FROM `shop_group`  WHERE `id`='16'
+[24.06.2012 23:10:09] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:10:09] SELECT * FROM `shop_group`  WHERE `id`='17'
+[24.06.2012 23:10:09] SHOW COLUMNS FROM `admin_menu`
+[24.06.2012 23:10:09] SELECT admin_menu.* FROM `admin_menu`  WHERE `status` = '1' AND `role` LIKE '%admin%' ORDER BY weight
+[24.06.2012 23:10:14] SHOW TABLES
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 23:10:14] SELECT shop_item.* FROM `shop_item`  WHERE `id` = '26' ORDER BY `weight`
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `shop_group`
+[24.06.2012 23:10:14] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:10:14] SELECT shop_group.* FROM `shop_group`  WHERE 1 ORDER BY `title`
+[24.06.2012 23:10:14] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:10:14] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `shop_properties`
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `group_id` = '17' ORDER BY weight
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:10:14] SELECT * FROM `prop_17`  WHERE id=26
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'operacionnaja_sistema' AND `group_id` = '17'
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `shop_proplist`
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '627' AND `group_id` = '17' AND `id` = '152'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_operacionnoj_sistemy' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '628' AND `group_id` = '17' AND `id` = '152'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'processorchipset' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '629' AND `group_id` = '17' AND `id` = '153'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'chastota_processora' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kolichestvo_jader_processora' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razmer_operativnoj_pamjati' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '632' AND `group_id` = '17' AND `id` = '154'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tip_operativnoj_pamjati' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '633' AND `group_id` = '17' AND `id` = '155'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razmer_vstroennoj_pamjati' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razmer_ekrana' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razreshenie_ekrana' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '636' AND `group_id` = '17' AND `id` = '156'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'chislo_pikselov_na_djujm' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tip_sensornogo_ekrana' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '638' AND `group_id` = '17' AND `id` = '157'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'multitach-ekran' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'wi-fi' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'standart_wi-fi' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '641' AND `group_id` = '17' AND `id` = '158'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_wimax' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_dlna' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'bluetooth' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'versija_bluetooth' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '645' AND `group_id` = '17' AND `id` = '159'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'profil_adp' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'sim-karta' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '647' AND `group_id` = '17' AND `id` = '160'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'rabota_v_rezhime_sotovogo_telefona' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_gprs' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_g' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_edge' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_hsdpa' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_hsupa' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'frontalnaja_kamera' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kolichestvo_megapikselov_frontalnoj_kamery' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kolichestvo_megapikselov_tylovoj_kamery' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vspyshka' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tylovaja_kamera' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'avtofokus' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vstroennyj_dinamik' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'zvuk' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '661' AND `group_id` = '17' AND `id` = '161'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vstroennyj_mikrofon' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'avtomaticheskaja_orientacija_ekrana' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'akselerometr' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'giroskop' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'gps' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'a-gps' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kompas' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'datchik_osveschennosti' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'fm-tjuner' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'fm-transmitter' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podkljuchenie_k_kompjuteru_po_usb' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podkljuchenie_vneshnih_ustrojstv_po_usb' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '673' AND `group_id` = '17' AND `id` = '162'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vyhod_audionaushniki' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'interfejs_ethernet' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_aac' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_ogg' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_mpeg-' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_h' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vremja_raboty_' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'emkost_akkumuljatora' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'zarjadka_ot_usb' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'dlina' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'shirina' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tolschina' AND `group_id` = '17'
+[24.06.2012 23:10:14] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'ves' AND `group_id` = '17'
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `manufacturer`
+[24.06.2012 23:10:14] SELECT * FROM `manufacturer`  WHERE `id`='35'
+[24.06.2012 23:10:14] SHOW COLUMNS FROM `admin_menu`
+[24.06.2012 23:10:14] SELECT admin_menu.* FROM `admin_menu`  WHERE `status` = '1' AND `role` LIKE '%admin%' ORDER BY weight
+[24.06.2012 23:10:16] SHOW TABLES
+[24.06.2012 23:10:16] SHOW COLUMNS FROM `manufacturer`
+[24.06.2012 23:10:16] SELECT * FROM `manufacturer`  WHERE 1
+[24.06.2012 23:35:05] SHOW TABLES
+[24.06.2012 23:35:05] SHOW COLUMNS FROM `shop_item`
+[24.06.2012 23:35:05] SELECT shop_item.* FROM `shop_item`  WHERE `id` = '26' ORDER BY `weight`
+[24.06.2012 23:35:05] SHOW COLUMNS FROM `shop_group`
+[24.06.2012 23:35:05] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:35:05] SELECT shop_group.* FROM `shop_group`  WHERE 1 ORDER BY `title`
+[24.06.2012 23:35:05] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:35:05] ALTER TABLE `shop_group` CHANGE `category_id` `category_id` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL   
+[24.06.2012 23:35:06] SHOW COLUMNS FROM `shop_properties`
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `group_id` = '17' ORDER BY weight
+[24.06.2012 23:35:06] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:35:06] SHOW COLUMNS FROM `prop_17`
+[24.06.2012 23:35:06] SELECT * FROM `prop_17`  WHERE id=26
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'operacionnaja_sistema' AND `group_id` = '17'
+[24.06.2012 23:35:06] SHOW COLUMNS FROM `shop_proplist`
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '627' AND `group_id` = '17' AND `id` = '152'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_operacionnoj_sistemy' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '628' AND `group_id` = '17' AND `id` = '152'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'processorchipset' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '629' AND `group_id` = '17' AND `id` = '153'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'chastota_processora' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kolichestvo_jader_processora' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razmer_operativnoj_pamjati' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '632' AND `group_id` = '17' AND `id` = '154'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tip_operativnoj_pamjati' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '633' AND `group_id` = '17' AND `id` = '155'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razmer_vstroennoj_pamjati' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razmer_ekrana' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'razreshenie_ekrana' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '636' AND `group_id` = '17' AND `id` = '156'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'chislo_pikselov_na_djujm' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tip_sensornogo_ekrana' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '638' AND `group_id` = '17' AND `id` = '157'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'multitach-ekran' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'wi-fi' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'standart_wi-fi' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '641' AND `group_id` = '17' AND `id` = '158'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_wimax' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_dlna' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'bluetooth' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'versija_bluetooth' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '645' AND `group_id` = '17' AND `id` = '159'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'profil_adp' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'sim-karta' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '647' AND `group_id` = '17' AND `id` = '160'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'rabota_v_rezhime_sotovogo_telefona' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_gprs' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_g' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_edge' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_hsdpa' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_hsupa' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'frontalnaja_kamera' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kolichestvo_megapikselov_frontalnoj_kamery' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kolichestvo_megapikselov_tylovoj_kamery' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vspyshka' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tylovaja_kamera' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'avtofokus' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vstroennyj_dinamik' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'zvuk' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '661' AND `group_id` = '17' AND `id` = '161'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vstroennyj_mikrofon' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'avtomaticheskaja_orientacija_ekrana' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'akselerometr' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'giroskop' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'gps' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'a-gps' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'kompas' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'datchik_osveschennosti' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'fm-tjuner' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'fm-transmitter' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podkljuchenie_k_kompjuteru_po_usb' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podkljuchenie_vneshnih_ustrojstv_po_usb' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_proplist.* FROM `shop_proplist`  WHERE `property_id` = '673' AND `group_id` = '17' AND `id` = '162'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vyhod_audionaushniki' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'interfejs_ethernet' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_aac' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_ogg' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_mpeg-' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'podderzhka_h' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'vremja_raboty_' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'emkost_akkumuljatora' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'zarjadka_ot_usb' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'dlina' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'shirina' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'tolschina' AND `group_id` = '17'
+[24.06.2012 23:35:06] SELECT shop_properties.* FROM `shop_properties`  WHERE `name` = 'ves' AND `group_id` = '17'
+[24.06.2012 23:35:06] SHOW COLUMNS FROM `manufacturer`
+[24.06.2012 23:35:06] SELECT * FROM `manufacturer`  WHERE `id`='35'
+[24.06.2012 23:35:06] SHOW COLUMNS FROM `admin_menu`
+[24.06.2012 23:35:06] SELECT admin_menu.* FROM `admin_menu`  WHERE `status` = '1' AND `role` LIKE '%admin%' ORDER BY weight
+[24.06.2012 23:35:12] SHOW TABLES
+[24.06.2012 23:35:12] SHOW COLUMNS FROM `manufacturer`
+[24.06.2012 23:35:12] SELECT * FROM `manufacturer`  WHERE 1

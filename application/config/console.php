@@ -1,0 +1,46 @@
+<?php
+return array(
+    'basePath'=>dirname(dirname(dirname(__FILE__))),
+    'baseUrl'=>'http://www.kansha.kz',
+    'name'=>'Kansha.kz',
+    'grabber'=>'http://localhost:3435',
+
+    'locale'=>'ru',
+    //'languages'=>array('en','de','fr'),
+    'components'=>array(
+        'db'=>array(
+            'host'=>'localhost',
+            'user'=>'root',
+            'password'=>'ghj,bhrf2011',
+            'database'=>'kansha_tmp'
+        ),
+        'log'=>array(
+            'dblog'=>array(
+                'class'=>'X3_Log_File',
+                'directory'=>'@app:log',
+                'filename'=>'mysql-{d-m-Y}.log',
+                'category'=>'db'
+            ),
+            'applog'=>array(
+                'class'=>'X3_Log_File',
+                'directory'=>'@app:log',
+                'filename'=>'application-{d-m-Y}.log',
+                'category'=>'application'
+            ),
+            'kansha_error'=>array(
+                'class'=>'X3_Log_File',
+                'directory'=>'@app:log',
+                'filename'=>'ks.error-{d-m-Y}.log',
+                'category'=>'kansha_error'
+            ),
+            'mailer'=>array(
+                'class'=>'X3_Log_File',
+                'directory'=>'@app:log',
+                'filename'=>'mailer-{d-m-Y}.log',
+                'category'=>'mailer'
+            ),
+        )
+    )
+);
+?>
+
