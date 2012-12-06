@@ -11,7 +11,7 @@ $models = X3::db()->query("SELECT DISTINCT ci.id id, ci.item_id, ci.company_id, 
     (SELECT COUNT(0) FROM company_stat WHERE company_stat.company_id=ci.company_id) AS `stats`,
     dc.title company, dc.isfree1 AS isfree, dc.login, dc.updated_at updated_at, dc.site site, dc.image
     FROM company_item ci INNER JOIN data_company dc ON dc.id=ci.company_id $q1
-    WHERE dc.status AND ci.price>0 AND ci.item_id=$model->id $q2 ORDER BY dc.isfree1, dc.weight, stats DESC");
+    WHERE dc.status AND ci.price>0 AND ci.item_id=$model->id $q2 GROUP BY ci.company_id ORDER BY dc.isfree1, dc.weight, stats DESC");
 
 $cities = X3::db()->fetchAll("SELECT DISTINCT r.id, r.title FROM data_region r INNER JOIN data_address a ON a.city = r.id 
     INNER JOIN company_item i ON i.company_id = a.company_id WHERE i.item_id=$model->id");

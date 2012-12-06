@@ -104,7 +104,7 @@ if($type==1):
 			<div class="main_services_inside_left one">
                         <meta itemprop="url" content="http://<?=$_SERVER['HTTP_HOST']?>/<?=$name?>-company<?=$comp['id']?>.html" />
 			<a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3 itemprop="name"><?=$comp['title']?></h3></a>
-                        <p itemprop="description"><?=  strip_tags($comp['servicetext'])?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
+                        <p itemprop="description"><?=  strip_tags($comp['servicetext'],"<b><i>")?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
 			<div class="main_services_inside_left_link">
                         <? foreach ($comp['services'] as $i=>$value): ?>
                             <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?if($i==0)echo' active';?>"><?=$value['title']?></a>
