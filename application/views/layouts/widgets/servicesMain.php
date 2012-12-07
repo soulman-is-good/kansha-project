@@ -1,11 +1,19 @@
 <?X3::profile()->start('servicesMain.widget');?>
 
 <?php
-$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE type=1 AND status ORDER BY weight");
+$query = '';
+$aquery = '';
+if(X3::user()->region!=null && X3::user()->region[0]>0){
+    $query.=' AND dc.id IN (SELECT company_id FROM data_address da WHERE type=1 AND city='.X3::user()->region[0].')';
+    $aquery = " AND city='".X3::user()->region[0]."'";
+}elseif(X3::user()->region!=null)
+   X3::user()->region = null;
+$addresses = X3::db()->fetchAll("SELECT * FROM data_address WHERE type=1 AND status ORDER BY ismain DESC, weight");
 //$services = X3::db()->fetchAll("SELECT * FROM data_service WHERE status ORDER BY title");
 $services = X3::db()->fetchAll("SELECT ds.id,ds.name,ds.title FROM data_service ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0 ORDER BY title");
-$companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status ORDER BY isfree, title LIMIT 3");
-$scomp = X3::db()->fetchAll("SELECT * FROM company_service");
+//$companies = X3::db()->fetchAll("SELECT * FROM data_company WHERE status ORDER BY isfree, title LIMIT 3");
+$companies = X3::db()->query("SELECT dc.* FROM data_company dc INNER JOIN company_service cs ON cs.company_id=dc.id WHERE dc.status AND (cs.services<>'[]' OR cs.groups<>'[]') $query ORDER BY isfree, weight, title LIMIT 10");
+/*$scomp = X3::db()->fetchAll("SELECT * FROM company_service");
 foreach ($scomp as $i => $sc) {
     $serv = json_decode($sc['services']);
     $grs = json_decode($sc['groups']);
@@ -27,7 +35,8 @@ foreach ($scomp as $i => $sc) {
 }
 
 foreach($companies as $j=>$comp) if(empty($companies[$j]['services'])) unset($companies[$j]);
-$ccount = count($companies);
+$ccount = count($companies);*/
+$ccount = is_resource($companies)?mysql_num_rows($companies):0;
 if($ccount>0):
 if($type==1):
 ?>
@@ -60,8 +69,10 @@ if($type==1):
 	<div class="ask">
 			<span class="under">Справочник услуг по ремонту и сервису товаров в Казахстане</span>
 	</div>
-                <? foreach ($companies as $j=>$comp): 
-                    $name = X3_String::create($comp['title'])->translit();
+                <? $j=0;while($comp = mysql_fetch_assoc($companies)): 
+                    $comp['services'] = X3::db()->fetchAll("SELECT name, title FROM `data_service` ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.company_id='{$comp['id']}' AND cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0");
+                    $comp['address'] = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} AND type=1 $aquery ORDER BY ismain DESC, weight, id");
+                    $name = X3_String::create($comp['title'])->translit(0,"'");
                     $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
                     $phones = explode(';;',$comp['address']['phones']);
                     ?>
@@ -104,7 +115,7 @@ if($type==1):
 			<div class="main_services_inside_left one">
                         <meta itemprop="url" content="http://<?=$_SERVER['HTTP_HOST']?>/<?=$name?>-company<?=$comp['id']?>.html" />
 			<a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3 itemprop="name"><?=$comp['title']?></h3></a>
-                        <p itemprop="description"><?=  strip_tags($comp['servicetext'])?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
+                        <p itemprop="description"><?=  strip_tags($comp['servicetext'],"<b><i><strong>")?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
 			<div class="main_services_inside_left_link">
                         <? foreach ($comp['services'] as $i=>$value): ?>
                             <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?if($i==0)echo' active';?>"><?=$value['title']?></a>
@@ -113,7 +124,7 @@ if($type==1):
 			</div>
 			<div class="pustoi" style="height:15px;clear:right;">&nbsp;</div>
 		</div><!--main_services_left-->
-                <? endforeach; ?>
+                <? $j++;endwhile; ?>
 	</td></tr></table>	
 	
 	</div><!--main_services-->
@@ -150,7 +161,9 @@ if($type==1):
 	<div class="ask">
 			<span class="under">Справочник услуг по ремонту и сервису товаров в Казахстане</span>
 	</div>
-                <? foreach ($companies as $j=>$comp): 
+                <? $j=0;while($comp = mysql_fetch_assoc($companies)): 
+                    $comp['services'] = X3::db()->fetchAll("SELECT name, title FROM `data_service` ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.company_id='{$comp['id']}' AND cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0");
+                    $comp['address'] = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} AND type=1 $aquery ORDER BY ismain DESC, weight, id");
                     $name = X3_String::create($comp['title'])->translit();
                     $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
                     $phones = explode(';;',$comp['address']['phones']);
@@ -193,7 +206,7 @@ if($type==1):
 			
 			<div class="main_services_inside_left one">
 			<a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3><?=$comp['title']?></h3></a>
-                        <p><?=  strip_tags($comp['servicetext'])?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
+                        <p><?=  strip_tags($comp['servicetext'],"<b><i><strong>")?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
 			<div class="main_services_inside_left_link">
                         <? foreach ($comp['services'] as $i=>$value): ?>
                             <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?=$i==0?' active':''?>"><?=$value['title']?></a>
@@ -202,7 +215,7 @@ if($type==1):
 			</div>
 			<div class="pustoi" style="height:15px;clear:right;">&nbsp;</div>
 		</div><!--main_services_left-->
-                <? endforeach; ?>
+                <? endwhile; ?>
 	</td></tr></table>	
 	
 	</div><!--main_services-->

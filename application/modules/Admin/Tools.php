@@ -35,6 +35,7 @@ class Admin_Tools extends X3_Module {
             '/admin/tools/process' => 'Процессы',
             '/admin/tools/cleancache'=>'Кэш',
             '/admin/tools/redirects'=>'Перенаправления',
+            '/admin/tools/restore'=>'Обитель времени',
             '/admin/storage'=>'Хранилище',
         );
         $p = array();
@@ -59,6 +60,13 @@ class Admin_Tools extends X3_Module {
     }
     public function moduleTitle() {
         return 'Инструменты';
+    }
+    
+    public function actionRestore() {
+        $table = $_POST['table'];
+        $date = $_POST['date'];
+        exec("php run.php job restore table=$table date=$date &");
+        exit;
     }
     
     public function actionShowfile() {
@@ -145,6 +153,24 @@ class Admin_Tools extends X3_Module {
                 @file_put_contents(X3::app()->basePath . '/redirects.txt', $r);
             }
         }
+    }
+    
+    public function execRestore() {
+        $tables = array('company_item'=>'Товары компаний','shop_item'=>'Товары в базе','shop_groups'=>'Группы');
+        $files = array();
+        $file = X3::app()->basePath . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR;
+        $time = time();
+        $ftime = $time-604800;
+        foreach($tables as $name=>$table){
+            for($i=$ftime;$i<=$time;$i+=84600){
+                $d = date('d_m',$i);
+                $tmp = $file . $name . "." . $d . '.sql';
+                if(is_file($tmp)){
+                    $files[$name][$d] = array('time'=>date('d.m.Y H:i:s',  filemtime($tmp)));
+                }
+            }
+        }
+        X3::app()->module->template->addData(array('files' => $files, 'tables'=>$tables));
     }
 
 }

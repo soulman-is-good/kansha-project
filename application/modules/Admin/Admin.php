@@ -103,7 +103,7 @@ class Admin extends X3_Module {
             'Admin_Tools'=>array(
                 'general'=>array(),
                 'common'=>array(),
-                'direct'=>array('process','cleancache','redirects'),
+                'direct'=>array('process','cleancache','redirects','restore'),
                 'labels'=>array()
             ),
             'Grabber'=>array(

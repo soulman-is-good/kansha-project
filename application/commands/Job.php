@@ -135,9 +135,66 @@ class JobCommand extends X3_Command{
         $mailer->send('soulman.is.good@gmail.com','Тест',"RAEA ываадлоаыдлваоывлдао");
     }
     
+    public function runClean() {
+        $cis = X3::db()->query("SELECT * FROM company_item ci WHERE (SELECT COUNT(0) FROM company_item ci2 WHERE ci2.item_id=ci.item_id AND ci2.company_id=ci.company_id)>1");
+        while($item = mysql_fetch_assoc($cis)){
+            echo $item['item_id']."\r\n";
+        }
+    }
+    
     public function runDump() {
         $d = date("d.m.Y");
         exec('mysqldump -uroot -proot -d kansha_tmp > '.X3::app()->basePath.'/dump/kansha.'.$d.'.sql');
+    }
+    
+    public function runStore() {
+        $cis = X3::db()->query("SELECT * FROM company_item");
+        $date = date("d_m");
+        $fh = fopen(X3::app()->basePath . DIRECTORY_SEPARATOR . "application" . 
+                DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR . "company_item.$date.sql", "wb");
+        if($fh === FALSE || !is_resource($cis)) die('Error initializing job. '.X3::db()->getErrors());
+        $qkeys = X3::db()->query("SHOW COLUMNS FROM company_item");
+        $keys = array();
+        while ($key = mysql_fetch_assoc($qkeys))
+            $keys[] = $key['Field'];
+        $keys = '(`' . implode('`, `',$keys) . '`)';
+        $count = mysql_num_rows($cis);
+        $kk = 0;
+        fwrite($fh,"TRUNCATE company_item;\r\n");
+        while($ci = mysql_fetch_assoc($cis)){
+            $percent = sprintf("%.02f",($kk/$count)*100);
+            if($kk++>0)
+                echo str_repeat("\x08",strlen("$percent%"));
+            echo "$percent%";
+            $ci = array_map(function($item){return mysql_real_escape_string($item);}, $ci);
+            fwrite($fh,"INSERT INTO company_item $keys VALUES ('" . implode("', '",$ci) . "')\r\n");
+        }
+        fclose($fh);
+        echo "OK!\n\n";
+    }
+    
+    public function runRestore() {
+        if(!isset(X3::app()->global['table']) || !isset(X3::app()->global['date'])) exit;
+        $table = X3::app()->global['table'];
+        $date = X3::app()->global['date'];
+        $file = X3::app()->basePath . DIRECTORY_SEPARATOR . "application" . 
+                DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR . "$table.$date.sql";
+        if(!is_file($file)) exit;
+        $sqls = file($file,FILE_SKIP_EMPTY_LINES);
+        $count = count($sqls);
+        $status = X3::app()->basePath . DIRECTORY_SEPARATOR . "application" . 
+                DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR . "restore.$table.status";
+        foreach($sqls as $sql){
+            $percent = sprintf("%.02f",($kk/$count)*100);
+            if($kk++>0)
+                echo str_repeat("\x08",strlen("$percent%"));
+            echo "$percent%";
+            if(X3::db()->query($sql))
+                @file_put_contents($status, json_encode(array('status'=>'loading','message'=>$percent)));
+        }
+        if(is_file($status))
+            @unlink($status);
+        echo "\nOK!\n\n";        
     }
 }
 
