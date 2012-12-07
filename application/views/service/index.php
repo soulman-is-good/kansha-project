@@ -133,11 +133,11 @@ if(is_resource($companies))
                 </div>
                 <? $j=0;if(is_resource($companies)) while ($comp = mysql_fetch_assoc($companies)): 
                     $services = X3::db()->query("SELECT name, title FROM `data_service` ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.company_id='{$comp['id']}' AND cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0");
-                    $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} AND type=1 $aquery ORDER BY id");
+                    $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} AND type=1 $aquery ORDER BY ismain DESC, weight, id");
                     if($address == null)
-                        $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} $aquery ORDER BY id");
+                        $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} $aquery ORDER BY ismain DESC, weight, id");
                     if($address == null)
-                        $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} ORDER BY id");
+                        $address = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} ORDER BY ismain DESC, weight, id");
                     if($address == null)
                         continue;
                     $name = X3_String::create($comp['title'])->translit();

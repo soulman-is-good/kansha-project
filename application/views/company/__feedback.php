@@ -3,15 +3,20 @@ $models = X3::db()->fetchAll("SELECT * FROM company_feedback WHERE status AND co
 $mark = explode("\n",SysSettings::getValue('FeedbackMarks', 'content', 'Подписи отзывов', null, "ужасно\nплохо\nнормально\nхорошо\nотлично"));
 $errors = $F->getTable()->getErrors();
 $c = count($models);
+$acnt = X3::db()->count("SELECT 0 FROM data_address WHERE status");
 $width = 240;
 $width += $scount>0?140:0;
 $width += $srcount>0?80:0;
+$width += $acnt>0?90:0;
 ?>
 <table class="three_inset" width="100%">
     <tbody><tr>
             <td style="padding-right:10px;white-space:nowrap;width:<?=$width?>px">
                 <a class="nero" href="<?=$url?>.html"><span>О Компании</span></a>
-                <a class="blu active" href="#" onclick="return false;"><span>Отзывы</span><sup><?=$fcount?></sup><i>&nbsp;</i></a>
+                <?if($acnt>0):?>
+                <a class="des_green" href="<?=$url?>/address.html"><span>Адреса<i>&nbsp;</i></span></a>
+                <?endif;?>
+                <a style="margin-left:0px" class="blu active" href="#" onclick="return false;"><span>Отзывы</span><sup><?=$fcount?></sup><i>&nbsp;</i></a>
                 <?if($scount>0):?>
                 <a class="rosso" href="<?=$url?>/sale.html"><span>Распродажи</span><sup><?=$scount?></sup></a>
                 <?endif;?>
