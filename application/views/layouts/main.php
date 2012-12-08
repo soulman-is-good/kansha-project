@@ -28,6 +28,7 @@
         <link rel="stylesheet" type="text/css" href="/js/tipTip.css" />
         <script type="text/javascript" src="/js/jquery.js"></script>
         <script type="text/javascript" src="/js/jquery.tipTip.js"></script>
+        <script type="text/javascript" src="//vk.com/js/api/openapi.js?71"></script>
         <!--[if IE]> <link rel="stylesheet" type= "text/css" href ="/css/style.ie.css" /> <![endif]-->
         <!--[if gte IE 9]>
   <style type="text/css">
@@ -112,7 +113,7 @@
                                         <div id="head_content">
                                             <div class="main_header">
                                                 <div class="main_logo">
-                                                    <a href="/"><img src="/images/kansha.jpg" width="184" height="38" /></a>
+                                                    <a href="http://www.kansha.kz/" title="Kansha.kz"><img src="/images/kansha.jpg" width="184" height="38" alt="kansha.kz" title="kansha.kz" /></a>
                                                     <noindex>
                                                     <p style="width:200px">В нашем каталоге <span class="number"><?=X3::user()->citemCount!==null?X3::user()->citemCount:(X3::user()->citemCount=Company_Stat::getStat('items'))?></span> 
                                                         <?=X3_String::create(" ")->numeral(X3::user()->itemCount,array("предложение","предложения","предложений"))?> от 
@@ -177,8 +178,8 @@
                                             <? if (X3::app()->request->url == '' || X3::app()->request->url == 'site/index'): ?>
                                                 <div class="main_lower_info">
                                                     <?//  X3_Widget::run('@layouts:widgets:nowFind.php',array('main'=>true))?>
-                                                    <?//  X3_Widget::run('@layouts:widgets:vk_widget.php')?>
-                                                    <?=  X3_Widget::run('@layouts:widgets:text.php',array('name'=>'about','type'=>2))?>
+                                                    <?=  X3_Widget::run('@layouts:widgets:vk_widget.php')?>
+                                                    <?=  X3_Widget::run('@layouts:widgets:text.php',array('name'=>'about','type'=>1))?>
                                                     
                                                                             <div class="clear-both">&nbsp;</div>
 
@@ -214,6 +215,7 @@
                                                                                 </table>
                                                                             </div>
                                                                         </div>
+<img style="display:none" src="http://www.kansha.kz/logo.jpg" width="100" alt="www.kansha.kz" title="www.kansha.kz" />                                                                        
 <?=SysSettings::getValue('counter01', 'html', 'Счетчик', NULL, '')?>
                                                                         </body>
                                                                         </html>

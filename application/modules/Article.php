@@ -135,6 +135,13 @@ class Article extends X3_Module_Table {
         return date('d',$this->created_at)." ".I18n::months((int)date('m',$this->created_at)-1,I18n::DATE_MONTH)." ".date('Y',$this->created_at);
     }
     
+    
+    public function getDefaultScope() {
+        return array(
+            '@order'=>'created_at DESC'
+        );
+    }    
+    
     public function beforeValidate() {
         if(strpos($this->created_at,'.')!==false){
             $this->created_at = strtotime($this->created_at);
