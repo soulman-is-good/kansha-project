@@ -371,7 +371,7 @@ class CompanyCommand extends X3_Command {
                     $v[1] = str_replace(',', '.', $v[1]);
                     $v[1] *= 1;
                     if(empty($name) && !isset($price[$v[0]])) continue;
-                    if((!isset($price[$v[0]]) && empty($articule) && TRUE === array_reduce($commonRules,function($res,$item)use($name){return $res || mb_stripos($name,$item,null,'UTF-8')!==false;},false))){
+                    if((!isset($price[$v[0]]) && empty($articule) && TRUE === array_reduce($commonRules,function($res,$item)use($name){$item = preg_quote($item);return $res || preg_match("~^{$item}[,\.\\\/><|;'\" ]|[,\.\\\/><|;'\" ]{$item}[,\.\\\/><|;'\" ]|[,\.\\\/><|;'\" ]{$item}$~i",$name)>0;},false))){
                         $rs->setCellValueExplicit('A' . $rc, $v[3], PHPExcel_Cell_DataType::TYPE_STRING);
                         $rs->setCellValue('B' . $rc, $v[1]);
                         $rs->setCellValueExplicit('C' . $rc, (string) $v[0], PHPExcel_Cell_DataType::TYPE_STRING);
@@ -470,8 +470,11 @@ class CompanyCommand extends X3_Command {
                             //echo "-={$price[$v[0]]}=-";
                             print_r($item->table->getErrors());
                             X3::log('Ошибка сохранения позиции ' . $v[3] . ' "' . print_r($item->table->getErrors(), 1) . '"', 'kansha_error');
-                        }else
+                        }else{
+                            if(!isset($price[$v[0]]))
+                                $price[$v[0]] = $iid;
                             unset($vs[$idx]);
+                        }
                     }
                     //$query = "UPDATE price SET price='" . $pr . "', price_opt='0', url='" . sql($url) . "', url_checked=0 WHERE company_id='" . $cid . "' AND shop_id='" . $price[$v[0]] . "' LIMIT 1";
                     unset($price[$v[0]],$item);

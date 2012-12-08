@@ -14,6 +14,14 @@ return array(
             'password'=>'ghj,bhrf2011',
             'database'=>'kansha_tmp'
         ),
+        'mongo'=>array(
+            'class'=>'X3_MongoConnection',
+            'host'=>'localhost',
+            'user'=>null,
+            'password'=>null,
+            'database'=>'kansha',
+            'lazyConnect'=>true,
+        ),        
         'log'=>array(
             'dblog'=>array(
                 'class'=>'X3_Log_File',

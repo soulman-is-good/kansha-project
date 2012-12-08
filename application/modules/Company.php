@@ -1064,7 +1064,7 @@ class Company extends X3_Module_Table {
         if(!isset($_GET['id'])) throw new X3_404();
         $id = (int)$_GET['id'];
         if(NULL===($model = Company::getByPk($id))) throw new X3_404();
-        if(isset($_GET['type']) && in_array($_GET['type'],array('feedback','services','sale','about'))){
+        if(isset($_GET['type']) && in_array($_GET['type'],array('feedback','services','sale','about','address'))){
             $type = $_GET['type'];
         }else 
             $type = 'about';
@@ -1109,6 +1109,8 @@ class Company extends X3_Module_Table {
                 $model->metatitle = 'Отзывы о компании '.$model->title;
             elseif($type == 'sale')
                 $model->metatitle = 'Распродажи компании '.$model->title;
+            elseif($type == 'address')
+                $model->metatitle = 'Адреса компании '.$model->title;
         $srcount = X3::db()->count("SELECT `id` FROM company_service WHERE company_id=$id AND (services<>'[]' OR groups<>'[]')");
         SeoHelper::setMeta($model->metatitle,$model->metakeywords,$model->metadescription);
         $this->template->render('show',array('type'=>$type,'model'=>$model,'fcount'=>$fcount,'scount'=>$scount,'srcount'=>$srcount,'rank'=>$mark,'F'=>$F,

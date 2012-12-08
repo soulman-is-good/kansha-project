@@ -39,6 +39,7 @@ array(
     //Company
     '/^\/shops(.*)$/'=>array('/Company/index$1'),
     '/^\/([\S]+)\-shops(.*)$/'=>array('/Company/index/city/$1$2'),
+    '/^\/.+?\-company([0-9]+)\/address(.*)$/'=>array('/Company/show/id/$1/type/address$2'),
     '/^\/.+?\-company([0-9]+)\/about(.*)$/'=>array('/Company/show/id/$1/type/about$2'),
     '/^\/.+?\-company([0-9]+)\/sale(.*)$/'=>array('/Company/show/id/$1/type/sale$2'),
     '/^\/.+?\-company([0-9]+)\/services(.*)$/'=>array('/Company/show/id/$1/type/services$2'),

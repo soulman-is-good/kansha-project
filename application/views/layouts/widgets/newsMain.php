@@ -65,7 +65,7 @@ if(($nc = $models->count())>0 || ($ac)>0):
                 <h3 data-id="#a<?=$model->id?>"><a href="/article/<?=$model->id?>.html"><?=$model->title?></a></h3>
                 <div id="a<?=$model->id?>" class="news-content-widget">
                     <?if(is_file('uploads/Article/'.$model->image)):?>
-                    <div class="mn_news_pic"><img src="/uploads/Article/139x83xf/<?=$model->image?>" alt="o" /></div>
+                    <div class="mn_news_pic"><img src="/uploads/Article/139x83xf/<?=$model->image?>" alt="" /></div>
                     <?endif;?>
                     <p><?=X3_String::create(str_replace("\r\n","",strip_tags($model->text)))->carefullCut()?>&nbsp;
                     <a href="/article/<?=$model->id?>.html">читать далее</a></p>
