@@ -160,6 +160,7 @@ class JobCommand extends X3_Command{
         $keys = '(`' . implode('`, `',$keys) . '`)';
         $count = mysql_num_rows($cis);
         $kk = 0;
+        echo "\r\n";
         fwrite($fh,"TRUNCATE company_item;\r\n");
         while($ci = mysql_fetch_assoc($cis)){
             $percent = sprintf("%.02f",($kk/$count)*100);
@@ -170,7 +171,7 @@ class JobCommand extends X3_Command{
             fwrite($fh,"INSERT INTO company_item $keys VALUES ('" . implode("', '",$ci) . "')\r\n");
         }
         fclose($fh);
-        echo "OK!\n\n";
+        echo "\nOK!\n\n";
     }
     
     public function runRestore() {

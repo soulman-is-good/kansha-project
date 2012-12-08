@@ -28,8 +28,9 @@ if(($nc = $models->count())>0 || ($ac)>0):
                 <span style="margin-top:0px" class="<?=($i==$nc-1?'last':($i==0?'first':''))?>"><?=$model->date()?></span>
                 <h3 data-id="#n<?=$model->id?>"><a href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
                 <div id="n<?=$model->id?>" class="news-content-widget">
-                    <div class="mn_news_pic"><img src="/uploads/News/139x83xf/<?=$model->image?>" />
-                    </div>
+                    <?if(is_file('uploads/News/'.$model->image)):?>
+                    <div class="mn_news_pic"><img src="/uploads/News/139x83xf/<?=$model->image?>" /></div>
+                    <?endif;?> 
                     <p style="margin-bottom:0px"><?=X3_String::create(str_replace('\r\n',"",strip_tags($model->text)))->carefullCut()?>
                         &nbsp;<a href="/news/<?=$model->id?>.html">читать далее</a>
                     </p>
@@ -63,9 +64,10 @@ if(($nc = $models->count())>0 || ($ac)>0):
                 <span style="margin-top:0px" class="<?=($i==$nc-1?'last':($i==0?'first':''))?>"><?=$model->date()?></span>
                 <h3 data-id="#a<?=$model->id?>"><a href="/article/<?=$model->id?>.html"><?=$model->title?></a></h3>
                 <div id="a<?=$model->id?>" class="news-content-widget">
-                    <div class="mn_news_pic"><img src="/uploads/Article/139x83xf/<?=$model->image?>" alt="o" />
-                    </div>
-                    <p><?=X3_String::create(str_replace('\r\n',"",strip_tags($model->text)))->carefullCut()?>&nbsp;
+                    <?if(is_file('uploads/Article/'.$model->image)):?>
+                    <div class="mn_news_pic"><img src="/uploads/Article/139x83xf/<?=$model->image?>" alt="" /></div>
+                    <?endif;?>
+                    <p><?=X3_String::create(str_replace("\r\n","",strip_tags($model->text)))->carefullCut()?>&nbsp;
                     <a href="/article/<?=$model->id?>.html">читать далее</a></p>
                     <div class="clear-both">&nbsp;</div>
                 </div>

@@ -162,7 +162,7 @@ class Admin_Tools extends X3_Module {
         $time = time();
         $ftime = $time-604800;
         foreach($tables as $name=>$table){
-            for($i=$ftime;$i<=$time;$i+=84600){
+            for($i=$ftime;$i<=$time + 84600;$i+=84600){
                 $d = date('d_m',$i);
                 $tmp = $file . $name . "." . $d . '.sql';
                 if(is_file($tmp)){
