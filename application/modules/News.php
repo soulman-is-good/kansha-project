@@ -132,6 +132,12 @@ class News extends X3_Module_Table {
         SeoHelper::setMeta($model->metatitle, $model->metakeywords, $model->metadescription);
         $this->template->render('show', array('model' => $model,'bread'=>array(array('/news.html'=>'Архив новостей'))));
     }
+    
+    public function getDefaultScope() {
+        return array(
+            '@order'=>'created_at DESC'
+        );
+    }
 
     public function date() {
         return date('d', $this->created_at) . " " . I18n::months((int) date('m', $this->created_at)-1, I18n::DATE_MONTH) . " " . date('Y', $this->created_at);

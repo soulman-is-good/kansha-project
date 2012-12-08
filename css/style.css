@@ -1767,9 +1767,9 @@ background: -o-linear-gradient(top,  #3e7814 0%,#336411 100%);
 background: -ms-linear-gradient(top,  #3e7814 0%,#336411 100%);
 background: linear-gradient(top,  #3e7814 0%,#336411 100%);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3e7814', endColorstr='#336411',GradientType=0 );
+border:none;
 behavior:url(/PIE.htc);
 }
-table.des_header a.des_green.active {border:none;}
 table.des_header a.des_green.active span {color:#ffffff;}
 table.des_header a.des_green.active sup{color:#ffffff;}
 table.des_header a.des_green.active i {display:inline-block;
@@ -1920,8 +1920,8 @@ border-top-color:#305995;}
 
 
 
-table.des_header div.price_stripe_left {background:url(../images/price_left.png) no-repeat;position:absolute;top:0px;left:-2px;}
-table.des_header div.price_stripe_right {background:url(../images/price_right.png) no-repeat;position:absolute;top:0px;right:-4px;}
+div.price_stripe_left {background:url(../images/price_left.png) no-repeat;position:absolute;top:0px;left:-2px;}
+div.price_stripe_right {background:url(../images/price_right.png) no-repeat;position:absolute;top:0px;right:-4px;}
 
 table.des_header div.black_stripe_long {height:3px;width:auto;position:relative;margin-top:33px;
 background: #424242;
@@ -3469,6 +3469,90 @@ behavior:url(PIE.htc);}
 #faq_window   input.and {margin-right:34px;}
 #faq_window   h4 {color:#35629e;font-size:16px;font-family:Tahoma,sans-serif;margin-top:18px;}
 #faq_window  a.blue_cross {float:right;position:relative;left:8px;top:10px;text-decoration:none;}
+
+.three_inset a.des_green span {
+  border-bottom: 1px dotted #386D12;
+  color: #386D12;
+}
+.three_inset a.des_green  span{color:#386d12;font-size:15px;font-family:Verdana,sans-serif;border-bottom:1px dotted #386d12;font-weight:bold;}
+.three_inset a.des_green {text-decoration:none;padding:9px 14px 9px 14px;}
+.three_inset a.des_green sup {border:none;text-decoration:none;color:#777777;font-size:10px;font-family:Verdana,sans-serif;margin-left:4px;}
+
+.three_inset a.des_green.active {position:relative;
+                                 margin-left:10px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+behavior:url(/PIE.htc);
+background: #3e7814;
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzNlNzgxNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzMzY0MTEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #3e7814 0%, #336411 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3e7814), color-stop(100%,#336411));
+background: -webkit-linear-gradient(top,  #3e7814 0%,#336411 100%);
+background: -o-linear-gradient(top,  #3e7814 0%,#336411 100%);
+background: -ms-linear-gradient(top,  #3e7814 0%,#336411 100%);
+background: linear-gradient(top,  #3e7814 0%,#336411 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3e7814', endColorstr='#336411',GradientType=0 );
+border:none;
+behavior:url(/PIE.htc);
+}
+.three_inset a.des_green.active span {color:#ffffff;}
+.three_inset a.des_green.active sup{color:#ffffff;}
+.three_inset a.des_green.active i {display:inline-block;
+width:0px;
+height:0px;
+font-size:0px;
+border:6px solid transparent;
+border-top-color:#336410;
+position:absolute;
+bottom:-12px;
+left:50%;
+margin-left:-3px;
+}
+
+.three_inset div.price_stripe {height:3px;position:relative;
+margin-top:35px;
+width:100%;
+background: #498e17;
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzQ5OGUxNyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzNmN2ExNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzMTYwMTAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #498e17 0%, #3f7a14 50%, #316010 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#498e17), color-stop(50%,#3f7a14), color-stop(100%,#316010));
+background: -webkit-linear-gradient(top,  #498e17 0%,#3f7a14 50%,#316010 100%);
+background: -o-linear-gradient(top,  #498e17 0%,#3f7a14 50%,#316010 100%);
+background: -ms-linear-gradient(top,  #498e17 0%,#3f7a14 50%,#316010 100%);
+background: linear-gradient(top,  #498e17 0%,#3f7a14 50%,#316010 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#498e17', endColorstr='#316010',GradientType=0 );
+behavior:url(/PIE.htc);
+}
+
+.addresses {
+    position:relative;
+    width:100%;
+}
+.ctype h2 {
+    margin:0px;
+    padding:0px;
+    position:absolute;
+    top:-25px;
+    left:0px;
+}
+.ctype h2 a{
+    font:bold 14px Tahoma;
+    color:#001a31;
+    padding:3px 5px 0;
+    margin-bottom:3px;
+    text-decoration:none;
+    border-bottom:1px dashed #001a31;
+}
+
+.ctype h2 a.active{
+    border-radius:5px;
+    margin-bottom:0px;
+    padding-bottom:3px;
+    background:#001a31;
+    color:#FFF;
+    border-bottom:none;
+}
 
  /* ==|== non-semantic helper classes ============;============================ */
 .ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }

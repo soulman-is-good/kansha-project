@@ -18,7 +18,7 @@ class Article extends X3_Module_Table {
         'id'=>array('integer[10]','unsigned','primary','auto_increment'),
         'image'=>array('file','default'=>'NULL','allowed'=>array('jpg','gif','png','jpeg'),'max_size'=>10240),
         'title'=>array('string[255]','language'),
-        'content'=>array('content','language'),
+//        'content'=>array('content','language'),
         'text'=>array('text','language'),
         'status'=>array('boolean','default'=>'1'),
         'created_at'=>array('datetime','default'=>'0'),
@@ -31,7 +31,7 @@ class Article extends X3_Module_Table {
             'created_at'=>'Дата',
             'image'=>'Картинка',
             'title'=>'Заголовок',
-            'content'=>'В кратце',
+//            'content'=>'В кратце',
             'text'=>'Содержание',
             'status'=>'Видимость',
             'metatitle'=>'Metatitle',
@@ -134,6 +134,13 @@ class Article extends X3_Module_Table {
     public function date() {
         return date('d',$this->created_at)." ".I18n::months((int)date('m',$this->created_at)-1,I18n::DATE_MONTH)." ".date('Y',$this->created_at);
     }
+    
+    
+    public function getDefaultScope() {
+        return array(
+            '@order'=>'created_at DESC'
+        );
+    }    
     
     public function beforeValidate() {
         if(strpos($this->created_at,'.')!==false){
