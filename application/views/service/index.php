@@ -179,7 +179,7 @@ if(is_resource($companies))
                     </div>
                     <div class="main_services_inside_left">
 			<a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3><?=$comp['title']?></h3></a>
-                        <p><?=  strip_tags($comp['servicetext'])?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
+                        <p><?=  strip_tags($comp['servicetext'],"<b><i><strong>")?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
 			<div class="main_services_inside_left_link">
                         <? $i=0;while($value = mysql_fetch_assoc($services)): ?>
                             <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?if($i==0)echo' active';?>"><?=$value['title']?></a>

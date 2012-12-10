@@ -810,7 +810,10 @@ class Shop_Item extends X3_Module_Table {
         $modelTitle=$model->title . $model->withArticule();//." ".$model->formSuffix();
         $mm = X3::db()->fetch("SELECT MIN(price) as `min`, MAX(price) as `max`, COUNT(0) as `cnt` FROM company_item INNER JOIN data_company dc ON dc.id=company_item.company_id WHERE dc.status AND price>0 AND item_id='$model->id'");
         $fcount = X3::db()->fetch("SELECT COUNT(0) AS `cnt`, SUM(`rank`) as `summ` FROM shop_feedback WHERE status AND item_id=$model->id");
-        $scount = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups LIKE '%\"$model->group_id\"%'");
+        $query = '';
+        if(X3::user()->region!=null && X3::user()->region[0]>0)
+            $query = ' AND dc.id IN (SELECT company_id FROM data_address da WHERE type=1 AND city='.X3::user()->region[0].')';        
+        $scount = X3::db()->fetch("SELECT COUNT(0) cnt FROM data_company dc INNER JOIN company_service cs ON cs.company_id=dc.id WHERE dc.status AND (cs.services<>'[]' OR cs.groups<>'[]') AND cs.groups LIKE '%\"$model->group_id\"%' $query ");
         $group = $model->getGroup();
         $bread = Breadcrumbs::items($model);
         $group->prepareMeta($model);
@@ -843,7 +846,13 @@ class Shop_Item extends X3_Module_Table {
     public function actionPrices() {
         if(IS_AJAX){
             if(isset($_POST['city'])){
-                X3::user()->city = (int)$_POST['city'];
+                if($_POST['city']>0){
+                    X3::user()->city = (int)$_POST['city'];
+                    X3::user()->region = array((int)$_POST['city'],'');
+                }else{
+                    X3::user()->city = null;
+                    X3::user()->region = null;
+                }
             }
             echo 'OK';
             exit;
@@ -884,7 +893,10 @@ class Shop_Item extends X3_Module_Table {
         $modelTitle=$model->title . $model->withArticule();//." ".$model->formSuffix();
         $mm = X3::db()->fetch("SELECT MIN(price) as `min`, MAX(price) as `max`, COUNT(0) as `cnt` FROM company_item INNER JOIN data_company dc ON dc.id=company_item.company_id WHERE dc.status AND price>0 AND item_id='$model->id'");
         $fcount = X3::db()->fetch("SELECT COUNT(0) AS `cnt`, SUM(`rank`) as `summ` FROM shop_feedback WHERE status AND item_id=$model->id");
-        $scount = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups LIKE '%\"$model->group_id\"%'");        
+        $query = '';
+        if(X3::user()->region!=null && X3::user()->region[0]>0)
+            $query = ' AND dc.id IN (SELECT company_id FROM data_address da WHERE type=1 AND city='.X3::user()->region[0].')';        
+        $scount = X3::db()->fetch("SELECT COUNT(0) cnt FROM data_company dc INNER JOIN company_service cs ON cs.company_id=dc.id WHERE dc.status AND (cs.services<>'[]' OR cs.groups<>'[]') AND cs.groups LIKE '%\"$model->group_id\"%' $query");
         $group = $model->getGroup();
         //statistics
         $bread = Breadcrumbs::items($model);
@@ -937,7 +949,7 @@ class Shop_Item extends X3_Module_Table {
         $modelTitle=$model->title . $model->withArticule();//." ".$model->formSuffix();
         $mm = X3::db()->fetch("SELECT MIN(price) as `min`, MAX(price) as `max`, COUNT(0) as `cnt` FROM company_item INNER JOIN data_company dc ON dc.id=company_item.company_id WHERE dc.status AND price>0 AND item_id='$model->id'");
         $fcount = X3::db()->fetch("SELECT COUNT(0) AS `cnt`, SUM(`rank`) as `summ` FROM shop_feedback WHERE status AND item_id=$model->id");
-        $scount = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups LIKE '%\"$model->group_id\"%'");        
+        $scount = array('cnt'=>0);
         $group = $model->getGroup();
         //statistics
         $cs = X3::db()->query("SELECT * FROM company_item WHERE price>0 AND item_id=$model->id GROUP BY company_id");
@@ -1015,7 +1027,9 @@ class Shop_Item extends X3_Module_Table {
         $modelTitle=$model->title . $model->withArticule();//." ".$model->formSuffix();
         $mm = X3::db()->fetch("SELECT MIN(price) as `min`, MAX(price) as `max`, COUNT(0) as `cnt` FROM company_item INNER JOIN data_company dc ON dc.id=company_item.company_id WHERE dc.status AND price>0 AND item_id='$model->id'");
         $fcount = X3::db()->fetch("SELECT COUNT(0) AS `cnt`, SUM(`rank`) as `summ` FROM shop_feedback WHERE status AND item_id=$model->id");
-        $scount = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM company_service WHERE groups LIKE '%\"$model->group_id\"%'");        
+        if(X3::user()->region!=null && X3::user()->region[0]>0)
+            $query = ' AND dc.id IN (SELECT company_id FROM data_address da WHERE type=1 AND city='.X3::user()->region[0].')';        
+        $scount = X3::db()->fetch("SELECT COUNT(0) cnt FROM data_company dc INNER JOIN company_service cs ON cs.company_id=dc.id WHERE dc.status AND (cs.services<>'[]' OR cs.groups<>'[]') AND cs.groups LIKE '%\"$model->group_id\"%' $query");        
         $group = $model->getGroup();
         //statistics
         $cs = X3::db()->query("SELECT * FROM company_item WHERE price>0 AND item_id=$model->id GROUP BY company_id");
