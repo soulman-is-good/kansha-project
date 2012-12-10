@@ -438,6 +438,23 @@ class Site extends X3_Module {
         exit;
     }
 
+    public function actionTest() {
+        //header("Content-Type: text/html; charset=utf-8");
+        //$data = RssParser::getInstance()->call('http://news.drweb.com/rss/get/?c=5&lng=ru');
+        //echo '<pre>';
+        //var_dump($data);
+        require_once('application/helpers/SimpleDom.php');
+        $html = file_get_html('http://timeallinfo.com/phone/samsung/');
+        foreach($html->find('.news-title > a') as $elem){
+            $html2 = file_get_html($elem->href);
+            echo $html2->find('.news-title a',0)->plaintext . '<br/>';
+            echo date("d.m.Y H:i",strtotime($html2->find('.gray a',2)->plaintext)) . '<br/>';
+            echo $html2->find('.news',0)->plaintext . '<br/>';
+            echo '<hr/>';
+        }
+        exit;
+    }
+    
     public function actionError() {
         $this->template->render('error',array('class'=>'error'));
     }

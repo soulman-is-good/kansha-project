@@ -107,16 +107,30 @@ $c = mysql_num_rows($models);
                 if((int)$fs['summ']==0) $fs['summ'] = 1;            
                 $i=0;
             while($model=  mysql_fetch_object($models)): 
+                $q = array('company_id'=>$model->company_id,'type'=>'0');
+                if(X3::user()->city > 0)
+                    $q['city'] = X3::user()->city;
+                elseif(X3::user()->region !=null && X3::user()->region[0]>0)
+                    $q['city'] = X3::user()->region[0];
                 $address = Address::get(array(
-                            '@condition'=>array('company_id'=>$model->company_id,'type'=>'0'),
+                            '@condition'=>$q,
                             ),1);
+                if($address == null){
+                    unset($q['type']);
+                    $address = Address::get(array(
+                                '@condition'=>$q,
+                                ),1);
+                }
                 $phones = $address->phones;
                 $fc = X3::db()->fetch("SELECT COUNT(0) `cnt`, SUM(`rank`) `summ` FROM company_feedback WHERE company_id=$model->company_id");
                 $rank = floor(5*$fc['summ']/$fs['summ']);
                 $_s = 5-$rank;
-                $region = $address->getRegion();
+                if($address!=null)
+                    $region = $address->getRegion();
                 if($region != null)
-                        $region = $region->title;
+                    $region = $region->title;
+                else
+                    $region = '';
                 $name = X3_String::create($model->company)->translit();
                 $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
                 ?>

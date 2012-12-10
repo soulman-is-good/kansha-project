@@ -1,5 +1,5 @@
 <div class="x3-submenu">
-    <a href="/admin/news">Новости</a> :: <span>Обзоры</span>
+    <a href="/admin/news">Новости</a> :: <span>Обзоры</span> :: <a href="/admin/newsgrabber">Граббер</a>
 </div>
 <?=$this->renderPartial("@views:admin:templates:default.kansha.php",
         array(

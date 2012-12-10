@@ -10,6 +10,8 @@ if(!IS_AJAX):
     .x3-errors{
         color:#FF0000;
     }
+    .x3-main-content table {width:100%}
+    .x3-main-content td:first-child {width:180px}
     .x3-main-content table input[type="text"], .x3-main-content table textarea {width:100%}
 </style>
 <div id="x3-buttons" x3-layout="buttons"></div>
