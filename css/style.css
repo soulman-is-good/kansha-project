@@ -2328,7 +2328,7 @@ border-top-color:#2e2e2e;}
 table.three_inset a.nero span {color:#333333;
 border-bottom:1px dotted #333333;}
 table.three_inset a.blu span{color:#35629e;border-bottom:1px dotted #35629e;}
-table.three_inset a.blu {text-decoration:none;margin-left:22px;}
+table.three_inset a.blu {text-decoration:none;}
 table.three_inset a.blu span i {display:none;}
 table.three_inset a span {font-family:Verdana,sans-serif;font-weight:bold;font-size:15px;}
 table.three_inset a.rosso {text-decoration:none;margin-left:21px;}

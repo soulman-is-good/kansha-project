@@ -8,21 +8,29 @@ $ac = $arts->count();
 if($nc>0 || $ac>0):
 ?>
 <div class="news_round_up">
-            <table>
+            <table style="width:100%">
                 <tbody><tr>
-                        <td>
+                        <?if($nc>0 && $ac>0):?>
+                        <td width="220">
                             <div class="news_round_up_inside product">
-                                <?if($nc>0 && $ac>0):?>
                                 <a class="news active" href="#anews"><span>Новости</span><i>&nbsp;</i></a>
                                 <a class="news" href="#art"><span>Обзоры</span><i>&nbsp;</i></a>
-                                <?elseif($nc>0):?>
-                                <a class="news active" href="#"><span>Новости</span><i>&nbsp;</i></a>
-                                <?elseif($ac>0):?>
-                                <a class="news active" href="#"><span>Обзоры</span><i>&nbsp;</i></a>
-                                <?endif;?>
                             </div>
                         </td>
-                        <td style="width:100%">
+                        <?elseif($nc>0):?>
+                        <td width="110">
+                            <div class="news_round_up_inside product">
+                                <a class="news active" href="#"><span>Новости</span><i>&nbsp;</i></a>
+                            </div>
+                        </td>
+                        <?elseif($ac>0):?>
+                        <td width="110">
+                            <div class="news_round_up_inside product">
+                                <a class="news active" href="#"><span>Обзоры</span><i>&nbsp;</i></a>
+                            </div>
+                        </td>
+                        <?endif;?>
+                        <td>
                             <div class="blue_blue_stripe">
                                 <div class="blue_left">&nbsp;</div>
                                 <div class="blue_right">&nbsp;</div>
@@ -40,7 +48,7 @@ if($nc>0 || $ac>0):
             ?>
             <div class="mn_news<?=($i==$nc-1)?' last':''?>">
                 <span><?=$model->date()?></span>
-                <h3><a href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
+                <h3 style="margin-top:0px"><a href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
                 <div style="display:none">
                 <?if($image):?>
                     <div class="mn_news_pic"><img src="<?=$image?>"></div>
@@ -61,7 +69,7 @@ if($nc>0 || $ac>0):
             ?>
             <div class="mn_news<?=($i==$nc-1)?' last':''?>">
                 <span><?=$model->date()?></span>
-                <h3><a href="/article/<?=$model->id?>.html"><?=$model->title?></a></h3>
+                <h3 style="margin-top:0px"><a href="/article/<?=$model->id?>.html"><?=$model->title?></a></h3>
                 <div style="display:none">
                 <?if($image):?>
                     <div class="mn_news_pic"><img src="<?=$image?>"></div>

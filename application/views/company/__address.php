@@ -44,7 +44,7 @@ $addreses = X3::db()->query("SELECT r.title AS city,a.city AS city_id, a.phones,
             <? if ($city != $address['city']): ?>
             <?endif;?>
             <? if ($city != $address['city']): ?>
-                <h3><?= $city = $address['city'] ?></h3>
+                <h3><a name="address<?=$address['id']?>">&nbsp;</a><?= $city = $address['city'] ?></h3>
         <? endif; ?>
             <table class="shops_upper_right">
                 <tbody><tr>
