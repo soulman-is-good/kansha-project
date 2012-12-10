@@ -42,7 +42,7 @@ class Admin extends X3_Module {
         'company'=>'Company','manufacturer'=>'Manufacturer','tools'=>'Admin_Tools','grabber'=>'Grabber','settings'=>'SysSettings',
         'props'=>'Shop_Properties','region'=>'Region','service'=>'Service','page'=>'Page','banner'=>'Banner','news'=>'News','article'=>'Article',
         'seo'=>'Meta','notify'=>'Notify','storage'=>'User_Storage','feedback'=>'Site_Feedback','feedcompany'=>'Company_Feedback','feedshop'=>'Shop_Feedback',
-        'sale'=>'Sale');
+        'sale'=>'Sale','newsgrabber'=>'News_Grabber');
 
     public $modules = array(
         'admin' => array(
@@ -87,6 +87,12 @@ class Admin extends X3_Module {
                 'common'=>array('edit','delete'),
                 'direct'=>array('save'),
                 'labels'=>array('add'=>'+ Новость')
+            ),
+            'News_Grabber'=>array(
+                'general'=>array('add'),
+                'common'=>array('edit','delete'),
+                'direct'=>array('save'),
+                'labels'=>array('add'=>'+ Граббер')
             ),
             'Article'=>array(
                 'general'=>array('add'),

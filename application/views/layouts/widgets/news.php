@@ -48,8 +48,8 @@ if($nc>0 || $ac>0):
             ?>
             <div class="mn_news<?=($i==$nc-1)?' last':''?>">
                 <span><?=$model->date()?></span>
-                <h3 style="margin-top:0px"><a href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
-                <div style="display:none">
+                <h3 style="margin-top:0px"><a style="display: inline;" class="active" href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
+                <div>
                 <?if($image):?>
                     <div class="mn_news_pic"><img src="<?=$image?>"></div>
                 <?endif;?>
@@ -69,8 +69,8 @@ if($nc>0 || $ac>0):
             ?>
             <div class="mn_news<?=($i==$nc-1)?' last':''?>">
                 <span><?=$model->date()?></span>
-                <h3 style="margin-top:0px"><a href="/article/<?=$model->id?>.html"><?=$model->title?></a></h3>
-                <div style="display:none">
+                <h3 style="margin-top:0px"><a style="display: inline;" class="active" href="/article/<?=$model->id?>.html"><?=$model->title?></a></h3>
+                <div>
                 <?if($image):?>
                     <div class="mn_news_pic"><img src="<?=$image?>"></div>
                 <?endif;?>

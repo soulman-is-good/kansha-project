@@ -16,6 +16,7 @@ class News extends X3_Module_Table {
     public $tableName = 'data_news';
     public $_fields = array(
         'id' => array('integer[10]', 'unsigned', 'primary', 'auto_increment'),
+        'kvaziid' => array('string[255]', 'default'=>'NULL'),
         'image' => array('file', 'default' => 'NULL', 'allowed' => array('jpg', 'gif', 'png', 'jpeg'), 'max_size' => 10240),
         'title' => array('string[255]', 'language'),
         'text' => array('text', 'language'),

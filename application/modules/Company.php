@@ -1094,8 +1094,8 @@ class Company extends X3_Module_Table {
                     echo X3::db()->getErrors();
             }
         }
-        $fcount = X3::db()->fetch("SELECT COUNT(0) `cnt`, SUM(`mark`) `marks` FROM company_feedback cf WHERE status AND company_id=$id");
-        $mcnt = X3::db()->fetch("SELECT SUM(`mark`) `m` FROM company_feedback cf WHERE status");
+        $fcount = X3::db()->fetch("SELECT COUNT(0) `cnt`, SUM(`rank`) `marks` FROM company_feedback cf WHERE status AND company_id=$id");
+        $mcnt = X3::db()->fetch("SELECT SUM(`rank`) `m` FROM company_feedback cf WHERE status");
         if($mcnt['m']==0) $mcnt['m']=1;
         $mark = ceil($fcount['marks']/$mcnt['m'])*5;
         $fcount = (int)$fcount['cnt'];
