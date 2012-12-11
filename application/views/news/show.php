@@ -5,7 +5,8 @@
                 $size = getimagesize(X3::app()->basePath.$image);
             }
 ?>
-<div class="product_expand">
+<div class="product_expand" style="position:relative;">
+<div style="position:absolute;top:-40px;right:0px;z-index:110"><a style="color:#3879BD" href="/articles.html">читать последние обзоры</a></div>
     <table class="production">
         <tbody><tr>
                 <td style="padding-right:10px;white-space:nowrap;height:19px">
