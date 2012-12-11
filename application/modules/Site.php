@@ -439,19 +439,123 @@ class Site extends X3_Module {
     }
 
     public function actionTest() {
-        //header("Content-Type: text/html; charset=utf-8");
-        //$data = RssParser::getInstance()->call('http://news.drweb.com/rss/get/?c=5&lng=ru');
-        //echo '<pre>';
-        //var_dump($data);
-        require_once('application/helpers/SimpleDom.php');
-        $html = file_get_html('http://timeallinfo.com/phone/samsung/');
-        foreach($html->find('.news-title > a') as $elem){
-            $html2 = file_get_html($elem->href);
-            echo $html2->find('.news-title a',0)->plaintext . '<br/>';
-            echo date("d.m.Y H:i",strtotime($html2->find('.gray a',2)->plaintext)) . '<br/>';
-            echo $html2->find('.news',0)->plaintext . '<br/>';
-            echo '<hr/>';
+        $url = $_GET['url'];
+        $type = $_GET['type'];
+        $results = array();
+        if($url!=''){
+        if($type == 'RSS'){
+            $data = RssParser::getInstance($url)->call();
+            $text = $_GET['text'];
+            foreach($data as $item){
+                $link = (string) $item->link;
+                $results['title'] = (string)$item->title;
+                $date = time();
+                if (property_exists($item, 'pubDate'))
+                    $date = strtotime($item->pubDate);
+                $results['date'] = date("d.m.Y H:i",$date);
+                if(property_exists($item, 'image')){
+                    $url = $item->image->url;
+                    $results['image'] = '<img src="'.$url.'" />';
+                }
+                if($text == '')
+                    $results['text'] = (string) $item->description;
+                else {
+                    $html = file_get_html($link);
+                    $idx = 0;
+                    if(strpos($text,':'))
+                        $idx = (int)array_pop(explode(':',$text));
+                    $results['text'] = nl2br($html->find($text, $idx)->plaintext);
+                }
+                break;
+            }
+        }else{
+            $link = $_GET['link'];
+            $title = $_GET['title'];
+            $date = $_GET['date'];
+            $image = $_GET['image'];
+            $text = $_GET['text'];
+            $tidx = 0;
+            if(strpos($title,':')){
+                $tidx = explode(':',$title);
+                $title = $tidx[0];
+                $tidx = (int)array_pop($tidx);
+            }            
+            $didx = 0;
+            if(strpos($date,':')){
+                $didx = explode(':',$date);
+                $date = $didx[0];
+                $didx = (int)array_pop($didx);
+            }
+            $cidx = 0;
+            if(strpos($text,':')){
+                $cidx = explode(':',$text);
+                $text = $cidx[0];
+                $cidx = (int)array_pop($cidx);
+            }
+            $iidx = 0;
+            if(strpos($image,':')){
+                $iidx = explode(':',$image);
+                $image = $iidx[0];
+                $iidx = (int)array_pop($iidx);
+            }            
+            
+            require_once('application/helpers/SimpleDom.php');
+            try{
+                $html = file_get_html($url);
+                $host = parse_url($url);
+                $elem = $html->find($link,0);
+                if($elem && $elem->href !=''){
+                    $html2 = file_get_html($elem->href);
+                    if($title != ''){
+                        $find = $html2->find($title, $tidx);
+                        if($find)
+                            $results[$i]['title'] = $find->plaintext;
+                        else
+                            $results[$i]['title'] = '<i>Не удалось получить заголовок новости</i>';
+                    }
+                    if($image != ''){
+                        $find = $html2->find($image, $iidx);
+                        if($find){
+                            $src = $find->src;
+                            $src = $host['scheme'] . "://" . $host['host'] . "/" . ltrim($src,'/');
+                            $results[$i]['image'] = '<img src="'.$src.'" />';
+                        }else
+                            $results[$i]['image'] = '';
+                    }
+                    if($date != ''){
+                        $find = $html2->find($date, $didx);
+                        $results[$i]['date'] = $find->plaintext;
+                        if($find)
+                            $results[$i]['date'] = date('d.m.Y H:i',strtotime($find->plaintext));
+                        else
+                            $results[$i]['date'] = time();
+                    }
+                    if($text != ''){
+                        $find = $html2->find($text, $cidx);
+                        if($find)
+                            $results[$i]['text'] = $find->plaintext;
+                        else
+                            $results[$i]['text'] = '<i>Не удалось получить текст</i>';
+                    }
+                }else{
+                    echo "Failed to load $url!!! Is link '$link' correct? ".($elem?"Or maybe failed to parse '$elem->href'":'')."<br/>";
+                }
+            }catch(Exception $e){
+                echo $e->getMessage();
+            }
         }
+        }else
+            echo 'URL пуст';
+        echo "<pre>".print_r($results,1)."</pre>";
+        exit;
+    }
+    
+    public function actionGrabnews() {
+        if(!X3::user()->isAdmin())
+            throw new X3_404();
+        set_time_limit(0);
+        exec("php run.php job grabnews");
+        header("Location: /admin/newsgrabber");
         exit;
     }
     

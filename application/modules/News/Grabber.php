@@ -22,6 +22,7 @@ class News_Grabber extends X3_Module_Table {
         'url'=>array('string[255]'),
         'tag'=>array('string[255]','default'=>'NULL'),
         'regtitle'=>array('string[255]','default'=>'NULL'),
+        'regimage'=>array('string[255]','default'=>'NULL'),
         'regdate'=>array('string[255]','default'=>'NULL'),
         'regtext'=>array('string[255]','default'=>'NULL'),
         'status'=>array('boolean','default'=>'1'),
@@ -37,9 +38,10 @@ class News_Grabber extends X3_Module_Table {
             'url'=>'Ссылка списка новостей',
             'tag'=>'Правило для ссылки',
             'regtitle'=>'Правило для заголовка',
+            'regimage'=>'Правило для картинки',
             'regdate'=>'Правило для даты',
             'regtext'=>'Правило для текста',
-            'status'=>'Видимость',
+            'status'=>'Активность',
         );
     }
        

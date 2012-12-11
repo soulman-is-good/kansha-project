@@ -16,6 +16,7 @@ class Article extends X3_Module_Table {
 
     public $_fields = array(
         'id'=>array('integer[10]','unsigned','primary','auto_increment'),
+        'kvaziid' => array('string[255]', 'default'=>'NULL'),
         'image'=>array('file','default'=>'NULL','allowed'=>array('jpg','gif','png','jpeg'),'max_size'=>10240),
         'title'=>array('string[255]','language'),
 //        'content'=>array('content','language'),
