@@ -1,11 +1,12 @@
 <?php
             $image = false;
-            if(is_file('uploads/News/'.$model->image)){
-                $image = "/uploads/News/".$model->image;
+            if(is_file('uploads/Article/'.$model->image)){
+                $image = "/uploads/Article/".$model->image;
                 $size = getimagesize(X3::app()->basePath.$image);
             }
 ?>
-<div class="product_expand">
+<div class="product_expand" style="position:relative">
+<div style="position:absolute;top:-40px;right:0px;z-index:110"><a style="color:#3879BD" href="/news.html">читать последние новости</a></div>
     <table class="production">
         <tbody><tr>
                 <td style="padding-right:10px;white-space:nowrap;height:19px">

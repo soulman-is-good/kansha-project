@@ -131,6 +131,13 @@ if(is_resource($companies))
                         continue;
                     $name = X3_String::create($comp['title'])->translit();
                     $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
+                    $regs = X3::db()->query("SELECT r.title, r.name FROM data_region r INNER JOIN data_address a ON a.city=r.id WHERE a.status AND a.company_id={$comp['id']} AND a.type=1 ORDER BY r.title DESC");
+                    $regions = '';
+                    if(is_resource($regs))
+                        while($reg = mysql_fetch_assoc($regs)){
+                            $regions .= "<a href=\"/$name-company{$comp['id']}/address.html#service-{$reg['name']}\">{$reg['title']}</a>, ";
+                        }
+                    $regions = trim($regions,", ");
                     $phones = explode(';;',$address['phones']);
                     ?> 
     <div class="main_services_left<?if($j==0)echo' first'?>"><!--main_services_left-->
@@ -140,6 +147,7 @@ if(is_resource($companies))
                         <div class="main_services_inside_left<?if($j==0)echo' one';?>">
                             <a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3><?=$comp['title']?></h3></a>
                             <p><?=  strip_tags($comp['servicetext'],"<b><i><strong>")?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
+                            <?=$regions?>
                             <div class="main_services_inside_left_link">
                             <? if(!empty($comp['services'])) foreach ($comp['services'] as $l=>$value): ?>
                                 <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?if($l==0)echo' active';?>"><?=$value['title']?></a>

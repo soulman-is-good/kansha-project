@@ -166,6 +166,13 @@ if($type==1):
                     $comp['address'] = X3::db()->fetch("SELECT * FROM data_address a WHERE status AND company_id={$comp['id']} AND type=1 $aquery ORDER BY ismain DESC, weight, id");
                     $name = X3_String::create($comp['title'])->translit();
                     $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);
+                    $regs = X3::db()->query("SELECT r.title, r.name FROM data_region r INNER JOIN data_address a ON a.city=r.id WHERE a.status AND a.company_id={$comp['id']} AND a.type=1 ORDER BY r.title DESC");
+                    $regions = '';
+                    if(is_resource($regs))
+                        while($reg = mysql_fetch_assoc($regs)){
+                            $regions .= "<a href=\"/$name-company{$comp['id']}/address.html#service-{$reg['name']}\">{$reg['title']}</a>, ";
+                        }
+                    $regions = trim($regions,", ");                    
                     $phones = explode(';;',$comp['address']['phones']);
                     ?>
 		<div class="main_services_left<?=($j==$ccount-1)?' last':''?>">
@@ -207,6 +214,7 @@ if($type==1):
 			<div class="main_services_inside_left one">
 			<a href="/<?=$name?>-company<?=$comp['id']?>.html" class="name"><h3><?=$comp['title']?></h3></a>
                         <p><?=  strip_tags($comp['servicetext'],"<b><i><strong>")?> <a href="/<?=$name?>-company<?=$comp['id']?>/services.html">Подробнее</a></p>
+                        <div style="margin-bottom:5px"><?=$regions?></div>
 			<div class="main_services_inside_left_link">
                         <? foreach ($comp['services'] as $i=>$value): ?>
                             <a href="/service/<?=$value['name']?>.html" class="main_orange_link<?=$i==0?' active':''?>"><?=$value['title']?></a>

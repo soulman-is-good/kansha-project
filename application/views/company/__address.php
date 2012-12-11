@@ -7,7 +7,7 @@ $width += $srcount > 0 ? 80 : 0;
     $type = 1;
 else
     $type = 0;*/
-$addreses = X3::db()->query("SELECT r.title AS city,a.city AS city_id, a.phones, a.fax, skype, icq, delivery, address, email, type
+$addreses = X3::db()->query("SELECT r.title AS city,r.name AS name, a.city AS city_id, a.phones, a.fax, skype, icq, delivery, address, email, type
     FROM data_address a INNER JOIN data_region r ON r.id=a.city WHERE a.company_id=$model->id ORDER BY type, ismain DESC, r.title");
 ?>
 <table class="three_inset" width="100%">
@@ -44,7 +44,7 @@ $addreses = X3::db()->query("SELECT r.title AS city,a.city AS city_id, a.phones,
             <? if ($city != $address['city']): ?>
             <?endif;?>
             <? if ($city != $address['city']): ?>
-                <h3><a name="address<?=$address['id']?>">&nbsp;</a><?= $city = $address['city'] ?></h3>
+                <h3><a name="<?=$address['name']?>">&nbsp;</a><?= $city = $address['city'] ?></h3>
         <? endif; ?>
             <table class="shops_upper_right">
                 <tbody><tr>
@@ -127,6 +127,15 @@ $addreses = X3::db()->query("SELECT r.title AS city,a.city AS city_id, a.phones,
                     return false;
                 })
             })
+            var h = location.hash.replace('#','');
+            if(h!=''){
+                h = h.split('-');
+                if(h[0] == 'service'){
+                    $('[href="#type1"]').click();
+                }else
+                    $('[href="#type0"]').click();
+                location.href = '#'+h[1];
+            }
         })
     </script>    
 <? endif; ?>
