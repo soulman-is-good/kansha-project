@@ -16,6 +16,6 @@
             'action'=>$action,
             'subaction'=>$subaction,
             'paginator'=>$paginator,
-            'functional'=>''            
+            'functional'=>'<a id="grab" href="/site/grabnews" class="x3-button">Сграбить последние записи</a>'
             )
         )?>

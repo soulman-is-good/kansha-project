@@ -6,7 +6,7 @@
             'modules'=>$modules,
             'moduleTitle'=>"Обзоры",
             'labels'=>array(
-                'image'=>array('@value'=>'Иконка','@wrapper'=>'<img src="/uploads/Shop_Category/{@image}" />'),
+                'kavziid'=>array('@value'=>'Сграблена','@wrapper'=>'{{=($module->kvaziid!=""?"*":"")}}'),
                 'created_at'=>array('@value'=>'Название','@wrapper'=>'{{=$modules->date()}}'),
                 'title'=>array('@value'=>'Название','@wrapper'=>'<a href="/admin/article/edit/{@id}">{@title}</a>'),
                 'status'=>'Видимость'

@@ -38,7 +38,7 @@
                 <span><?=$model->date()?></span>
                 <h3><a href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
                 <?if($image):?>
-                <div class="mn_news_photo"><a href="/news/<?=$model->id?>.html" style="text-decoration: none"><img src="<?=$image?>" /></a></div>
+                <div class="mn_news_photo" style="margin-top:0px;height:auto;"><a href="/news/<?=$model->id?>.html" style="text-decoration: none"><img src="<?=$image?>" /></a></div>
                 <?endif;?>
                 <p class="mn_news_text"><?=X3_String::create(strip_tags($model->text))->carefullCut(512)?></p>
             </div>
@@ -64,7 +64,7 @@
                 <span><?=$model->date()?></span>
                 <h3><a href="/article/<?=$model->id?>.html"><?=$model->title?></a></h3>
                 <?if($image):?>
-                <div class="mn_news_photo"><a href="/article/<?=$model->id?>.html" style="text-decoration: none"><img src="<?=$image?>" /></a></div>
+                <div class="mn_news_photo" style="margin-top:0px;height:auto;"><a href="/article/<?=$model->id?>.html" style="text-decoration: none"><img src="<?=$image?>" /></a></div>
                 <?endif;?>
                 <p class="mn_news_text"><?=X3_String::create(str_replace('\r\n',"",strip_tags($model->text)))->carefullCut(512)?></p>
             </div>
