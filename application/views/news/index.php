@@ -8,12 +8,12 @@
                     <td width="<?=($nc>0 && $ac>0)?'220':'120'?>">
                         <div class="news_round_up_inside">
                             <?if($nc>0 && $ac>0):?>
-                            <a class="news active" href="#anews"><span>Новости</span><i>&nbsp;</i></a>
-                            <a class="news" href="#article"><span>Обзоры</span><i>&nbsp;</i></a>
+                            <a class="news active" href="/news.html"><span>Новости</span><i>&nbsp;</i></a>
+                            <a class="news" href="/articles.html"><span>Обзоры</span><i>&nbsp;</i></a>
                             <?elseif($nc>0):?>
-                            <a class="news active" href="#"><span>Новости</span><i>&nbsp;</i></a>
+                            <a class="news active" href="/news.html"><span>Новости</span><i>&nbsp;</i></a>
                             <?elseif($ac>0):?>
-                            <a class="news active" href="#"><span>Обзоры</span><i>&nbsp;</i></a>
+                            <a class="news active" href="/articles.html"><span>Обзоры</span><i>&nbsp;</i></a>
                             <?endif;?>
                         </div>
                     </td>
