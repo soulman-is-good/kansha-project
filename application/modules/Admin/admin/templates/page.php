@@ -29,7 +29,7 @@ echo $this->renderPartial("@views:admin:templates:default.kansha.php",
             'actions'=>$actions,
             'action'=>$action,
             'subaction'=>$subaction,
-            'paginator'=>'',
+            'paginator'=>$paginator,
             'functional'=>''            
             )
         )?>
