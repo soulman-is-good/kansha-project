@@ -14,6 +14,8 @@ class Informer extends X3_Module_Table {
     public $encoding = 'UTF-8';
     public $tableName = 'data_informer';
 
+    public $user_id = 0;
+    
     public $_fields = array(
         'id'=>array('integer[10]','unsigned','primary','auto_increment'),
         'category'=>array('string[255]','default'=>'all'),
@@ -37,6 +39,12 @@ class Informer extends X3_Module_Table {
     public function actionClearall() {
         $cat = $_GET['cat'];
         Informer::delete(array('category'=>$cat));
+        exit;
+    }
+    
+    public function actionClearbyid() {
+        $id = (int)$_GET['id'];
+        Informer::update(array('status'=>'1','created_at'=>time()),array('id'=>$id));
         exit;
     }
     

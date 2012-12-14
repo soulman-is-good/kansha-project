@@ -1,5 +1,11 @@
 <div class="x3-submenu">
-    <a href="/admin/shop">Товары</a> :: <a href="/admin/shopgroup">Группы</a> :: <span>Категории</span>
+    <?if($this->allowed('Shop_Item')):?>
+    <a href="/admin/shop">Товары</a> :: 
+    <?endif;?>
+    <?if($this->allowed('Shop_Group')):?>
+    <a href="/admin/shopgroup">Группы</a> :: 
+    <?endif;?>
+    <span>Категории</span>
 </div>
 <?=$this->renderPartial("@views:admin:templates:default.kansha.php",
         array(

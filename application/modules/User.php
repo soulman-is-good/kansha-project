@@ -24,9 +24,9 @@ class User extends X3_Module_Table {
         'login'=>array('string[64]','unique'),
         'email'=>array('email','unique'),
         'password'=>array('string[255]','password'),
-        'role'=>array('string[255]','default'=>'user'),
-        'lastbeen_at'=>array('integer[10]','unsigned','default'=>'0','datetime'),
-        'status'=>array('integer[1]','unsigned','default'=>'1') //0-deleted, 1-active, 2-activation, 3-banned
+        'role'=>array('string[255]','default'=>'moderator'),
+        'lastbeen_at'=>array('datetime'),
+        'status'=>array('boolean','default'=>'1')
     );
     
     public function fieldNames() {
@@ -36,19 +36,23 @@ class User extends X3_Module_Table {
             'password'=>'Пароль',
             'email'=>'E-mail',
             'role'=>'Роль',
+            'status'=>'Доступ',
             'lastbeen_at'=>'Последнее посещение',
         );
     }
+    
+    public function moduleTitle() {
+        return 'Пользователи';
+    }
 
-    public function filter() {
+    /*public function filter() {
         return array(
             'allow'=>array(
-                'user'=>array('settings','logout','password'),
-                'admin'=>array('settings','logout','password','cart','balance','history','credit')
+                '*'=>array('logout'),
             ),
             'handle'=>'redirect:/'
         );
-    }
+    }*/
 
     public static function newInstance($class=__CLASS__) {
         return parent::newInstance($class);
@@ -56,13 +60,13 @@ class User extends X3_Module_Table {
     public static function getInstance($class=__CLASS__) {
         return parent::getInstance($class);
     }
-    public static function get($arr,$single=false,$class=__CLASS__) {
+    public static function get($arr=array(),$single=false,$class=__CLASS__) {
         return parent::get($arr,$single,$class);
     }
     public static function getByPk($pk,$class=__CLASS__) {
         return parent::getByPk($pk,$class);
     }
-    public function actionSettings() {
+    /*public function actionSettings() {
         $id = X3::app()->user->id;
         $user = $this->table->select('*')->where('id='.$id)->asObject(true);
         $success = null;
@@ -98,7 +102,7 @@ class User extends X3_Module_Table {
         $this->template->render('settings',array('user'=>$user,'success'=>$success));
     }
 
-    public function actionLogin() {
+   /* public function actionLogin() {
         if(!X3::app()->user->isGuest()) $this->controller->redirect('/');
         $error = false;
         $u = array('uid'=>'','password'=>'');
@@ -114,7 +118,7 @@ class User extends X3_Module_Table {
             }
         }
         $this->template->render('login',array('error'=>$error,'user'=>$u));
-    }
+    }*/
     
     public function actionLogout() {
         if(X3::app()->user->logout()){

@@ -84,7 +84,7 @@ if($_GET['add']!='' && isset($modules->table['parent_id'])){
 <div id="mtabs">
     <ul>
         <li><a href="#common">Основные</a></li>
-        <?if(!$modules->getTable()->getIsNewRecord() && !empty($groups)):?>
+        <?if($this->allowed('Manufacturer','textTab') && !$modules->getTable()->getIsNewRecord() && !empty($groups)):?>
         <li><a href="#text">Текстовка</a></li>
         <?endif;?>
     </ul>
@@ -106,7 +106,7 @@ if(!empty($errs)):?>
 <?=$form->render();?>
 <?=$form->end();?>
     </div>
-<?if(!$modules->getTable()->getIsNewRecord() && !empty($groups)):?>
+<?if($this->allowed('Manufacturer','textTab') && !$modules->getTable()->getIsNewRecord() && !empty($groups)):?>
     <div id="text">
         <form action="/manufacturer_Group/update" method="post" enctype="multipart/form-data">
         <ul>
