@@ -25,7 +25,8 @@
     }
 </style>
 <div style="margin-left:10px;">
-<h1>Добро пожаловать!</h1>
+<h1>Добро пожаловать <?=X3::user()->name?>!</h1>
+<?if(X3::user()->isAdmin()):?>
 <div class="x3-informer">
     <h3>Seo на главной странице</h3>
     <div class="informer-content new_property-content">
@@ -59,20 +60,52 @@ $noinfo = false;
         <?endforeach;?>
     </div>
 </div>
-<?endif;?>
-<div style="clear:both;"><!----></div>
-<?if($noinfo):?>
-<i>Пока нет никакой информации</i>
-<? endif; ?>
-</div>
 <script type="text/javascript">
     function clearall(cat){
         $.get('/informer/clearall/cat/'+cat,function(){
             $('.'+cat+'-content').html('');
         });
+        return false;
     }
     $('#seomain').submit(function(){
         $.post($(this).attr('action'),$(this).serialize(),function(){$.growl('Сохранено','ok')}).error(function(){$.growl('Ошибка сохранения')})
         return false;
     })
 </script>
+<?endif;?>
+<div style="clear:both;"><!----></div>
+<?if($noinfo):?>
+<i>Пока нет никакой информации</i>
+<? endif; ?>
+<? endif; ?>
+<?php
+$noinfo = true;
+$informers = Informer::get(array('@condition'=>array('category'=>'tasks','status'=>'0'),'@order'=>'created_at DESC'));
+if($informers->count()>0):
+$noinfo = false;
+?>
+<div class="x3-informer">
+    <h3>Ваши задания</h3>
+    <div class="informer-content new_property-content">
+        <?foreach($informers as $inf):
+            $msg = json_decode($inf->message);
+            if(is_object($msg) && $msg->user_id == X3::user()->id):
+            ?>
+        <div class="inf" id="cat<?=$inf->id?>"><?=$msg->message?><a onclick="done('<?=$inf->id?>')" href="#clear" title="Решить" style="float:right;margin-right: 10px" class="ui-widget-content ui-corner-all ui-icon ui-icon-flag">&nbsp;</a></div>
+        <?endif;endforeach;?>
+    </div>
+</div>
+<script type="text/javascript">
+    function done(id){
+        $.get('/informer/clearbyid/id/'+id,function(){
+            $('#cat'+id).fadeOut();
+        });
+        return false;
+    }
+</script>
+<?endif;?>
+<div style="clear:both;"><!----></div>
+<?if($noinfo):?>
+<i>Пока нет никакой информации</i>
+<? endif; ?>
+</div>

@@ -64,7 +64,6 @@
 </style>
 <?if($subaction!='add'):
     
-    
 ////////////////////////////////
 //Bills
 ////////////////////////////////
@@ -94,10 +93,16 @@ $addreses = new Address();
 <div id="tabs">
     <ul>
         <li><a href="#common">Общие</a></li>
+        <?if($this->allowed('Company','tabSeo')):?>
         <li><a href="#seo">SEO</a></li>
+        <?endif;?>
+        <?if($this->allowed('Company','tabAddress')):?>
         <li><a href="#addresses">Адреса</a></li>
+        <?endif;?>
+        <?if($this->allowed('Company','tabService')):?>
         <li><a href="#services">Услуги</a></li>
-        <?if(count($bill)>0):?>
+        <?endif;?>
+        <?if($this->allowed('Company','tabPayments') && count($bill)>0):?>
         <li><a href="#bills">Счета</a></li>
         <?endif;?>
     </ul>
@@ -135,6 +140,7 @@ if(!$modules->table->getIsNewRecord()){
 <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>    
 </div>
+<?if($this->allowed('Company','tabSeo')):?>
 <div id="seo">
 <table class="formtable" width="100%">
     <tr id="<?=$class?>-metatitle">
@@ -154,7 +160,9 @@ if(!$modules->table->getIsNewRecord()){
     </tr>
 <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>
-</div>    
+</div>
+<?endif;?>
+<?if($this->allowed('Company','tabAddress')):?>
 <div id="addresses">
     <fieldset style="border:1px solid #666666;border-radius: 5px;padding:10px;poition:relative;">
         <legend style="padding:5px;margin-left:10px;font-weight: bold;color: #666666">Адреса</legend>
@@ -267,6 +275,8 @@ if(!$modules->table->getIsNewRecord()){
 <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>
 </div>
+<?endif;?>
+<?if($this->allowed('Company','tabService')):?>
 <div id="services">
     <?php
         if($subaction == 'edit'){
@@ -335,9 +345,10 @@ if(!$modules->table->getIsNewRecord()){
 <table>
     <tr><td colspan="3"><?=X3_Html::form_tag('button',array('%content'=>'Сохранить','type'=>'submit'))?></td></tr>
 </table>        
-</div>    
+</div>
+<?endif;?>
 <?=$form->end();?>
-<?if(count($bill)>0):?>
+<?if(count($bill)>0 && $this->allowed('Company','tabPayments')):?>
 <div id="bills">
     <ul id="bill-types">
         <? 

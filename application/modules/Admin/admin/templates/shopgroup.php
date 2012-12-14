@@ -1,5 +1,11 @@
 <div class="x3-submenu">
-    <a href="/admin/shop">Товары</a> :: <span>Группы</span> :: <a href="/admin/shopcategory">Категории</a>
+    <?if($this->allowed('Shop_Item')):?>
+    <a href="/admin/shop">Товары</a> :: 
+    <?endif;?>
+    <span>Группы</span> :: 
+    <?if($this->allowed('Shop_Category')):?>
+    <a href="/admin/shopcategory">Категории</a>
+    <?endif;?>
 </div>
 <?
 $metas = array();

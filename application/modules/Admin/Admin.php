@@ -18,6 +18,7 @@ class Admin extends X3_Module {
 
     public function __construct($action = null) {
         //X3::app()->user->role='admin';
+        $this->modules = include('application/config/modules.php');
         parent::__construct($action);
     }
 
@@ -44,161 +45,11 @@ class Admin extends X3_Module {
         'seo'=>'Meta','notify'=>'Notify','storage'=>'User_Storage','feedback'=>'Site_Feedback','feedcompany'=>'Company_Feedback','feedshop'=>'Shop_Feedback',
         'sale'=>'Sale','newsgrabber'=>'News_Grabber');
 
-    public $modules = array(
-        'admin' => array(
-            'Menu'=>array(
-                'general'=>array('add'),
-                'common'=>array('add_sub','edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Меню')
-            ),
-            'Region'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Регион')
-            ),
-            'Sale'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Распродажа')
-            ),
-            'Meta'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+')
-            ),
-            'Notify'=>array(
-                'general'=>array('add','sendclients'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+','sendclients'=>'Оповещение')
-            ),
-            'User_Storage'=>array(
-                'general'=>array(),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array()
-            ),
-            'News'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Новость')
-            ),
-            'News_Grabber'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Граббер')
-            ),
-            'Article'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Обзор')
-            ),
-            'Admin_Menu'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Меню')
-            ),
-            'Admin_Tools'=>array(
-                'general'=>array(),
-                'common'=>array(),
-                'direct'=>array('process','cleancache','redirects','restore'),
-                'labels'=>array()
-            ),
-            'Grabber'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Граббер')
-            ), 
-            'UI'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ ЮИ')
-            ),
-            'Shop_Item'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','clone','delete'),
-                'direct'=>array('save','filter-title'),
-                'labels'=>array('add'=>'+')
-            ),
-            'Shop_Group'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete','genmodels','meta'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Группа','genmodels'=>'Генерировать модели')
-            ),
-            'Shop_Category'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Категория')
-            ),
-            'Manufacturer'=>array(
-                'general'=>array('add','listadd'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Производитель','listadd'=>'Добавить списком')
-            ),
-            'Company'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','excel','upload','content','autoupdate','payment'),
-                'direct'=>array('save','delete'),
-                'labels'=>array('add'=>'+ Компания','toexcel'=>'в Excel')
-            ),
-            'Service'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Услуга')
-            ),
-            'SysSettings'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Группа')
-            ),
-            'Page'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Страницу')
-            ),
-            'Banner'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Баннер')
-            ),
-            'Site_Feedback'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Отзыв')
-            ),
-            'Shop_Feedback'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Отзыв')
-            ),
-            'Company_Feedback'=>array(
-                'general'=>array('add'),
-                'common'=>array('edit','delete'),
-                'direct'=>array('save'),
-                'labels'=>array('add'=>'+ Отзыв')
-            ),
-        )
-    );
+    public $modules = array();
     
+    public function allowed($module,$tag=false) {
+        return isset($this->modules[X3::user()->group]) && isset($this->modules[X3::user()->group][$module]) && isset($this->modules[X3::user()->group][$module]['misc']) && ($tag === false || in_array($tag,$this->modules[X3::user()->group][$module]['misc']));
+    }
     
     public function UIactions(){
         return array(
@@ -285,15 +136,21 @@ class Admin extends X3_Module {
             return true;
         elseif(X3::user()->isGuest()) 
             $this->redirect('/site/error');
-        if(!isset($this->aliases[$action])) return true;
-        $class = $this->aliases[$action];
+        if(!isset($this->aliases[$action])){
+            $class = ucfirst($action);
+            if(!class_exists($class)){
+                return true;
+            }else
+                $this->aliases[$action] = $class;
+        }else
+            $class = $this->aliases[$action];
         $labels = array();
         $paginator = "";
         if(is_array($class)){
             $class[0] = new $class[0];
             call_user_func($class);            
         }else{
-            $abc = null;
+            $abc = null; //if isset limit as 'ABC' in Module property 'limit' (e.g. @see Manufacturer.php)
             $module = new $class();
             $actions = array();
             $ui = array();            
@@ -486,7 +343,7 @@ class Admin extends X3_Module {
             $this->template->layout = null;
             X3::app()->profile->enable = false;
             $this->template->render('login', array('error' => $error));
-        } elseif (X3::app()->user->isAdmin()) {
+        } else if(isset($this->modules[X3::app()->user->group])) {
             $this->template->render('index');
         }else{
             X3::app()->user->logout();
@@ -984,7 +841,7 @@ class Admin extends X3_Module {
             $s->services = isset($serv['services'])?json_encode($serv['services']):array();
             $s->groups = isset($serv['groups'])?json_encode($serv['groups']):array();
             $s->save();
-        }else{
+        }else if($this->allowed('Company','tabAddress')){
             $s = Company_Service::get(array('company_id'=>$model->id),1);
             if($s!=NULL){
                 $s->services = array();
@@ -992,31 +849,33 @@ class Admin extends X3_Module {
                 $s->save();
             }
         }
-        $array = array("Monday"=>"1","Tuesday"=>"1","Wednesday"=>"1","Thursday"=>"1","Friday"=>"1","Saturday"=>"1","Sunday"=>"1");
-        $ads = $_POST['Address'];
-        foreach ($ads as $key => $address) {
-            if(isset($address['delete'])){
-                if($address['id']>0){
-                    Address::deleteByPk($address['id']);
-                }
-            }else{
-                foreach($array as $k=>$a){
-                    if(is_null($address['worktime']['days'][$k]))
-                        $address['worktime']['days'][$k] = $a;
-                }
-                $a = new Address();
-                $address['ismain'] = isset($address['ismain'])?1:0;
-                $a->table->acquire($address);
-                if($address['id']>0){
-                    $a->table->setIsNewRecord(false);
-                }elseif($a->weight == 0)
-                    $a->weight = $key;
-                $a->worktime = $address['worktime'];
-                $a->phones = $address['phones'];
-                $a->company_id = $model->id;
-                if(!$a->save()){
-                    var_dump($a->table->getErrors());
-                    exit;
+        if(isset($_POST['Address'])){
+            $array = array("Monday"=>"1","Tuesday"=>"1","Wednesday"=>"1","Thursday"=>"1","Friday"=>"1","Saturday"=>"1","Sunday"=>"1");
+            $ads = $_POST['Address'];
+            foreach ($ads as $key => $address) {
+                if(isset($address['delete'])){
+                    if($address['id']>0){
+                        Address::deleteByPk($address['id']);
+                    }
+                }else{
+                    foreach($array as $k=>$a){
+                        if(is_null($address['worktime']['days'][$k]))
+                            $address['worktime']['days'][$k] = $a;
+                    }
+                    $a = new Address();
+                    $address['ismain'] = isset($address['ismain'])?1:0;
+                    $a->table->acquire($address);
+                    if($address['id']>0){
+                        $a->table->setIsNewRecord(false);
+                    }elseif($a->weight == 0)
+                        $a->weight = $key;
+                    $a->worktime = $address['worktime'];
+                    $a->phones = $address['phones'];
+                    $a->company_id = $model->id;
+                    if(!$a->save()){
+                        var_dump($a->table->getErrors());
+                        exit;
+                    }
                 }
             }
         }

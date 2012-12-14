@@ -37,9 +37,14 @@ class Admin_Tools extends X3_Module {
             '/admin/tools/redirects'=>'Перенаправления',
             '/admin/tools/restore'=>'Обитель времени',
             '/admin/storage'=>'Хранилище',
+            '/admin/user'=>'Пользователи',
+            '/admin/tools/tasks'=>'Задания',
         );
         $p = array();
+        $modules = X3::app()->module->modules[X3::user()->group]['Admin_Tools'];
         foreach ($a as $k => $v) {
+            $j = pathinfo($k,PATHINFO_BASENAME);
+            if(strpos($k,'tools')===false || (strpos($k,'tools')!=false && in_array($j, $modules['direct'])))
             if (strpos($k,$cur)!==false)
                 $p[] = "<span>$v</span>";
             else
@@ -153,6 +158,37 @@ class Admin_Tools extends X3_Module {
                 @file_put_contents(X3::app()->basePath . '/redirects.txt', $r);
             }
         }
+    }
+    
+    public function execTasks() {
+        $informer = new Informer;
+        if(isset($_POST['Informer'])){
+            $inf = $_POST['Informer'];
+            $tmp = array('message'=>$inf['message'],'user_id'=>$inf['user_id']);
+            $inf['message'] = json_encode($tmp);
+            $informer->getTable()->acquire($inf);
+            if($informer->id>0)
+                $informer->getTable()->setIsNewRecord(false);
+            $informer->category = 'tasks';
+            $informer->created_at = time();
+            if($informer->save()){
+                X3::app()->module->redirect('/admin/tools/tasks');
+            }else{
+                $informer->message = $tmp['message'];
+                $informer->user_id = $tmp['user_id'];
+            }
+        }
+        if(isset($_GET['delete'])){
+            Informer::deleteByPk((int)$_GET['delete']);
+            X3::app()->module->redirect('/admin/tools/tasks');
+        }
+        if(isset($_GET['edit'])){
+            $informer = Informer::getByPk((int)$_GET['edit']);
+            $message = json_decode($informer->message);
+            $informer->message = $message->message;
+            $informer->user_id = $message->user_id;
+        }
+        X3::app()->module->template->addData(array('informer'=>$informer));
     }
     
     public function execRestore() {

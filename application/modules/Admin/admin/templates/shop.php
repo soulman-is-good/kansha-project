@@ -20,7 +20,13 @@ foreach ($modules as $module){
 }
 ?>
 <div class="x3-submenu">
-    <span>Товары</span> :: <a href="/admin/shopgroup">Группы</a> :: <a href="/admin/shopcategory">Категории</a>
+    <span>Товары</span> :: 
+    <?if($this->allowed('Shop_Group')):?>
+    <a href="/admin/shopgroup">Группы</a> :: 
+    <?endif;?>
+    <?if($this->allowed('Shop_Category')):?>
+    <a href="/admin/shopcategory">Категории</a>
+    <?endif;?>
 </div>
 <?=
 $this->renderPartial("@views:admin:templates:default".AdminSide::$theme.".php",
