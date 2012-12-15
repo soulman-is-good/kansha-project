@@ -48,7 +48,7 @@ class Admin extends X3_Module {
     public $modules = array();
     
     public function allowed($module,$tag=false) {
-        return isset($this->modules[X3::user()->group]) && isset($this->modules[X3::user()->group][$module]) && isset($this->modules[X3::user()->group][$module]['misc']) && ($tag === false || in_array($tag,$this->modules[X3::user()->group][$module]['misc']));
+        return isset($this->modules[X3::user()->group]) && isset($this->modules[X3::user()->group][$module]) && ($tag === false || (isset($this->modules[X3::user()->group][$module]['misc']) && in_array($tag,$this->modules[X3::user()->group][$module]['misc'])));
     }
     
     public function UIactions(){
