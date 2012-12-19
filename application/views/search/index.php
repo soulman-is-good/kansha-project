@@ -1,9 +1,9 @@
 <div class="product_expand">
     <div style="margin-top:20px;" class="news_round_up">
         <?if(($numbers[0] | $numbers[1] | $numbers[2] | $numbers[3] | $numbers[4]) !== 0):?>
-        <table style="margin-bottom:6px">
+        <table width="100%" style="margin-bottom:6px">
             <tbody><tr>
-                    <td style="padding-right:10px;white-space:nowrap;height:19px">
+                    <td width="<?=$width?>" style="padding-right:10px;white-space:nowrap;height:19px">
                         <div class="des_header_links search">
                             <?if($numbers[0]>0):?>
                             <a style="margin-left:0px" class="green_green<?=$type=='items'?' active':''?>" href="/search/type/items.html?q=<?=$_GET['search']?>"><span>Товары<i>&nbsp;</i></span><sup><?=$numbers[0]?></sup></a>
@@ -22,14 +22,14 @@
                             <?endif;?>
                         </div>
                     </td>
-                    <td style="width:100%">
+                    <td>
                         <?if($type=='items'):?>
-                        <div class="green_green_stripe">
+                        <div class="green_green_stripe" style="margin-top:15px;">
                             <div class="green_green_left">&nbsp;</div>
                             <div class="green_green_right">&nbsp;</div>
                         </div>
                         <?elseif($type=='news'):?>
-                        <div class="blue_blue_stripe">
+                        <div class="blue_blue_stripe" style="margin-top:15px;">
                             <div class="blue_left">&nbsp;</div>
                             <div class="blue_right">&nbsp;</div>
                         </div>
@@ -53,7 +53,7 @@
                 </tr>
             </tbody></table>
         <div class="search">
-<?= X3_Widget::run('@views:search:left_block.php',array('models'=>$block))?>
+<?= ($block!=false)?X3_Widget::run("@views:search:{$type}_left_block.php",array('models'=>$block)):''?>
             <div class="product_right"<?=(empty($block))?' style="margin-left:0"':''?>>
                 <table width="100%" class="for_selector">
                     <tbody><tr>

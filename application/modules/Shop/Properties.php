@@ -144,11 +144,11 @@ class Shop_Properties extends X3_Module_Table {
                                     $soex = X3_String::create($val[$e->name])->dmstring();
                                     if(!isset($plist[$val[$e->name]])){
                                         X3::db()->query("INSERT INTO shop_proplist (`group_id`,`property_id`,`soundex`,`title`,`value`) VALUES 
-                                            ('{$e->group_id}','$e->id','$soex','{$val[$e->name]}','{$val[$e->name]}')");
-                                        $plist[$val[$e->name]] = mysql_insert_id();
+                                            ('{$prop['group_id']}','$e->id','$soex','{$val[$e->name]}','{$val[$e->name]}')");
+                                        $plist["p".$val[$e->name]] = mysql_insert_id();
                                     }
                                 }else
-                                    $plist[$val[$e->name]] = 'NULL';
+                                    $plist["p".$val[$e->name]] = 'NULL';
                                 X3::db()->query("UPDATE TABLE prop_{$prop['group_id']} SET `$e->name`={$plist[$val[$e->name]]} WHERE id={$val['id']}");
                             }
                         }

@@ -214,7 +214,7 @@ class JobCommand extends X3_Command {
             $model = new $class;
             if ($grabber->type == 'RSS') {
                 $rss = RssParser::getInstance($grabber->url)->call();
-                foreach($rss as $item){
+                foreach($rss->channel->item as $item){
                     $link = (string) $item->link;
                     $kid = md5($link);
                     if(X3::db()->count("SELECT id FROM `$model->tableName` WHERE kvaziid='$kid'")==0){
@@ -222,10 +222,10 @@ class JobCommand extends X3_Command {
                         $model->kvaziid = $kid;                        
                         $date = time();
                         if (property_exists($item, 'pubDate'))
-                            $date = strtotime($item->pubDate);
+                            $date = strtotime((string)$item->pubDate);
                         $model->created_at = $date;
                         if(property_exists($item, 'image')){
-                            $url = $item->image->url;
+                            $url = (string)$item->image->url;
                             $ext = pathinfo($url,PATHINFO_EXTENSION);
                             $filename = "$class-".time().rand(10,99).".$ext";
                             if(@file_put_contents(X3::app()->basePath . "/uploads/$class/$filename", file_get_contents($url)))
@@ -244,7 +244,8 @@ class JobCommand extends X3_Command {
                             $model->text = nl2br($html->find($grabber->regtext, $idx)->plaintext);
                         }
                         if(!$model->save())
-                            print_r($model->table->getErrors());
+                            print_r($model->table->getErrors(),1);
+                        sleep(0.5);
                     }else
                         echo "\t$class with $item->title already exists\n";
                 }

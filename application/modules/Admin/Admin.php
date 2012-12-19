@@ -649,7 +649,6 @@ class Admin extends X3_Module {
     }
     
     function actionGrab() {
-        if(!X3::user()->isAdmin()) throw new X3_404();
         if(isset($_GET['q'])){
             echo Grabber::grep(array('find'=>'1','q'=>$_GET['q']));
             //echo file_get_contents("http://grab.instinct.kz/?find&q=".$_GET['q']);

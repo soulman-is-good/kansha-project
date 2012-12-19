@@ -12,12 +12,12 @@ if(is_file('uploads/News/'.$model->image)){
 ?>
 <div class="mn_news news<?=$i==0?' first':''?>">
     <span><?=$model->date()?></span>
-    <h3><a href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
+    <h3 style="margin-top:5px"><a style="margin:0" href="/news/<?=$model->id?>.html"><?=$model->title?></a></h3>
     <?if($image):?>
     <div style="background-image:url(<?=$image?>)" class="mn_news_photo">&nbsp;</div>
     <?endif;?>
     <p class="mn_news_text">
-        <?=$model->content?>
+        <?=X3_String::create(strip_tags($model->text))->carefullCut(512);?>
     </p>
 </div>
 <?$i++;endwhile;?>

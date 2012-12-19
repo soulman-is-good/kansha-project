@@ -77,10 +77,24 @@ class Service extends X3_Module_Table {
             $rsql = str_replace(" ", "|", $sql);
             $sql = preg_replace("/[\(\)\[\]\{\}]/", '', $sql);
             $scope = array();
+            $ids = array();
+            $q = X3::db()->query("SELECT id FROM data_service s WHERE ".$this->like('title', $sql, false,$strict,$union)." OR ".$this->like('text', $sql, false,$strict,$union));
+            if(is_resource($q)) while($id = mysql_fetch_assoc($q)){
+                $ids[]=$id['id'];
+            }
             $scope['@condition'] = array(
-                array('title' => array('LIKE' => $this->like('title', $sql, true,$strict,$union))),
-                array('text' => array('LIKE' => $this->like('text', $sql, true,$strict,$union))),
+                'data_company.status',
+                'cs.services'=>array('<>'=>"'[]'"),
             );
+            if(!empty($ids)){
+                $scope['@condition'][] = array(
+                    array('data_company.servicetext' => array('LIKE' => $this->like('data_company.servicetext', $sql, true,$strict,$union))),
+                    array('cs.services'=>array('LIKE'=>'\'%"'.implode('"%\' OR \'%"',$ids).'"%\''))
+                );
+            }else
+                $scope['@condition'][] = array('data_company.servicetext' => array('LIKE' => $this->like('data_company.servicetext', $sql, true,$strict,$union)));
+            $scope['@join'] = 'INNER JOIN company_service cs ON cs.company_id=data_company.id';
+            $scope['@order'] = 'data_company.isfree, data_company.weight, data_company.title';
             if($return === 'query')
                 return $scope;
             if($return === 'json')

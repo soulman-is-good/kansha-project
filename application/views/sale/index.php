@@ -56,7 +56,9 @@
 
                 <div class="sale_box_text_image">
                     <img src="/uploads/Company/88x31xh/<?=$company->image?>" alt="<?=$company->title?>" title="<?=$company->title?>" />
-                    <a class="go_next" href="/company/go/to/<?=base64_encode($company->id)?>">Перейти на сайт продавца</a>
+                    <noindex>
+                    <a rel="nofollow" class="go_next" href="/company/go/to/<?=base64_encode($company->id)?>">Перейти на сайт продавца</a>
+                    </noindex>
                 </div>
             </div>
             <div style="height:17px" class="pustoi">&nbsp;</div>

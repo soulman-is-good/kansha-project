@@ -63,12 +63,59 @@ class Sale extends X3_Module_Table {
         );
     }
     
+    private function like($a, $s, $no = false,$strict = false,$union = 'AND') {
+        $c = '';
+        if(!$strict)
+            $c='%';
+        if ($no)
+            return "'$c" . implode("%' $union $a LIKE '%", explode(' ', $s)) . "$c'";
+        else
+            return "$a LIKE '$c" . implode("%' $union $a LIKE '%", explode(' ', $s)) . "$c'";
+    }        
+
+    public function search($search = null, $return = true, $strict = false, $union = 'AND') {
+        if (!empty($search)) {
+            $sql = X3::db()->validateSQL(trim($search));
+            $sql = preg_replace("/[\s]+/", " ", $sql);
+            $rsql = str_replace(" ", "|", $sql);
+            $sql = preg_replace("/[\(\)\[\]\{\}]/", '', $sql);
+            $scope = array();
+            $scope['@condition'] = array(
+                'c.status',
+                'data_sale.status',
+                'starts_at'=>array('<'=>"'".time()."'"),
+                'ends_at'=>array('>'=>"'".time()."'"),array(
+                array('title' => array('LIKE' => $this->like('title', $sql, true,$strict,$union))),
+                array('gifttitle' => array('LIKE' => $this->like('gifttitle', $sql, true,$strict,$union))),
+                array('text' => array('LIKE' => $this->like('text', $sql, true,$strict,$union))),
+                array('gifttext' => array('LIKE' => $this->like('gifttext', $sql, true,$strict,$union))),
+                    )
+            );
+            $scope['@join'] = "INNER JOIN data_company c ON c.id = data_sale.company_id";
+            $scope['@order'] = 'c.isfree2, starts_at DESC, weight';
+            if($return === 'query')
+                return $scope;
+            if($return === 'json')
+                return json_encode (self::get ($scope, 0, __CLASS__,1));
+            if($return === 'array')
+                return self::get ($scope, 0, __CLASS__,1);
+            if($return == true)
+                return self::get($scope);
+        }
+        if($return)
+            return false;
+        else
+            exit;
+    }        
+    
     public function actionIndex() {
-        $q = array('@condition'=>array('status','ends_at'=>array('>'=>time())),'@order'=>'starts_at DESC, weight');
+        $q = array('@condition'=>array('data_sale.status','c.status','ends_at'=>array('>'=>"'".time()."'")),'@order'=>'c.isfree2, starts_at DESC, weight'
+            ,'@join'=>"INNER JOIN data_company c ON c.id=data_sale.company_id");
+        //$a = new X3_MySQL_Query('data_sale');echo $a->formQuery($q)->buildSQL();exit;
         $nc = Sale::num_rows($q);
         $pag = new Paginator('Sale', $nc);
-        $q['@offset']=$pagnews->offset;
-        $q['@limit']=$pagnews->limit;
+        $q['@offset']=$pag->offset;
+        $q['@limit']=$pag->limit;
         $models = Sale::get($q);
         SeoHelper::setMeta();
         $this->template->render('index',array('models'=>$models,'paginator'=>$pag,'saleCount'=>$nc,'bread'=>array(array('#'=>'Распродажа'))));

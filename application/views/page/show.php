@@ -58,7 +58,7 @@ if(is_resource($items) && mysql_num_rows($items)>0):
                 <div class="main_product_info">
                     <a class="product_info" title="<?=$mdl->title?>" href="<?=$mdl->getLink()?>.html"><?=$mdl->title?></a>
                     <span>от <b><?=$item['price']?><i>&nbsp;</i></b></span>
-                    <a class="product_info_price" href="<?=$mdl->getLink()?>.html/prices.html">Сравнить цены</a>
+                    <a class="product_info_price" href="<?=$mdl->getLink()?>/prices.html">Сравнить цены</a>
                 </div>
             </div>
             <?$i++;endwhile;?>

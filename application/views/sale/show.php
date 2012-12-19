@@ -59,7 +59,9 @@ $phones = $company->getAddress()->phones;
                                                 <td style="padding-left:28px">
                                                     <?=  X3_Widget::run('@layouts:widgets:stars.php',array('class'=>'Company','query'=>array('company_id'=>$company->id),'url'=>$company->getLink()."/feedback.html"))?>
                                                     <span class="order_span"><?=$company->title?></span>
-                                                    <a class="blue" href="/company/go/to/<?=base64_encode($company->id)?>">Перейти на сайт продавца</a>
+                                                    <noindex>
+                                                    <a rel="nofollow" class="blue" href="/company/go/to/<?=base64_encode($company->id)?>">Перейти на сайт продавца</a>
+                                                    </noindex>
 
                                                 </td>
                                             </tr>

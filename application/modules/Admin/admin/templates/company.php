@@ -7,7 +7,7 @@ $func = '<form method="post"><select name="filter" onchange="$(this).parent().su
 $func .= '<option '.($filter==0?'selected="selected"':'').' value="0">Все компании</option>';
 $func .= '<option '.($filter==1?'selected="selected"':'').' value="1">Магазины</option>';
 $func .= '<option '.($filter==2?'selected="selected"':'').' value="2">Сервис-центры</option>';
-$func .= '</select>';
+$func .= '</select></form>';
 echo $this->renderPartial("@views:admin:templates:default.kansha.php",
         array(
             'modules'=>$modules,

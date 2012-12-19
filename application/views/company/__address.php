@@ -1,5 +1,5 @@
 <?
-$width = 330;
+$width = 310;
 $width += $scount > 0 ? 140 : 0;
 $width += $srcount > 0 ? 80 : 0;
 
@@ -14,8 +14,8 @@ $addreses = X3::db()->query("SELECT r.title AS city,r.name AS name, a.city AS ci
     <tbody><tr>
             <td style="padding-right:10px;white-space:nowrap;width:<?= $width ?>px">
                 <a class="nero" href="<?=$url?>.html"><span>О Компании</span></a>
-                <a class="des_green active" href="#" onclick="return false;"><span>Адреса<i>&nbsp;</i></span></a>
-                <a class="blu" href="<?= $url ?>/feedback.html"><span>Отзывы</span><sup><?= $fcount ?></sup></a>
+                <a class="des_green active" href="<?=$url?>/address.html" onclick="return false;"><span>Адреса<i>&nbsp;</i></span></a>
+                <a class="blu" href="<?= $url ?>/feedback.html" style="margin-left:10px"><span>Отзывы</span><sup><?= $fcount ?></sup></a>
                 <? if ($scount > 0): ?>
                     <a class="rosso" href="<?= $url ?>/sale.html"><span>Распродажи</span><sup><?= $scount ?></sup></a>
                 <? endif; ?>

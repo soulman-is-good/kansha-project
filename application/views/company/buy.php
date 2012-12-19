@@ -60,7 +60,9 @@ $url = '/'.strtolower(X3_String::create($item->title)->translit()).($item->artic
                                                 <td>
                                                     <img src="/uploads/Company/125x57xf/<?=$company->image?>" />
                                                     <?if(!empty($model->url)):?>
-                                                    <a class="blue" target="_blank" href="/company/go/to/<?=  base64_encode($company->id.','.$model->id)?>">Перейти на сайт продавца</a>
+                                                    <noindex>
+                                                    <a rel="nofollow" class="blue" target="_blank" href="/company/go/to/<?=  base64_encode($company->id.','.$model->id)?>">Перейти на сайт продавца</a>
+                                                    </noindex>
                                                     <?endif;?>
                                                 </td>
                                                 <td style="padding-left:28px">
