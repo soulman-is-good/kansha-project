@@ -380,6 +380,12 @@ class Shop extends X3_Module_View{
         exit;
     }
     
+    /**
+     * Rewrite empty string values '' to a NULL
+     * There where empty string values sometimes. So there where a need of 
+     * such function.
+     * @throws X3_404
+     */
     public function actionFuckprops() {
         if(!X3::user()->isAdmin()) throw new X3_404;
         $props = X3::db()->fetchAll("SELECT * FROM shop_proplist WHERE value='' GROUP BY property_id ORDER BY group_id");
@@ -574,6 +580,68 @@ class Shop extends X3_Module_View{
         }
         echo '</table>';
         exit;
+    }
+    /**
+     * Made to find broken properties
+     * Like double to string made strange substitution to Core i5
+     */
+    public function actionBroken() {
+        $groups = X3::db()->query("SELECT id, title FROM shop_group");
+        $similar = array();
+        while($g = mysql_fetch_assoc($groups)){
+            $prs = X3::db()->query("SELECT id,name,label FROM shop_properties WHERE group_id={$g['id']} AND type='string'");
+            if(mysql_num_rows($prs)>0)
+            while($pr = mysql_fetch_assoc($prs)){
+                $prv = X3::db()->query("SELECT id,title FROM shop_proplist WHERE group_id={$g['id']} AND property_id={$pr['id']}");
+                $count = mysql_num_rows($prv);
+                if($count>0){
+                    $nonsimilar = 0;
+                    while($pv = mysql_fetch_assoc($prv)){
+                        if(!is_numeric($pv['title']))
+                            $nonsimilar++;
+                    }
+                    if($nonsimilar>0 && $nonsimilar/$count<0.2){
+                        echo "Group {$g['title']} and property {$pr['id']}#{$pr['label']}\n\n<br/>";
+                    }
+                }
+            }
+            
+        }
+        exit;
+    }
+    
+    public function actionConvert() {
+        $pid = $_GET['pid'];
+        $to = $_GET['to'];
+        if(!in_array($to,array('string','boolean','decimal','integer','content')))
+                die('wrong data type');
+        $prop = X3::db()->fetch("SELECT id, type, name, group_id, label FROM shop_properties WHERE id={$pid}");
+        if(!$prop)
+            die(X3::db()->getErrors());
+        //from string
+        if($prop['type']=='string'){
+            $plist = X3::db()->query("SELECT id, title FROM shop_proplist WHERE group_id={$prop['group_id']} AND property_id={$pid}") or die('[]');
+            if($to == 'string') exit;
+            X3::db()->startTransaction();
+            X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");
+            while($p = mysql_fetch_assoc($plist)){
+                if($to == 'decimal'){
+                    $val = (double)$p['title'];
+                    if($val == 0)
+                        $val = 'NULL';
+                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$val}'");
+                }
+
+            }
+            X3::db()->addTransaction("DELETE FROM shop_proplist WHERE group_id={$prop['group_id']} AND property_id={$pid}");
+            if(!X3::db()->commit()){
+                X3::db()->rollback();
+                die(X3::db()->getErrors());
+            }
+        }else
+            die('not a string prop');
+        //TODO: to string
+        exit('OK!');
     }
 }
 

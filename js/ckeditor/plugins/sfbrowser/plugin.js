@@ -19,7 +19,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 					{
 						function addFiles(aFiles){
 							for(var i in aFiles){
-								editor.insertHtml("<img src=\""+aFiles[i].file+"\" />");
+								editor.insertHtml("<img src=\"/"+aFiles[i].file+"\" />");
 							};						
 						}
 						$.sfb({select:addFiles,plugins:['filetree','imageresize'],allow:['jpeg','png','gif','jpg','JPG','JPEG','PNG','GIF'],swfupload:true,preview:true,bgcolor:'#CEE9F4',bgalpha:.8});

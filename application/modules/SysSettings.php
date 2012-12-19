@@ -120,7 +120,7 @@ class SysSettings extends X3_Module_Table {
         $this->renderPartial("update");
     }
     
-    public function defaultScope() {
+    public function getDefaultScope() {
         if(!isset($_GET['group']))
             $_GET['group'] = urlencode('Прочие');
         $gr = urldecode($_GET['group']);

@@ -41,6 +41,7 @@ class Search extends X3_Module_Table{
             if($_GET['search'] != X3::user()->search){
                 X3::user()->search_group = 0;
                 X3::user()->SearchPage = 0;
+                X3::user()->SearchType = 'items';
             }
             X3::user()->search = $_GET['search'];
         }
@@ -71,18 +72,22 @@ class Search extends X3_Module_Table{
             $qnews=News::getInstance()->search($search, 'query',false,'OR');
             $qarticle=Article::getInstance()->search($search, 'query',false,'OR');
             $qservice=Service::getInstance()->search($search, 'query',false,'OR');
-            //$qsale=Sale::getInstance()->search($search, 'query',false,'OR');
+            $qsale=Sale::getInstance()->search($search, 'query',false,'OR');
             $count = Shop_Item::num_rows($qitems);
             $ncount = News::num_rows($qnews);
             $acount = Article::num_rows($qarticle);
-            $scount = 0;//Service::num_rows($qservice);
-            $rcount = 0;
-            
-            if($count==0) $type = 'news';
-            if($count==0 && $ncount==0) $type = 'articles';
-            if($count==0 && $ncount==0 && $acount==0) $type = 'services';
-            if($count==0 && $ncount==0 && $acount==0 && $scount==0) $type = 'sales';
+            $scount = Company::num_rows($qservice);
+            $rcount = Sale::num_rows($qsale);
+            $width = 0;
+            if(!isset($_GET['type']) && (isset($_GET['search']) && $_GET['search'] != X3::user()->search)){
+            if($count==0) X3::user()->SearchType = $type = 'news';
+            if($count==0 && $ncount==0) X3::user()->SearchType = $type = 'articles';
+            if($count==0 && $ncount==0 && $acount==0) X3::user()->SearchType = $type = 'services';
+            if($count==0 && $ncount==0 && $acount==0 && $scount==0) X3::user()->SearchType = $type = 'sales';
+            }
+            if($count>0) $width += 77;if($ncount>0) $width += 77;if($acount>0) $width += 77;if($scount>0) $width += 77;if($rcount>0) $width += 77;
             $numbers = array($count,$ncount,$acount,$scount,$rcount);
+            $block = false;
             switch($type){
                 case 'items':
                     $block = $qitems;
@@ -113,18 +118,28 @@ class Search extends X3_Module_Table{
                     $models = $items->formQuery($qarticle)->buildSQL();
                 break;
                 case 'services':
+                    $block = array(
+                        'services'=>X3::db()->fetchAll("SELECT ds.id,ds.name,ds.title FROM data_service ds WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.services LIKE CONCAT('%\"',ds.id,'\"%'))>0 ORDER BY title"),
+                        'groups'=>X3::db()->fetchAll("SELECT g.id,g.title FROM shop_group g WHERE status AND (SELECT COUNT(0) FROM company_service cs WHERE cs.groups LIKE CONCAT('%\"',g.id,'\"%'))>0 ORDER BY title")
+                    );
                     $paginator = new Paginator(__CLASS__,$scount);
-                    $qservice['@order'] = 'data_service.weight';
                     $qservice['@offset'] = $paginator->offset;
                     $qservice['@limit'] = $paginator->limit;
-                    $items = new X3_MySQL_Query('data_service');
+                    $items = new X3_MySQL_Query('data_company');
+                    $items->select = 'data_company.*';
                     $models = $items->formQuery($qservice)->buildSQL();
+                    //var_dump($models);exit;
                 break;
                 case 'sales':
+                    $paginator = new Paginator(__CLASS__,$rcount);
+                    $qsale['@offset'] = $paginator->offset;
+                    $qsale['@limit'] = $paginator->limit;
+                    $items = new X3_MySQL_Query('data_sale');
+                    $models = $items->formQuery($qsale)->buildSQL();
                 break;
             }
         }
-        $this->template->render('index',array('models'=>$models,'type'=>$type,'paginator'=>$paginator,'numbers'=>$numbers,'block'=>$block,
+        $this->template->render('index',array('models'=>$models,'type'=>$type,'paginator'=>$paginator,'numbers'=>$numbers,'block'=>$block,'width'=>$width,
             'bread'=>'<div style="position:relative;float:left;"><a class="list_shops" ><span>Результаты поиска по запросу “'.$search.'”</span></a></div>'));
     }
     

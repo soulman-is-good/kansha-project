@@ -17,7 +17,7 @@ foreach($grs as $g){
     }
 }
 $acnt = X3::db()->count("SELECT 0 FROM data_address WHERE status");
-$width = 320;
+$width = 300;
 $width += $scount>0?140:0;
 $width += $acnt>0?90:0;
 ?>
@@ -28,7 +28,7 @@ $width += $acnt>0?90:0;
                 <?if($acnt>0):?>
                 <a class="des_green" href="<?=$url?>/address.html"><span>Адреса<i>&nbsp;</i></span></a>
                 <?endif;?>                
-                <a class="blu" href="<?= $url ?>/feedback.html"><span>Отзывы</span><sup><?= $fcount ?></sup></a>
+                <a class="blu" style="margin-left:0px" href="<?= $url ?>/feedback.html"><span>Отзывы</span><sup><?= $fcount ?></sup></a>
                 <? if ($scount > 0): ?>
                     <a class="rosso" href="<?= $url ?>/sale.html"><span>Распродажи</span><sup><?= $scount ?></sup></a>
                 <? endif; ?>

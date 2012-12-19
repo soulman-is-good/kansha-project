@@ -53,7 +53,13 @@ if ($modules instanceOf X3_Module_Table):
     $form = new Form($modules);
     ?>
     <div class="x3-submenu">
-        <span>Товары</span> :: <a href="/admin/shopgroup">Группы</a> :: <a href="/admin/shopcategory">Категории</a>
+        <span>Товары</span> :: 
+            <?if($this->allowed('Shop_Group')):?>
+    <a href="/admin/shopgroup">Группы</a> :: 
+    <?endif;?>
+    <?if($this->allowed('Shop_Category')):?>
+    <a href="/admin/shopcategory">Категории</a>
+    <?endif;?>
     </div>
     <div class="x3-main-content" style="">
         <div id="x3-buttons" x3-layout="buttons"></div>

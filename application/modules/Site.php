@@ -143,6 +143,7 @@ class Site extends X3_Module {
             $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/articles.html");
             //MANUFACTURERS
             $models = X3::db()->query("SELECT name,title FROM manufacturer WHERE status");
+            if(is_resource($models))
             while($m = mysql_fetch_assoc($models)){
                 $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".$m['name'].".html");
                 $i++;
@@ -155,6 +156,7 @@ class Site extends X3_Module {
             }
             //CATEGORIES
             $models = X3::db()->query("SELECT id,title FROM shop_category WHERE status");
+            if(is_resource($models))
             while($m = mysql_fetch_assoc($models)){
                 $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($m['title'])->translit(false,"'"))."-c".$m['id'].".html");
                 $i++;
@@ -167,6 +169,7 @@ class Site extends X3_Module {
             }
             //GROUPS
             $models = X3::db()->query("SELECT id,title FROM shop_group WHERE status");
+            if(is_resource($models))
             while($m = mysql_fetch_assoc($models)){
                 $prs = X3::db()->fetchAll("SELECT * FROM shop_properties WHERE status AND isgroup AND group_id={$m['id']}");
                 if(count($prs)>0){
@@ -250,6 +253,7 @@ class Site extends X3_Module {
             }
             //ITEMS
             $models = X3::db()->query("SELECT id,title,articule FROM shop_item WHERE status");
+            if(is_resource($models))
             while($m = mysql_fetch_assoc($models)){
                 $title = $m['title']. ($m['articule']!=''?" ({$m['articule']})":'');
                 $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl."/".strtolower(X3_String::create($title)->translit())."-".$m['id'].".html");
@@ -266,6 +270,7 @@ class Site extends X3_Module {
             }
             //COMPANIES
             $models = X3::db()->query("SELECT * FROM data_company WHERE status");
+            if(is_resource($models))
             while($m = mysql_fetch_assoc($models)){
                 $name = X3_String::create($m['title'])->translit();
                 $name = preg_replace("/['\"\.\/\-;:\+\)\(\*\&\^%\$#@!`]/", '', $name);  
@@ -295,9 +300,24 @@ class Site extends X3_Module {
                 }
                 
             }*/
-            //todo:sales
+            //SALES
+            $time = time();
+            $models = X3::db()->query("SELECT id FROM data_sale WHERE status AND ends_at>'$time' AND starts_at<'$time'");
+            if(is_resource($models))
+            while($m = mysql_fetch_assoc($models)){
+                $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl . "/sale/" . $m['id'] . ".html");
+                $i++;
+                if($i%50000==0){
+                    $fname=$file==0?"sitemap.xml":"sitemap".($file-1).".xml";file_put_contents(X3::app()->basePath."/$fname",  X3_Widget::run('@views:site:map.php',array('links'=>$links)));
+                    $links = array();
+                    $files[] = $fname;
+                    $file++;
+                }
+                
+            }
             //NEWS
             $models = X3::db()->query("SELECT id FROM data_news WHERE status");
+            if(is_resource($models))
             while($m = mysql_fetch_assoc($models)){
                 $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl . "/news/" . $m['id'] . ".html");
                 $i++;
@@ -311,6 +331,7 @@ class Site extends X3_Module {
             }
             //ARTICLES
             $models = X3::db()->query("SELECT id FROM data_article WHERE status");
+            if(is_resource($models))
             while($m = mysql_fetch_assoc($models)){
                 $links[] = str_replace(array('&',"'",'"','>','<'),array('&amp;','&apos;','&quot;','&gt;','&lt;'),X3::app()->baseUrl . "/article/" . $m['id'] . ".html");
                 $i++;
@@ -337,7 +358,7 @@ class Site extends X3_Module {
             }
             file_put_contents(X3::app()->basePath.'/robots.txt', $robot);
             if($file>0){
-                echo $i." links generated.";
+                echo $i." links generated in $file files.";
                 $index = X3_Widget::run('@views:site:map_index.php',array('files'=>$files));
                 file_put_contents(X3::app()->basePath.'/sitemap_index.xml',$index);
                 //header ("content-type: text/xml");

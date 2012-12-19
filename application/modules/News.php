@@ -85,7 +85,6 @@ class News extends X3_Module_Table {
             $scope = array();
             $scope['@condition'] = array(
                 array('title' => array('LIKE' => $this->like('title', $sql, true,$strict,$union))),
-                array('content' => array('LIKE' => $this->like('content', $sql, true,$strict,$union))),
                 array('text' => array('LIKE' => $this->like('text', $sql, true,$strict,$union))),
             );
             if($return === 'query')

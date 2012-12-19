@@ -29,9 +29,9 @@ class Company extends X3_Module_Table {
         'email_private' => array('email'),
         'text' => array('text', 'default' => 'NULL'),
         'servicetext' => array('text', 'default' => 'NULL'),
-        'isfree' => array('boolean', 'default' => '1', 'orderable'),
-        'isfree1' => array('boolean', 'default' => '1', 'orderable'),
-        'isfree2' => array('boolean', 'default' => '1', 'orderable'),
+        'isfree' => array('boolean', 'default' => '1', 'orderable'), //free services
+        'isfree1' => array('boolean', 'default' => '1', 'orderable'), //free prices
+        'isfree2' => array('boolean', 'default' => '1', 'orderable'), //free sales
         'status' => array('boolean', 'default' => '1', 'orderable'),
         'weight' => array('integer[5]', 'unsigned', 'default' => '0', 'orderable'),
         'rate' => array('integer[11]', 'unsigned', 'default' => '0', 'orderable'),
@@ -1099,7 +1099,8 @@ class Company extends X3_Module_Table {
         if($mcnt['m']==0) $mcnt['m']=1;
         $mark = ceil($fcount['marks']/$mcnt['m'])*5;
         $fcount = (int)$fcount['cnt'];
-        $scount = 0;//TODO Sale count;
+        $srcount = X3::db()->count("SELECT `id` FROM company_service WHERE company_id=$id AND (services<>'[]' OR groups<>'[]')");
+        $scount = X3::db()->count("SELECT id FROM data_sale WHERE status AND ends_at>'".time()."' AND company_id='$id'");
         if($model->metatitle == '')
             if($type == 'about')
                 $model->metatitle = 'О компании '.$model->title;
@@ -1111,7 +1112,6 @@ class Company extends X3_Module_Table {
                 $model->metatitle = 'Распродажи компании '.$model->title;
             elseif($type == 'address')
                 $model->metatitle = 'Адреса компании '.$model->title;
-        $srcount = X3::db()->count("SELECT `id` FROM company_service WHERE company_id=$id AND (services<>'[]' OR groups<>'[]')");
         SeoHelper::setMeta($model->metatitle,$model->metakeywords,$model->metadescription);
         $this->template->render('show',array('type'=>$type,'model'=>$model,'fcount'=>$fcount,'scount'=>$scount,'srcount'=>$srcount,'rank'=>$mark,'F'=>$F,
             'bread'=>array(array('/shops.html'=>'Магазины'))));

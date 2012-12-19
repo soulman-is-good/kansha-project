@@ -103,7 +103,7 @@ foreach ($modules as $module):?>
 </div>
 <?if($metatitle!=null):?>
     <div id="seo">
-        <form id="seo-form" action="/seo/save">
+        <form id="seo-form" action="/seo/save" type="post">
             Metatitle:
             <input name="SysSettings[0][id]" type="hidden" value="<?=$metatitle['id']?>" />
             <input name="SysSettings[0][value]" style="width:100%" value="<?=$metatitle['value']?>" /><br/>
@@ -116,15 +116,17 @@ foreach ($modules as $module):?>
             <button type="submit">Сохранить</button>
         </form>
         <script type="text/javascript">
-            $('#seo-form').submit(function(){
-                $.post('/seo/save',$(this).serialize(),function(m){
-                    if(m.status == 'OK'){
-                        $.growl('Сохранено','ok');
-                    }else
-                        $.growl(m.message)
-                },'json')
-                return false;
-            });
+            $(function(){
+                $('#seo-form').submit(function(){
+                    $.post('/seo/save',$(this).serialize(),function(m){
+                        if(m.status == 'OK'){
+                            $.growl('Сохранено','ok');
+                        }else
+                            $.growl(m.message)
+                    },'json')
+                    return false;
+                });
+            })
         </script>
     </div>
 <?endif;?>

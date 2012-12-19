@@ -31,7 +31,9 @@ $image = is_file(X3::app()->basePath.'/uploads/Company/'.$model->image);
                     <a href="#" onclick="return false"><img src="/uploads/Company/127x57xf/<?=$model->image?>"></a>
                     <?endif;?>
                     <?if($site):?>
-                    <div class="shops_link"><a class="move" href="/company/go/to/<?=base64_encode($model->id)?>" target="_blank">Перейти на сайт продавца</a></div>
+                    <noindex>
+                    <div class="shops_link"><a rel="nofollow" class="move" href="/company/go/to/<?=base64_encode($model->id)?>" target="_blank">Перейти на сайт продавца</a></div>
+                    </noindex>
                     <?endif;?>
                 </td>
                 <?endif;?>
@@ -147,7 +149,9 @@ $image = is_file(X3::app()->basePath.'/uploads/Company/'.$model->image);
                                     <span>Сайт:</span>
                                 </td>
                                 <td>
-                                    <a class="black" target="_blank" href="/company/go/to/<?=base64_encode($model->id)?>"><?=trim(str_replace('http://','',$model->site),' /')?></a>
+                                    <noindex>
+                                    <a class="black" target="_blank" rel="nofollow" href="/company/go/to/<?=base64_encode($model->id)?>"><?=trim(str_replace('http://','',$model->site),' /')?></a>
+                                    </noindex>
                                 </td>
                             </tr>
                             <?endif;?>

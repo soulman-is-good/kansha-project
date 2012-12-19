@@ -29,7 +29,7 @@ class RssParser extends X3_Component implements Iterator {
         if (!$rss instanceof SimpleXMLElement) {
             return false;
         }
-        return $rss->channel->item;
+        return $rss;
 
         /*$results = array();
         foreach ($rss->channel->item as $item) {

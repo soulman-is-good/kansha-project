@@ -140,7 +140,7 @@ class CompanyCommand extends X3_Command {
                     exit;
                 }
                 @file_put_contents(X3::app()->basePath."/uploads/autoload-$cid.stat", json_encode(array('status' => 'prepare', 'message' => "Скачивание файла '$url'..")));
-                if($fp === FALSE || FALSE===($nf = fopen(X3::app()->basePath.DIRECTORY_SEPARATOR.$filename, 'w'))){
+                if($fp === FALSE || FALSE===($nf = fopen(X3::app()->basePath.DIRECTORY_SEPARATOR.$filename, 'w', false, stream_create_context(array('http' => array('timeout', 300)))))){
                     $msg = array('status' => 'error', 'message' => "Не возможно создать файл на локальной машине.");
                     //Notify::sendMail('autoupdateError01',array('message'=>$msg));
                     @file_put_contents(X3::app()->basePath."/uploads/autoload-$cid.stat", json_encode($msg));
@@ -159,7 +159,7 @@ class CompanyCommand extends X3_Command {
                 while(!feof($fp)){
                     fwrite($nf,fread($fp, 10240));
                     $byte+=10240;
-                    $fbyte = ($byte>1024)?(round($byte/1024)."Kb"):($byte>1048576?round($byte/1048576)."Mb":$byte."B");
+                    $fbyte = $byte>1048576?round($byte/1048576)."Mb":(($byte>1024)?(round($byte/1024)."Kb"):$byte."B");
                     @file_put_contents(X3::app()->basePath."/uploads/autoload-$cid.stat", json_encode(array('status' => 'prepare', 'message' => "Скачивание файла '$url' ($fbyte)")));
                 }
                 fclose($nf);

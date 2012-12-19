@@ -158,7 +158,9 @@ $c = mysql_num_rows($models);
                             
                             <a class="comment" href="/<?=$name?>-company<?=$model->company_id?>/feedback.html"><?=(int)$fc['cnt']?> <?=  X3_String::create('Отзывов')->numeral($fc['cnt'],array('Отзыв','Отзыва','Отзывов'))?></a>
                             <?if(X3_String::create($model->url)->check_protocol()):?>
-                            <a class="go" href="/company/go/to/<?=  base64_encode($model->company_id.",".$model->id)?>" target="_blank">Перейти на сайт продавца</a>
+                            <noindex>
+                            <a rel="nofollow" class="go" href="/company/go/to/<?=  base64_encode($model->company_id.",".$model->id)?>" target="_blank">Перейти на сайт продавца</a>
+                            </noindex>
                             <?endif;?>
                         </div>
                     </div>
