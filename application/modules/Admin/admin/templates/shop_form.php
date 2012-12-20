@@ -137,11 +137,11 @@ function generate_form(props){
         <?else:?>
         if(props['image'][1]!=null && props['image'][1].indexOf('http://')==0)
         div.html('')
-        .append('<img width="100" src="'+props['image'][1]+'" /><br/><div class="head"><b>Фото url</b>:<input value="'+props['image'][1]+'" name="Shop[imageurl]" type="text" /><div>')
+        .append('<img width="100" src="'+props['image'][1]+'" /><span style="background:#00aa00;font-weight:bold;padding:20px;color:#FFF;border-radius:10px;display:none" id="newgroup">Будет создана новая группа</span><br/><div class="head"><b>Фото url</b>:<input value="'+props['image'][1]+'" name="Shop[imageurl]" type="text" /><div>')
         .append('<div class="head"><b>Фото</b>:<input name="Shop_Item[image]" type="file" /></div>');
         else
         div.html('')
-        .append('<img width="100" src="/uploads/Shop_Item/'+props['image'][1]+'" /><br/><div class="head"><b>Фото url</b>:<input value="" name="Shop[imageurl]" type="text" /><div>')
+        .append('<img width="100" src="/uploads/Shop_Item/'+props['image'][1]+'" /><span style="background:#00aa00;font-weight:bold;padding:20px;color:#FFF;border-radius:10px;display:none" id="newgroup">Будет создана новая группа</span><br/><div class="head"><b>Фото url</b>:<input value="" name="Shop[imageurl]" type="text" /><div>')
         .append('<div class="head"><b>Фото</b>:<input name="Shop_Item[image]" type="file" /><input value="'+props['image'][1]+'" name="Shop_Item[image_source]" type="hidden" /></div>');
         div.append('<div class="head"><input type="checkbox" name="imagedel" /> Удалить картинку</div>');
         <?endif;?>
@@ -198,7 +198,8 @@ function generate_form(props){
         if(typeof props['group_id'] != 'undefined'){
             $("[name='Group[id]']").val(props['group_id']);
             $("#group_select").val(props['group_id']);
-        }
+        }else
+            $('#newgroup').css('display','block');
         if(props['item_id']>0){
             div.append($('<input />').attr({'type':'hidden','name':'Shop[id]'}).val(props['item_id']))
         }
@@ -233,7 +234,7 @@ function gen_props(props){
         var fset = $('<fieldset style="border:1px solid #cacaca;padding:10px;display:inline-block"><legend><input type="text" name="propgroup[]" value="Общие характеристики" /></legend><table class="prop-table"></table></fieldset>')
         var table = fset.find('.prop-table');
         //TODO: Make real-time switching between types.
-        var type_select = $('<select />')
+        var type_select = $('<select />').attr('disabled',true)
                 .append($('<option />').attr({'value':'string'}).html('Строка'))
                 .append($('<option />').attr({'value':'integer'}).html('Целое'))
                 .append($('<option />').attr({'value':'decimal'}).html('Вещественное'))

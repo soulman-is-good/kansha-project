@@ -351,6 +351,7 @@ class Site extends X3_Module {
             $robot  = "User-agent: *\r\n";
             $robot .= "Disallow: /admin\r\n";
             $robot .= "Disallow: /login\r\n";
+            $robot .= "Disallow: /buy\r\n";
             $robot .= "Host: www.kansha.kz\r\n";
             $robot .= "Sitemap: http://www.kansha.kz/sitemap.xml\r\n";
             for($j=0;$j<$file;$j++){
