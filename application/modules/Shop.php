@@ -611,8 +611,38 @@ class Shop extends X3_Module_View{
     }
     
     public function actionConvert() {
+        $filename = X3::app()->basePath . '/dump';
+        if(!is_dir($filename) || !is_writable($filename))
+            die('Undo file could not be written! Dump directory either not allowed to write or does not exists! '.$filename);
+        $filename .= '/lastprop.undo';
+        if(isset($_GET['undo'])){
+            if(!is_file($filename))
+                die("No undo file found! Sorry...");
+            echo "Undoing last operations...<hr/>";
+            $undo = file_get_contents($filename);
+            $undo = json_decode($undo);
+            if($undo == null)
+                die('Something wrong with undo file so it can not be read. Sorry...');
+            
+            if($_GET['undo']=='skip' || !X3::db()->query($undo['convert']))
+                die("Can not restore old data type. Check the following sql and do it manualy and then proceed with <a href=\"/shop/convert/undo/skip\">this link to skip</a><hr/><i>'{$undo['convert']}'</i><hr/>");
+            $query = new X3_MySQL_Query('shop_proplist');
+            X3::db()->startTransaction();    
+            foreach($undo['data'] as $i=>$data){
+                $sql = $query->insert($data)->buildSQL();
+                echo "$sql<br/>";
+                X3::db()->addTransaction($sql);
+                X3::db()->addTransaction($undo['queries'][$i]);
+            }
+            if(!X3::db()->commit()){
+                X3::db()->rollback();
+                die(X3::db()->getErrors());
+            }
+            exit;
+        }
         $pid = $_GET['pid'];
         $to = $_GET['to'];
+        $undo = array('convert'=>'','data'=>array());
         if(!in_array($to,array('string','boolean','decimal','integer','content')))
                 die('wrong data type');
         $prop = X3::db()->fetch("SELECT id, type, name, group_id, label FROM shop_properties WHERE id={$pid}");
@@ -620,16 +650,28 @@ class Shop extends X3_Module_View{
             die(X3::db()->getErrors());
         //from string
         if($prop['type']=='string'){
-            $plist = X3::db()->query("SELECT id, title FROM shop_proplist WHERE group_id={$prop['group_id']} AND property_id={$pid}") or die('[]');
+            $plist = X3::db()->query("SELECT * FROM shop_proplist WHERE group_id={$prop['group_id']} AND property_id={$pid}") or die('[]');
             if($to == 'string') exit;
             X3::db()->startTransaction();
             X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");
+            $undo['convert'] = "UPDATE shop_properties SET `type`={$prop['type']} WHERE id={$pid}";
             while($p = mysql_fetch_assoc($plist)){
                 if($to == 'decimal'){
-                    $val = (double)$p['title'];
+                    $go = false;
+                    if($p['value']!==null && !is_numeric($p['value'])){
+                        $zz = X3::db()->fetch("SELECT MIN(id) real_id FROM shop_proplist WHERE `value` LIKE '{$p['value']}'");
+                        $val = (double)$zz['real_id'];
+                        $go = true;
+                    }else
+                        $val = (double)$p['value'];
                     if($val == 0)
                         $val = 'NULL';
-                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$val}'");
+                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$val}' WHERE `{$prop['name']}`='{$p['id']}'");
+                    $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$p['id']}' WHERE `{$prop['name']}`='{$val}'";
+                    $undo['data'][] = $p;
+                    if($go)
+                        $p['value'] = '<b style="color:red">' . $p['value'] . '</b>';
+                    echo "Converting <b>{$prop['label']}</b> converting from <em>'{$p['value']}'</em> to <em>'$val'</em><br/>";
                 }
 
             }
@@ -638,10 +680,11 @@ class Shop extends X3_Module_View{
                 X3::db()->rollback();
                 die(X3::db()->getErrors());
             }
+            @file_put_contents($filename, json_encode($undo));
         }else
             die('not a string prop');
         //TODO: to string
-        exit('OK!');
+        exit('OK! Проверте результаты и если надо отмените действие - <a href="/shop/convert/undo">отменить</a>');
     }
 }
 
