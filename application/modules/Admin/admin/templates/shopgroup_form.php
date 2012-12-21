@@ -647,12 +647,16 @@ $form = new Form($modules);
                         x.find('legend').html('Свойство №'+pid+' ('+dataTypes[$(this).attr('dtype')]+')');
                         x.append(
                             $('<div />').append($('<input />').attr({'name':'Props[id]','type':'hidden'}).val(pid))
+                            .append($('<a />').attr({'href':'#delProp','class':'x3-button red','style':'float:right;color:#fff'}).html('Удалить'))
                             .append('<a href="#rename" class="renameprop">Название свойства:</a>')
                             .append($('<input />').attr({'name':'Props[value]'}).val($(this).children('i').text()))
                             .append($('<input />').attr({'name':'Props[isgroup]','type':'checkbox','checked':$(this).attr('gr')=='1'}))
-                            .append($('<a />').attr({'href':'#delProp','class':'x3-button red','style':'float:right;color:#fff'}).html('Удалить'))
                             .append('как подгруппы')
                             .append('<br />')
+                            .append('<a href="/shop/convert/pid/'+pid+'/to/string" class="x3-button convert" target="_blank">Стока</a>')
+                            .append('<a href="/shop/convert/pid/'+pid+'/to/integer" class="x3-button convert" target="_blank">Целое</a>')
+                            .append('<a href="/shop/convert/pid/'+pid+'/to/decimal" class="x3-button convert" target="_blank">Вещественнон</a>')
+                            .append('<a href="/shop/convert/pid/'+pid+'/to/boolean" class="x3-button convert" target="_blank">Переключатель</a><br/>')
                             .append('<br />')
                             .append($('<input />').attr({'name':'Props[status]','type':'checkbox','checked':$(this).attr('status')=='1'}))
                             .append('Видимость')

@@ -620,7 +620,7 @@ class Shop extends X3_Module_View{
                 die("No undo file found! Sorry...");
             echo "Undoing last operations...<hr/>";
             $undo = file_get_contents($filename);
-            $undo = json_decode($undo);
+            $undo = json_decode($undo,true);
             if($undo == null)
                 die('Something wrong with undo file so it can not be read. Sorry...');
             
@@ -629,9 +629,11 @@ class Shop extends X3_Module_View{
             $query = new X3_MySQL_Query('shop_proplist');
             X3::db()->startTransaction();    
             foreach($undo['data'] as $i=>$data){
-                $sql = $query->insert($data)->buildSQL();
-                echo "$sql<br/>";
-                X3::db()->addTransaction($sql);
+                if(!empty($data)){
+                    $sql = $query->insert($data)->buildSQL();
+                    //echo "$sql<br/>";
+                    X3::db()->addTransaction($sql);
+                }
                 X3::db()->addTransaction($undo['queries'][$i]);
             }
             if(!X3::db()->commit()){
@@ -656,14 +658,24 @@ class Shop extends X3_Module_View{
             X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");
             $undo['convert'] = "UPDATE shop_properties SET `type`={$prop['type']} WHERE id={$pid}";
             while($p = mysql_fetch_assoc($plist)){
-                if($to == 'decimal'){
+                if($to == 'decimal' || $to == 'integer' || $to == 'boolean'){
                     $go = false;
                     if($p['value']!==null && !is_numeric($p['value'])){
                         $zz = X3::db()->fetch("SELECT MIN(id) real_id FROM shop_proplist WHERE `value` LIKE '{$p['value']}'");
-                        $val = (double)$zz['real_id'];
+                        if($to == 'decimal')
+                            $val = (double)$zz['real_id'];
+                        if($to == 'integer')
+                            $val = (int)$zz['real_id'];
+                        if($to == 'boolean')
+                            $val = (bool)$zz['real_id'];
                         $go = true;
                     }else
-                        $val = (double)$p['value'];
+                        if($to == 'decimal')
+                            $val = (double)$p['value'];
+                        if($to == 'integer')
+                            $val = (int)$p['value'];
+                        if($to == 'boolean')
+                            $val = (bool)$p['value'];
                     if($val == 0)
                         $val = 'NULL';
                     X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$val}' WHERE `{$prop['name']}`='{$p['id']}'");
@@ -671,7 +683,7 @@ class Shop extends X3_Module_View{
                     $undo['data'][] = $p;
                     if($go)
                         $p['value'] = '<b style="color:red">' . $p['value'] . '</b>';
-                    echo "Converting <b>{$prop['label']}</b> converting from <em>'{$p['value']}'</em> to <em>'$val'</em><br/>";
+                    //echo "Converting <b>{$prop['label']}</b> converting from <em>'{$p['value']}'</em> to <em>'$val'</em><br/>";
                 }
 
             }
@@ -681,9 +693,31 @@ class Shop extends X3_Module_View{
                 die(X3::db()->getErrors());
             }
             @file_put_contents($filename, json_encode($undo));
-        }else
-            die('not a string prop');
-        //TODO: to string
+        }else {
+            if($to == $prop['type']) exit;
+            X3::db()->startTransaction();
+            X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");         
+            $undo['convert'] = "UPDATE shop_properties SET `type`={$prop['type']} WHERE id={$pid}";
+            $models = X3::db()->query("SELECT `{$prop['name']}` FROM prop_{$prop['group_id']}");
+            $inserted = array();
+            while($model = mysql_fetch_assoc($models)){
+                if($model[$prop['name']]!=null && !isset($inserted[$model[$prop['name']]])){
+                    $soex = X3_String::create($model[$prop['name']])->dmstring();
+                    X3::db()->query("INSERT INTO shop_proplist (`property_id`, `group_id`, `value`, `title`, `soundex`) VALUES ('{$prop['id']}','{$prop['group_id']}','{$model[$prop['name']]}','{$model[$prop['name']]}','{$soex}')",false);
+                    $inserted[$model[$prop['name']]] = $iid = mysql_insert_id();
+                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='$iid' WHERE `{$prop['name']}`='{$model[$prop['name']]}'");
+                    $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$model[$prop['name']]}' WHERE `{$prop['name']}`='$iid'";
+                    $undo['data'][] = array();            
+                }
+            }
+            $undo['queries'][] = "DELETE FROM shop_proplist WHERE group_id={$prop['group_id']} AND property_id={$pid}";
+            $undo['data'][] = array();            
+            if(!X3::db()->commit()){
+                X3::db()->rollback();
+                die(X3::db()->getErrors());
+            }
+            @file_put_contents($filename, json_encode($undo));
+        }
         exit('OK! Проверте результаты и если надо отмените действие - <a href="/shop/convert/undo">отменить</a>');
     }
 }
