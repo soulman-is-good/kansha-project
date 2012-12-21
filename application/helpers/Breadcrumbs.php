@@ -43,7 +43,7 @@ class Breadcrumbs extends X3_Widget {
                     $url = "/".Shop_Group::getLink($g['id'],$pr['id'],false,$pr['title']).".html";
                     if(X3::user()->property_id == $pr['id']){
                         X3::app()->groupTitle = $pr['title'];
-                        if(!empty($pr['description']))
+                        if(!empty($pr['description']) && X3::app()->manufacturerTitle=='')
                             X3::app()->group_description = $pr['description'];
                         $cats[0]=array($url=>$pr['title']);
                     }else{
@@ -54,7 +54,7 @@ class Breadcrumbs extends X3_Widget {
                 $url = "/".Shop_Group::getLink($g['id'],null,$g['title']).".html";
                 if(X3::user()->property_id == null && $group->id == $g['id']){
                     X3::app()->groupTitle = $g['title'];
-                    if(!empty($g['text']))
+                    if(!empty($g['text']) && X3::app()->manufacturerTitle == '')
                         X3::app()->group_description = $g['text'];
                     $cats[0]=array($url=>$g['title']);
                 }else

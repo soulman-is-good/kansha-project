@@ -164,7 +164,7 @@ html, body,select {cursor:url(./cursors/instinct-default.cur), default}
     display: inline-block;
     margin:7px 0;
 }
-#x3-buttons a, .x3-button {
+#x3-buttons a,.admin-body .x3-button {
     font:16px Arial;
     color:#FFF;
     background: #006633;
