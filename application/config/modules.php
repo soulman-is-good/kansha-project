@@ -65,7 +65,7 @@ return array(
             'Admin_Tools'=>array(
                 'general'=>array(),
                 'common'=>array(),
-                'direct'=>array('process','cleancache','redirects','restore','tasks'),
+                'direct'=>array('process','cleancache','redirects','restore','tasks','stopwork','startwork'),
                 'labels'=>array()
             ),
             'Grabber'=>array(
