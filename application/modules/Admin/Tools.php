@@ -125,6 +125,20 @@ class Admin_Tools extends X3_Module {
         echo json_encode($process);
         exit;
     }
+    
+    public function execStopwork() {
+        if(false === ($a = file_put_contents(X3::app()->basePath . DIRECTORY_SEPARATOR . 'dump/site.stop','stop')))
+            die($a);
+        X3::app()->module->redirect('/admin/tools/restore');
+        exit;
+    }
+    
+    public function execStartwork() {
+        if(is_file(X3::app()->basePath . DIRECTORY_SEPARATOR . 'dump/site.stop'))
+            @unlink(X3::app()->basePath . DIRECTORY_SEPARATOR . 'dump/site.stop');
+        X3::app()->module->redirect('/admin/tools/restore');
+        exit;
+    }
 
     public function execProcess() {
         $process = $this->process();
@@ -194,7 +208,7 @@ class Admin_Tools extends X3_Module {
     public function execRestore() {
         $tables = array('company_item'=>'Товары компаний','shop_item'=>'Товары в базе','shop_groups'=>'Группы');
         $files = array();
-        $file = X3::app()->basePath . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR;
+        $file = X3::app()->basePath . DIRECTORY_SEPARATOR . 'dump' . DIRECTORY_SEPARATOR;
         $time = time();
         $ftime = $time-604800;
         foreach($tables as $name=>$table){

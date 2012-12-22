@@ -148,10 +148,11 @@ class JobCommand extends X3_Command {
     }
 
     public function runStore() {
+        //Dumping company_item
         $cis = X3::db()->query("SELECT * FROM company_item");
         $date = date("d_m");
-        $fh = fopen(X3::app()->basePath . DIRECTORY_SEPARATOR . "application" .
-                DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR . "company_item.$date.sql", "wb");
+        $fh = fopen(X3::app()->basePath . DIRECTORY_SEPARATOR . "dump" .
+                DIRECTORY_SEPARATOR . "company_item.$date.sql", "wb");
         if ($fh === FALSE || !is_resource($cis))
             die('Error initializing job. ' . X3::db()->getErrors());
         $qkeys = X3::db()->query("SHOW COLUMNS FROM company_item");
@@ -171,10 +172,62 @@ class JobCommand extends X3_Command {
             $ci = array_map(function($item) {
                         return mysql_real_escape_string($item);
                     }, $ci);
-            fwrite($fh, "INSERT INTO company_item $keys VALUES ('" . implode("', '", $ci) . "')\r\n");
+            fwrite($fh, "INSERT INTO company_item $keys VALUES ('" . implode("', '", $ci) . "');\r\n");
         }
         fclose($fh);
-        echo "\nOK!\n\n";
+        echo "---------------------------------------------\ncompany_item ............ OK!\n\n";
+        
+        //Dumping shop_item with their links (shop_item - shop_properties - shop_proplist)
+        $date = date("d_m");
+        $fh = fopen(X3::app()->basePath . DIRECTORY_SEPARATOR . "dump" .
+                DIRECTORY_SEPARATOR . "shop_item.$date.sql", "wb");
+        if ($fh === FALSE)
+            die('Error initializing job. ' . X3::db()->getErrors());
+        $keys = array();
+        //shop_item fields
+        $qkeys = X3::db()->query("SHOW COLUMNS FROM shop_item");
+        $tmp = array();
+        while ($key = mysql_fetch_assoc($qkeys))
+            $tmp[] = $key['Field'];
+        $keys['shop_item'] = '(`' . implode('`, `', $tmp) . '`)';
+        //shop_properties fields
+        $qkeys = X3::db()->query("SHOW COLUMNS FROM shop_properties");
+        $tmp = array();
+        while ($key = mysql_fetch_assoc($qkeys))
+            $tmp[] = $key['Field'];
+        $keys['shop_properties'] = '(`' . implode('`, `', $tmp) . '`)';
+        //shop_proplist fields
+        $qkeys = X3::db()->query("SHOW COLUMNS FROM shop_proplist");
+        $tmp = array();
+        while ($key = mysql_fetch_assoc($qkeys))
+            $tmp[] = $key['Field'];
+        $keys['shop_proplist'] = '(`' . implode('`, `', $tmp) . '`)';
+        
+        $cnt = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM shop_item");
+        $count = $cnt['cnt'];
+        $cnt = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM shop_properties");
+        $count += $cnt['cnt'];
+        $cnt = X3::db()->fetch("SELECT COUNT(0) AS `cnt` FROM shop_proplist");
+        $count += $cnt['cnt'];
+        $kk = 0;
+        echo "\r\n";
+        $tables = array('shop_item','shop_properties','shop_proplist');
+        foreach($tables as $table){
+            $cis = X3::db()->query("SELECT * FROM `$table`");
+            fwrite($fh, "TRUNCATE `$table`;\r\n");
+            while ($ci = mysql_fetch_assoc($cis)) {
+                $percent = sprintf("%.02f", ($kk / $count) * 100);
+                if ($kk++ > 0)
+                    echo str_repeat("\x08", strlen("$percent%"));
+                echo "$percent%";
+                $ci = array_map(function($item) {
+                            return mysql_real_escape_string($item);
+                        }, $ci);
+                fwrite($fh, "INSERT INTO `$table` {$keys[$table]} VALUES ('" . implode("', '", $ci) . "');\r\n");
+            }
+        }
+        fclose($fh);
+        echo "---------------------------------------------\nshop_item ............ OK!\n\n";
     }
 
     public function runRestore() {
@@ -182,14 +235,17 @@ class JobCommand extends X3_Command {
             exit;
         $table = X3::app()->global['table'];
         $date = X3::app()->global['date'];
-        $file = X3::app()->basePath . DIRECTORY_SEPARATOR . "application" .
-                DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR . "$table.$date.sql";
-        if (!is_file($file))
-            exit;
-        $sqls = file($file, FILE_SKIP_EMPTY_LINES);
-        $count = count($sqls);
         $status = X3::app()->basePath . DIRECTORY_SEPARATOR . "application" .
-                DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR . "restore.$table.status";
+                DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR . "restore.$table.status";        
+        $file = X3::app()->basePath . DIRECTORY_SEPARATOR . "dump" .
+                DIRECTORY_SEPARATOR . "$table.$date.sql";
+        if (!is_file($file)){
+            @file_put_contents($status, json_encode(array('status' => 'error', 'message' => 'Файл отката не доступен для чтения. Либо, что более невероятно, кто-то удалил его ПОСЛЕ Вашего входа в "Обитель времени"')));
+            exit;
+        }
+        $sqls = file($file, FILE_SKIP_EMPTY_LINES);
+        $kk = 0;
+        $count = count($sqls);
         foreach ($sqls as $sql) {
             $percent = sprintf("%.02f", ($kk / $count) * 100);
             if ($kk++ > 0)
@@ -197,7 +253,10 @@ class JobCommand extends X3_Command {
             echo "$percent%";
             if (X3::db()->query($sql))
                 @file_put_contents($status, json_encode(array('status' => 'loading', 'message' => $percent)));
+            else
+                @file_put_contents($status, json_encode(array('status' => 'warn', 'message' => "Ошибка при восстановлении записи в строке $kk. ".X3::db()->getErrors())));
         }
+        @file_put_contents($status, json_encode(array('status' => 'OK', 'message' => 'Восстановление прошло успешно')));
         if (is_file($status))
             @unlink($status);
         echo "\nOK!\n\n";

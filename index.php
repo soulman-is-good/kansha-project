@@ -1,10 +1,11 @@
 <?php
 header('Content-type: text/html; charset=utf-8');
-if($_SERVER['REMOTE_ADDR']!='217.15.188.220' && 0){
-    $time = date('i',strtotime("14.08.2012 10:59")-time());
+session_start();
+if(is_file('dump/site.stop') && ((!isset($_SESSION['X3.User.role']) && strpos($_SERVER['REQUEST_URI'],'/admin')===false && strpos($_SERVER['REQUEST_URI'],'/login')===false) || (isset($_SESSION['X3.User.role']) && $_SESSION['X3.User.role']!='admin' && $_SESSION['X3.User.role']!='root'))){
+//    $time = date('i') + ;
     echo "<h1>Сайт временно недоступен. Ведутся технические работы.</h1>";
     echo "<h2>Просим прощения за временные неудобства.</h2>";
-    echo "<h3>Сайт должен заработать через:$time минут</h3>";
+//    echo "<h3>Сайт должен заработать через:$time минут</h3>";
     echo "<span style='color:#fff'>{$_SERVER['REMOTE_ADDR']}</span>";
     exit;
 }

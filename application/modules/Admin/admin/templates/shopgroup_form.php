@@ -655,7 +655,7 @@ $form = new Form($modules);
                             .append('<br />')
                             .append('<a href="/shop/convert/pid/'+pid+'/to/string" class="x3-button convert" target="_blank">Стока</a>')
                             .append('<a href="/shop/convert/pid/'+pid+'/to/integer" class="x3-button convert" target="_blank">Целое</a>')
-                            .append('<a href="/shop/convert/pid/'+pid+'/to/decimal" class="x3-button convert" target="_blank">Вещественнон</a>')
+                            .append('<a href="/shop/convert/pid/'+pid+'/to/decimal" class="x3-button convert" target="_blank">Вещественное</a>')
                             .append('<a href="/shop/convert/pid/'+pid+'/to/boolean" class="x3-button convert" target="_blank">Переключатель</a><br/>')
                             .append('<br />')
                             .append($('<input />').attr({'name':'Props[status]','type':'checkbox','checked':$(this).attr('status')=='1'}))
@@ -848,6 +848,17 @@ $form = new Form($modules);
                             saveFilters();
                         }
                     });
+                    
+                    $('.convert').live('click',function(){
+                        var href = $(this).attr('href');
+                        $.get(href,function(m){
+                            $('<div />').html(m).dialog({title:'Результат конвертации.'})
+                        }).error(function(){
+                            $.growl('Возникла ошибка при конвертации!');
+                        })
+                        return false;
+                    })
+                    
                     $( "#unigroup span.ui-icon-close" ).live( "click", function() {
                         if(confirm('Уверены, что хотите удалить объединение?')){
                             var index = $( "li", $('#unigroup') ).index( $( this ).parent() );
