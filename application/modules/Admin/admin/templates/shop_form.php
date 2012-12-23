@@ -234,7 +234,7 @@ function gen_props(props){
         var fset = $('<fieldset style="border:1px solid #cacaca;padding:10px;display:inline-block"><legend><input type="text" name="propgroup[]" value="Общие характеристики" /></legend><table class="prop-table"></table></fieldset>')
         var table = fset.find('.prop-table');
         //TODO: Make real-time switching between types.
-        var type_select = $('<select />').attr('disabled',true)
+        var type_select = $('<select />')//.attr('disabled',true)
                 .append($('<option />').attr({'value':'string'}).html('Строка'))
                 .append($('<option />').attr({'value':'integer'}).html('Целое'))
                 .append($('<option />').attr({'value':'decimal'}).html('Вещественное'))

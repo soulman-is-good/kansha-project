@@ -1165,15 +1165,15 @@ class Company extends X3_Module_Table {
                 $errors['captcha'] = 'Код с картинки введен не верно.';
             }
             if(empty($errors)){
+                $company = Company::getByPk($ask['shop']);
                 if($ask['id']!='common'){
                     $item = Shop_Item::getByPk($ask['id']);
-                    $item->title = "товара ".$item->title;
-                    $link = $item->getLink();
+                    $item->title = "товара ".$item->title.$item->withArticule();
+                    $link = $item->getLink().".html";
                 }else{
                     $item = (object)array('title'=>'компании');
-                    $link = '#';
+                    $link = $company->getLink() . ".html";
                 }
-                $company = Company::getByPk($ask['shop']);
                 $data = array('item'=>$item->title,'url'=>$link,'company'=>$company->title,
                     'username'=>$ask['name'],'usermail'=>$ask['email'],'question'=>$ask['question']);
                 $email = $company->getAddress()->email;
