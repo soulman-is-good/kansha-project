@@ -586,10 +586,13 @@ class Shop extends X3_Module_View{
      * Like double to string made strange substitution to Core i5
      */
     public function actionBroken() {
+        $type = 'numeric';
+        if(isset($_GET['type']))
+            $type = $_GET['type'];
         $groups = X3::db()->query("SELECT id, title FROM shop_group");
         $similar = array();
         while($g = mysql_fetch_assoc($groups)){
-            $prs = X3::db()->query("SELECT id,name,label FROM shop_properties WHERE group_id={$g['id']} AND type='string'");
+            $prs = X3::db()->query("SELECT id,name,label FROM shop_properties WHERE group_id={$g['id']}");
             if(mysql_num_rows($prs)>0)
             while($pr = mysql_fetch_assoc($prs)){
                 $prv = X3::db()->query("SELECT id,title FROM shop_proplist WHERE group_id={$g['id']} AND property_id={$pr['id']}");
@@ -597,7 +600,7 @@ class Shop extends X3_Module_View{
                 if($count>0){
                     $nonsimilar = 0;
                     while($pv = mysql_fetch_assoc($prv)){
-                        if(!is_numeric($pv['title']))
+                        if(($type == 'numeric' && !is_numeric($pv['title'])) || ($type == 'string' && is_numeric($pv['title'])))
                             $nonsimilar++;
                     }
                     if($nonsimilar>0 && $nonsimilar/$count<0.2){
@@ -658,10 +661,27 @@ class Shop extends X3_Module_View{
             die(X3::db()->getErrors());
         //from string
         if($prop['type']=='string'){
-            $plist = X3::db()->query("SELECT * FROM shop_proplist WHERE group_id={$prop['group_id']} AND property_id={$pid}") or die('[]');
             if($to == 'string') exit;
+            $plist = X3::db()->query("SELECT * FROM shop_proplist WHERE group_id={$prop['group_id']} AND property_id={$pid}") or die('[]');
             X3::db()->startTransaction();
             X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");
+            if($to == 'string')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` VARCHAR(255) NULL CHARACTER SET utf8");
+            else if($to == 'decimal')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` DECIMAL(10,2) NULL");
+            else if($to == 'integer')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` INT NULL");
+            else if($to == 'boolean')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` TINYINT(1) NULL");
+            if($prop['type'] == 'string')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` VARCHAR(255) NULL CHARACTER SET utf8";
+            else if($prop['type'] == 'decimal')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` DECIMAL(10,2) NULL";
+            else if($prop['type'] == 'integer')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` INT NULL";
+            else if($prop['type'] == 'boolean')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` TINYINT(1) NULL";
+            $undo['data'][] = array();
             $undo['convert'] = "UPDATE shop_properties SET `type`={$prop['type']} WHERE id={$pid}";
             while($p = mysql_fetch_assoc($plist)){
                 if($to == 'decimal' || $to == 'integer' || $to == 'boolean'){
@@ -685,8 +705,8 @@ class Shop extends X3_Module_View{
                             $val = (int)$p['value']>0?1:0;
                     if($val == 0)
                         $val = 'NULL';
-                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$val}' WHERE `{$prop['name']}`='{$p['id']}'");
-                    $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$p['id']}' WHERE `{$prop['name']}`='{$val}'";
+                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$val}' WHERE `{$prop['name']}` LIKE '{$p['id']}'");
+                    $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$p['id']}' WHERE `{$prop['name']}` LIKE '{$val}'";
                     $undo['data'][] = $p;
                     if($go)
                         $p['value'] = '<b style="color:red">' . $p['value'] . '</b>';
@@ -705,17 +725,34 @@ class Shop extends X3_Module_View{
             if($to == $prop['type']) exit;
             X3::db()->startTransaction();
             X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");         
+            if($to == 'string')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` VARCHAR(255) NULL CHARACTER SET utf8");
+            else if($to == 'decimal')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` DECIMAL(10,2) NULL");
+            else if($to == 'integer')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` INT NULL");
+            else if($to == 'boolean')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` TINYINT(1) NULL");
+            if($prop['type'] == 'string')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` VARCHAR(255) NULL CHARACTER SET utf8";
+            else if($prop['type'] == 'decimal')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` DECIMAL(10,2) NULL";
+            else if($prop['type'] == 'integer')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` INT NULL";
+            else if($prop['type'] == 'boolean')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` TINYINT(1) NULL";
+            $undo['data'][] = array();
             $undo['convert'] = "UPDATE shop_properties SET `type`='{$prop['type']}' WHERE id={$pid}";
             $models = X3::db()->query("SELECT `{$prop['name']}` FROM prop_{$prop['group_id']}");
             $inserted = array();
             while($model = mysql_fetch_assoc($models)){
                 $key = "value".$model[$prop['name']];
-                if($model[$prop['name']]!=null && !isset($inserted[$key])){
+                if($model[$prop['name']]!='NULL' && $model[$prop['name']]!=null && !isset($inserted[$key])){
                     $soex = X3_String::create($model[$prop['name']])->dmstring();
                     X3::db()->query("INSERT INTO shop_proplist (`property_id`, `group_id`, `value`, `title`, `soundex`) VALUES ('{$prop['id']}','{$prop['group_id']}','{$model[$prop['name']]}','{$model[$prop['name']]}','{$soex}')",false);
                     $inserted[$key] = $iid = mysql_insert_id();
-                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='$iid' WHERE `{$prop['name']}`='{$model[$prop['name']]}'");
-                    $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$model[$prop['name']]}' WHERE `{$prop['name']}`='$iid'";
+                    X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='$iid' WHERE `{$prop['name']}` LIKE '{$model[$prop['name']]}'");
+                    $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$model[$prop['name']]}' WHERE `{$prop['name']}` LIKE '$iid'";
                     $undo['data'][] = array();            
                 }
             }
@@ -730,7 +767,24 @@ class Shop extends X3_Module_View{
         }else {
             if($to == $prop['type']) exit;
             X3::db()->startTransaction();
-            X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");         
+            X3::db()->addTransaction("UPDATE shop_properties SET `type`='$to' WHERE id={$pid}");
+            if($to == 'string')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` VARCHAR(255) NULL CHARACTER SET utf8");
+            else if($to == 'decimal')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` DECIMAL(10,2) NULL");
+            else if($to == 'integer')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` INT NULL");
+            else if($to == 'boolean')
+                X3::db()->addTransaction("ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` TINYINT(1) NULL");
+            if($prop['type'] == 'string')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` VARCHAR(255) NULL CHARACTER SET utf8";
+            else if($prop['type'] == 'decimal')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` DECIMAL(10,2) NULL";
+            else if($prop['type'] == 'integer')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` INT NULL";
+            else if($prop['type'] == 'boolean')
+                $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` TINYINT(1) NULL";
+            $undo['data'][] = array();            
             $undo['convert'] = "UPDATE shop_properties SET `type`='{$prop['type']}' WHERE id={$pid}";
             $models = X3::db()->query("SELECT `{$prop['name']}` FROM prop_{$prop['group_id']}");
             while($model = mysql_fetch_assoc($models)){
@@ -743,8 +797,8 @@ class Shop extends X3_Module_View{
                 if($to == 'boolean'){
                     $val = (((int)$model[$prop['name']])>0?1:0);
                 }
-                X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='$val' WHERE `{$prop['name']}`='{$model[$prop['name']]}'");
-                $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$model[$prop['name']]}' WHERE `{$prop['name']}`='$val'";
+                X3::db()->addTransaction("UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='$val' WHERE `{$prop['name']}` LIKE '{$model[$prop['name']]}'");
+                $undo['queries'][] = "UPDATE prop_{$prop['group_id']} SET `{$prop['name']}`='{$model[$prop['name']]}' WHERE `{$prop['name']}` LIKE '$val'";
                 $undo['data'][] = array();
             }
             if(!X3::db()->commit()){

@@ -166,7 +166,7 @@ class Shop_Properties extends X3_Module_Table {
                     }
                 }
             }
-            $e->acquire($prop);
+            $e->getTable()->acquire($prop);
             if(!$e->save()){
                 $err = print_r($e->table->getErrors(),1);
                 X3::log("Ошибка сохранения свойста {$prop['name']} для группы '{$prop['group_id']}'. [{$err}]",'kansha_error');
