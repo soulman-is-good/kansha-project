@@ -250,6 +250,7 @@ class Shop extends X3_Module_View{
     }
     
     public function actionFuckprops2() {
+        if(!X3::user()->isAdmin()) throw new X3_404;
         $ids = X3::db()->fetchAll("SELECT DISTINCT s1.id id, s1.group_id group_id, s1.property_id pid FROM shop_proplist s1, shop_proplist s2 WHERE s1.value=s2.value AND s1.group_id=s2.group_id AND s1.id<>s2.id");
         $del = array();
         $props = array();
@@ -404,6 +405,7 @@ class Shop extends X3_Module_View{
     }
     
     public function actionCheckprops() {
+        if(!X3::user()->isAdmin()) throw new X3_404;
         $prs = array();
         $props = X3::db()->fetchAll("SELECT id,label FROM shop_properties");
         foreach ($props as $prop)
@@ -428,6 +430,7 @@ class Shop extends X3_Module_View{
     }
     
     public function actionFixprops() {
+        if(!X3::user()->isAdmin()) throw new X3_404;
         $groups = X3::db()->fetchAll('SELECT id,title FROM shop_group');
         foreach($groups as $g){
             $shop = X3::db()->fetchAll("SELECT * FROM prop_{$g['id']}");
@@ -533,7 +536,9 @@ class Shop extends X3_Module_View{
         echo json_encode($res);
         exit;
     }
-    
+    /**
+     * Prints out items which prices differs by defined koefficient (0.3 by default)
+     */
     public function actionDiff() {
         $diff = 0.3;
         $qgr = "";
@@ -586,6 +591,7 @@ class Shop extends X3_Module_View{
      * Like double to string made strange substitution to Core i5
      */
     public function actionBroken() {
+        if(!X3::user()->isAdmin()) throw new X3_404;
         $type = 'numeric';
         if(isset($_GET['type']))
             $type = $_GET['type'];
@@ -618,6 +624,7 @@ class Shop extends X3_Module_View{
      */
     public function actionConvert() {
         //preparing undo file
+        if(!X3::user()->isAdmin()) throw new X3_404;
         $filename = X3::app()->basePath . '/dump';
         if(!is_dir($filename) || !is_writable($filename))
             die('Undo file could not be written! Dump directory either not allowed to write or does not exists! '.$filename);
@@ -682,7 +689,7 @@ class Shop extends X3_Module_View{
             else if($prop['type'] == 'boolean')
                 $undo['queries'][] = "ALTER TABLE `prop_{$prop['group_id']}` MODIFY `{$prop['name']}` TINYINT(1) NULL";
             $undo['data'][] = array();
-            $undo['convert'] = "UPDATE shop_properties SET `type`={$prop['type']} WHERE id={$pid}";
+            $undo['convert'] = "UPDATE shop_properties SET `type`='{$prop['type']}' WHERE id={$pid}";
             while($p = mysql_fetch_assoc($plist)){
                 if($to == 'decimal' || $to == 'integer' || $to == 'boolean'){
                     $go = false;
